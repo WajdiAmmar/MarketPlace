@@ -1,0 +1,64 @@
+/* Container pour centrer la barre de recherche */
+.search-container {
+    display: flex;
+    justify-content: center; /* Centrer horizontalement */
+    align-items: center; /* Centrer verticalement */
+    height: 15vh; /* Hauteur complète de la fenêtre */
+
+}
+
+/* Style de la barre de recherche */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #fff; /* Fond blanc */
+    border-radius: 50px; /* Bordures arrondies */
+    padding: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre */
+    width: 500px; /* Largeur de la barre */
+}
+
+/* Style du champ de texte */
+.search-input {
+    flex: 1; /* Prendre tout l'espace disponible */
+    border: none;
+    padding: 15px 20px;
+    border-radius: 50px 0 0 50px; /* Bord arrondi à gauche */
+    outline: none;
+    font-size: 18px; /* Texte plus grand */
+    color: #333; /* Couleur du texte */
+    background-color: transparent; /* Fond transparent */
+}
+
+/* Style du bouton */
+.search-button {
+    background-color: #F9A825; /* Fond jaune pour correspondre à l'image */
+    color: #000; /* Couleur de l'icône en noir */
+    border: none;
+    border-radius: 0 50px 50px 0; /* Bord arrondi à droite */
+    padding: 15px;
+    cursor: pointer;
+    font-size: 18px; /* Taille de l'icône */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button i {
+    font-size: 0.1px; /* Taille de l'icône de recherche */
+}
+
+/* Supprimer les styles par défaut des boutons */
+.search-button:focus {
+    outline: none;
+}
+.search-icon {
+    max-width: 20px; /* Ajustez selon vos besoins */
+    max-height: 20px; /* Ajustez selon vos besoins */
+    width: auto; /* Pour conserver le rapport d'aspect */
+    height: auto; /* Pour conserver le rapport d'aspect */
+    margin-left: 5px; /* Ajustez selon vos besoins */
+  }
+  
+  /* Autres styles de la barre de recherche ici... */
+  
