@@ -1,0 +1,33 @@
+/* Style de la top-bar */
+.top-bar {
+    background-color: #ffcc00; /* Couleur de fond jaune */
+    color: #000; /* Couleur du texte noir */
+    height: 97px
+  }
+  
+  .logo-img {
+    max-width: 200px; /* Largeur maximale de l'image du logo */
+    height: auto; /* Hauteur automatique pour garder le ratio */
+    margin: -46px;
+  }
+  
+  /* Style de la barre de navigation */
+  .navbar {
+    background-color: #000; /* Couleur de fond noire */
+    height:60px;
+  }
+  
+  .navbar .nav-link {
+    color: #fff; /* Couleur du texte des liens en blanc */
+    margin:20px;
+
+  }
+  
+  .navbar .btn {
+    margin-left: 10px; /* Espacement à gauche du bouton */
+  }
+  
+  /* Espacement entre les icônes et le texte dans la top-bar */
+  .top-bar i {
+    margin-right: 40px;
+  }
