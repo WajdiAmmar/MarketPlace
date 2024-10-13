@@ -1,21 +1,17 @@
 import React from 'react';
-import Header from './components/Header';  // Importer le Header
-import MainBanner from './components/MainBanner';  // Importer le MainBanner
-import CategoriesGrid from './components/CategoriesGrid';  // Importer la grille des catégories
-import Footer from './components/Footer';  // Importer le Footer
-import SearchBar from './components/SearchBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; // Optionnel si vous avez des styles personnalisés
+import RouteList from './route/routeliste';
+import { BrowserRouter as Router } from 'react-router-dom'; 
 
 function App() {
   return (
+    <Router>
     <div className="App">
-      <Header />
-      <SearchBar />
-      <MainBanner />
-      <CategoriesGrid />
-      <Footer />
+      <RouteList />
     </div>
+    </Router>
+
   );
 }
 export default App;
