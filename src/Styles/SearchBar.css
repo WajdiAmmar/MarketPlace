@@ -11,10 +11,10 @@
 .search-bar {
     display: flex;
     align-items: center;
-    background-color: #fff; /* Fond blanc */
+    background-color: #f7f7f0; /* Fond blanc */
     border-radius: 50px; /* Bordures arrondies */
     padding: 5px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Légère ombre */
     width: 500px; /* Largeur de la barre */
 }
 
