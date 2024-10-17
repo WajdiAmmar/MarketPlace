@@ -8,17 +8,22 @@ import Sidebar from '../components/Sidebar';
 
 const Home = () => {
   return (
- <div className="App">
-
+    
+<div className="App">
 <Header />
-<div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
-          <Sidebar />
-        </div>
+<div className="row">
+<div className="sidebarArea col-xl-3 sidebar" id="sidebarArea">
+<Sidebar />
+</div>
+<div className="col-xl-9 main-content"> 
 <SearchBar />
 <MainBanner />
 <CategoriesGrid />
+</div>
+</div>
 <Footer />
-    </div>
+
+</div>
   );
 };
 

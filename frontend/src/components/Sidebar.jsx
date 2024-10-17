@@ -14,17 +14,19 @@ const Sidebar = () => {
         >
           <i className="bi bi-x"></i>
         </Button>
-          <ul className="list-group">
+          <ul className="list">
           <li className="list-group-item">
-              <Link to="#">{('tableaudebord')}</Link>
+              <Link to="#">{('Tableaudebord')}</Link>
             </li>
             <li className="list-group-item">
-              <Link to="../dashboard/ListeComptable">{('listecomptable')}</Link>
+              <Link to="../dashboard/ListeComptable">{('Gatégories')}</Link>
             </li>
             <li className="list-group-item">
-              <Link to="../dashboard/ListeClients">{('listclient')}</Link>
+              <Link to="../dashboard/ListeClients">{('Produit')}</Link>
             </li>
-          
+          <Button>
+            
+          </Button>
           </ul>
         </div>
   );
