@@ -1,43 +1,40 @@
-.sidebarArea {
-    flex-shrink: 0;
-    width: var(--sidebarWidth); /* Replace $sidebarWidth with a CSS variable or fixed value */
-    background-color: var(--sidebarColor); /* Replace $sidebarColor with a CSS variable or fixed value */
-    width: 16%;
-}
-
-.sidebarArea .nav-link {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.sidebarArea .sidenav-bg:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: var(--border-radius); /* Replace $border-radius with a CSS variable or fixed value */
-}
-
-.sidebarArea .sidenav-bg:hover .nav-link {
-    color: white;
-}
-
-.sidebarArea .sidenav-bg .active {
-    background-color: var(--primary); /* Replace $primary with a CSS variable or fixed value */
-    border-radius: var(--border-radius); /* Replace $border-radius with a CSS variable or fixed value */
-    color: white;
-}
-
-
-@media (max-width: 992px) { /* lg breakpoint, adjust if necessary */
-    .sidebarArea {
-        position: fixed;
-        height: 100%;
-        overflow: auto;
-        top: 0;
-        z-index: 1;
-        margin-left: calc(var(--sidebarWidth) * -1); /* Replace $sidebarWidth with a CSS variable or fixed value */
-        transition: 0.2s ease-in;
-        width: 80%;
+.sidebar {
+    background-color: #000; /* Adjust background color as needed */
+    color: #000;
+    padding: 20px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .sidebar.showSidebar {
+    transform: translateX(0);
+  }
+  
+  .list-group-item {
+    padding: 15px;
+    border: none;
+    border-bottom: 1px solid #444;
+  }
+  
+  .list-group-item:hover {
+    background-color: #000;
+  }
+  
+  .list-group-item a {
+    color: #F9A825;
+    text-decoration: none;
+  }
+  
+  .list-group-item a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -250px; /* Adjust negative offset for mobile */
+      z-index: 999;
     }
-
-    .sidebarArea.showSidebar {
-        display: none;
-    }
-}
+  }

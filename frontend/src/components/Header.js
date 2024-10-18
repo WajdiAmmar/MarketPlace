@@ -13,9 +13,7 @@ function Header() {
       <div className="top-bar">
         <Container>
           <Row className="align-items-center">
-            <Col md={2} className="logo">
-              {/* Accédez à l'image directement depuis le dossier public */}
-              
+            <Col md={2} className="logo"> 
               <img src="/logo.png" alt="Logo" className="logo-img" />
             </Col>
             <Col md={8}>
@@ -42,7 +40,7 @@ function Header() {
       </div>
 
       {/* Barre de navigation */}
-      <Navbar expand="lg" className="bg-dark text-light">
+      <Navbar expand="lg" className="text-light">
         <Container>
           <Navbar.Toggle aria-controls="navbar-nav" />
           <Navbar.Collapse id="navbar-nav" className="d-flex justify-content-between align-items-center">
