@@ -19,8 +19,9 @@ const Home = () => {
 <div className="col-xl-9 main-content"> 
 <SearchBar />
 <CarouselComponent/>
-<MainBanner />
+<div style={{ marginTop: '30px' }} />
 <CategoriesGrid />
+<MainBanner />
 </div>
 </div>
 <Footer />
