@@ -1,0 +1,13 @@
+.main-banner {
+    height: 80vh; /* Hauteur de 80% de la fenêtre */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover; /* Assure que l'image couvre toute la surface */
+    background-position: center;
+    margin: 0; /* Supprime les marges */
+    padding: 50px; /* Espace intérieur pour plus de confort */
+    color: white; /* Couleur du texte */
+  }
+  
+  
