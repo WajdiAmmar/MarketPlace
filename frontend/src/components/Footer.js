@@ -8,7 +8,7 @@ const Footer = () => {
         <div className='me-5 d-none d-lg-block'>
           <span className='text-white'>Get connected with us on social networks:</span>
         </div>
-
+        
         <div>
           <a href='' className='me-4 text-reset'>
             <MDBIcon className='text-warning' fab icon='facebook-f' />
@@ -38,7 +38,7 @@ const Footer = () => {
               <h6 className='text-uppercase fw-bold mb-4 text-white'>
                 <Col md={2} className="logo">
               <img src="/logo.png" alt="Logo" className="logo-img" />
-            </Col>  Happy Shop</h6>
+            </Col></h6>
             </MDBCol>
 
             <MDBCol md='2' lg='2' xl='2' className='mx-auto mb-4'>
