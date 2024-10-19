@@ -5,6 +5,7 @@ import CategoriesGrid from '../components/CategoriesGrid';  // Importer la grill
 import Footer from '../components/Footer';  // Importer le Footer
 import SearchBar from '../components/SearchBar';
 import Sidebar from '../components/Sidebar';
+import CarouselComponent from '../components/CarouselComponent';
 
 const Home = () => {
   return (
@@ -12,11 +13,12 @@ const Home = () => {
 <div className="App">
 <Header />
 <div className="row">
-<div className="sidebarArea col-xl-3 sidebar" id="sidebarArea">
+<div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
 <Sidebar />
 </div>
 <div className="col-xl-9 main-content"> 
 <SearchBar />
+<CarouselComponent/>
 <MainBanner />
 <CategoriesGrid />
 </div>
