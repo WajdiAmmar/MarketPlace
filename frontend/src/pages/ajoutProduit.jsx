@@ -143,7 +143,6 @@ const Ajoutproduit = () => {
 
           </Form>
         </Col>
-        
         <Col md={7} className="bg-hover-light shadow-lg text-black p-5 ml-5 mt-5 mb-5 container">
         <Row>
         <Col md={7}>
