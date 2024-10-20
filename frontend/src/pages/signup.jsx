@@ -9,8 +9,6 @@ import { collection, addDoc } from 'firebase/firestore';
 
 function Signup() {
   const navigate = useNavigate();
-
-  // États pour stocker les informations de l'utilisateur
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [genre, setGenre] = useState('');
@@ -44,7 +42,9 @@ function Signup() {
       alert('Erreur lors de l\'inscription. Veuillez réessayer.');
     }
   };
-
+  const handleHomeClick = () => {
+    navigate('/'); // Rediriger vers la page d'inscription
+  };
   return (
     <Container>
       <Row className='d-flex justify-content-center align-items-center h-100'>
@@ -57,7 +57,7 @@ function Signup() {
               <Col md='6'>
                 <Card.Body className='text-black d-flex flex-column justify-content-center'>
                 <div className="mx-auto mb-3">
-                    <Image src="/logo.png" alt="Logo" className="logo-img" fluid />
+                    <Image src="/logo.png" alt="Logo" className="logo-img" fluid onClick={handleHomeClick} />
                 </div> 
                   <Form>
                     <Form.Group className="mb-4">

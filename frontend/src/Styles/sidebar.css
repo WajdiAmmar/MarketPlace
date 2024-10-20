@@ -45,7 +45,7 @@
   background-color: #000;
   color: #000;
   padding: 20px;
-  height: 100vh; /* 100% de la hauteur visible */
+  height: auto; /* 100% de la hauteur visible */
   overflow-y: auto; /* Permet de défiler si le contenu dépasse */
   transition: transform 0.3s ease-in-out;
   box-sizing: border-box; /* Assure que padding est inclus dans la hauteur totale */

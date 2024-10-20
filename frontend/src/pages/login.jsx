@@ -10,6 +10,9 @@ function Login() {
   const handleLoginClick = () => {
     navigate('/Signup'); // Rediriger vers la page d'inscription
   };
+  const handleHomeClick = () => {
+    navigate('/'); // Rediriger vers la page d'inscription
+  };
 
   return (
     <Container>
@@ -23,7 +26,7 @@ function Login() {
               <Col md='6'>
                 <Card.Body className='text-black d-flex flex-column justify-content-center'>
                 <Col className="mx-auto mb-3">
-                  <Image src="/logo.png" alt="Logo" className="logo-img" />
+                  <Image src="/logo.png" alt="Logo" className="logo-img" onClick={handleHomeClick}/>
                 </Col>
                   <Form>
                     <Form.Group className="mb-4">

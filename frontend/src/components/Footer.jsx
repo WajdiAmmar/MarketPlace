@@ -47,13 +47,13 @@ const Footer = () => {
             <Col md="2" lg="2" xl="2" className="mx-auto mb-4">
               <h6 className="text-uppercase fw-bold mb-4 text-white">Gatégories</h6>
               <p className='text-white'>
-                <a href="#" className="text-reset">High-Tech</a>
+                <a href="/high-tech" className="text-reset">High-Tech</a>
               </p>
               <p className='text-white'>
-                <a href="#" className="text-reset">Cuisine et Maison</a>
+                <a href="/cuisine-maison" className="text-reset">Cuisine et Maison</a>
               </p>
               <p className='text-white'>
-                <a href="#" className="text-reset">Beauté</a>
+                <a href="/beaute" className="text-reset">Beauté</a>
               </p>
             </Col>
 
