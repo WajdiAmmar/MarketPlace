@@ -1,0 +1,19 @@
+.high-tech-grid {
+    background-color: #e0f7fa;
+    padding: 20px;
+  }
+  
+  .high-tech-grid .card {
+    border: 1px solid #00838f;
+    transition: transform 0.3s ease;
+  }
+  
+  .high-tech-grid .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .high-tech-grid .card-title {
+    color: #00796b;
+  }
+  
