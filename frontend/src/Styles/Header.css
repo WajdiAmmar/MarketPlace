@@ -84,10 +84,10 @@ align-Items: center;
   border-radius: 10px;
   box-shadow:  8px 8px 8px 12px rgba(0, 0, 0, 0.2);
   z-index: 1000; /* Ensure it appears above other content */
-  width: 60%;
-  height: 50%; /* Adjust width as needed */
+  width: 70%;
+  height: 60%; /* Adjust width as needed */
   padding: 15px;
-  top:200px;
+  top:140px;
   left:350px;
 }
 

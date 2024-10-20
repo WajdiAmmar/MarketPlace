@@ -1,6 +1,14 @@
 import React from 'react';
-import { Container, Row, Col, Carousel } from 'react-bootstrap';
+import { Container, Row, Col,Carousel } from 'react-bootstrap';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar'
 
+const cuisineMaisonCategories = [
+  { title: 'Électroménager', image: '/electromenager.png' },
+  { title: 'Meubles', image: '/meuble.png' },
+  { title: 'Fournitures de Cuisines', image: '/fourniturescuisines.png' },
+];
 const highTechItems = [
   { title: '', image: '/o1 (1).png' },
   { title: '', image: '/sp1.png' },
@@ -8,18 +16,19 @@ const highTechItems = [
   { title: '', image: '/sw1.png' }
 ];
 
-const highTechCategories = [
-  { title: 'Laptops', image: '/ordinateur.jpg' },
-  { title: 'Smartphones', image: '/smartphone.jpg' },
-  { title: 'Tablettes', image: '/tablette.jpg' },
-  { title: 'Smartwatches', image: '/smartwatch.jpg' }
-];
 
-function HighTechCarousel() {
+function CuisineMaison() {
   return (
+    <div className='bg-white'>
+    <Header />
+    <div className="row">
+<div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
+<Sidebar />
+</div>
+<div className="col-xl-10">
     <Container>
-      {/* Carousel */}
-      <h2 className="text-center my-4">High-Tech</h2>
+   {/* Carousel */}
+      <h2 className="text-center my-4">Cuisine et Maison</h2>
       <Carousel>
         {highTechItems.map((item, index) => (
           <Carousel.Item key={index}>
@@ -45,9 +54,9 @@ function HighTechCarousel() {
       </Carousel>
 
       {/* Circular Images Below the Carousel */}
-      <h3 className="text-center my-4">Explore More High-Tech Categories</h3>
+      <h3 className="text-center my-4">Explorez plus de catégories de Cuisine et maison</h3>
       <Row className="justify-content-center">
-        {highTechCategories.map((category, index) => (
+        {cuisineMaisonCategories.map((category, index) => (
           <Col md={3} sm={6} xs={12} key={index} className="text-center mb-4">
             <img
               src={category.image}
@@ -64,7 +73,11 @@ function HighTechCarousel() {
         ))}
       </Row>
     </Container>
+    </div>
+    </div>
+    <Footer />
+    </div>
   );
 }
 
-export default HighTechCarousel;
+export default CuisineMaison;

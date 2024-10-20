@@ -1,7 +1,11 @@
-import { Link } from "react-router-dom";
 import { Button,} from 'react-bootstrap';
-import '../Styles/sidebar.css'
+import '../Styles/sidebar.css';
+import { Link , useNavigate } from 'react-router-dom'; 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const handleLoginClick = () => {     
+    navigate('/ajoutProduit'); 
+  };  
   const showMobilemenu = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
@@ -19,13 +23,13 @@ const Sidebar = () => {
               <Link to="#">{('Tableaudebord')}</Link>
             </li>
             <li className="list-group-item">
-              <Link to="../dashboard/ListeComptable">{('Gatégories')}</Link>
+              <Link to="#">{('Gatégories')}</Link>
             </li>
             <li className="list-group-item">
-              <Link to="../dashboard/ListeClients">{('Produit')}</Link>
+              <Link to="#">{('Produit')}</Link>
             </li>
           </ul>
-          <Button variant="outline-light" id="connecter-btn">Ajouter Votre Produit</Button>
+          <Button variant="outline-light" id="connecter-btn" onClick={handleLoginClick}>Ajouter Votre Produit</Button>
         </div>
   );
 };

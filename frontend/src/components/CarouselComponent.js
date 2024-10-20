@@ -1,8 +1,12 @@
 import React from 'react';
 import { Carousel, Button } from 'react-bootstrap';
 import '../Styles/carousel.css';
-
+import { useNavigate } from "react-router-dom";
 function CarouselComponent() {
+  const navigate = useNavigate();
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
   return (
     <Carousel interval={3000} pause="hover" indicators={true}>
       {/* Diapositive 1 */}
@@ -14,7 +18,7 @@ function CarouselComponent() {
         />
         <Carousel.Caption>
         <div className="container-3">
-  <Button className="custom-button-1">Se connecter</Button>
+  <Button className="custom-button-1" onClick={handleLoginClick}>Se connecter</Button>
         </div>
         </Carousel.Caption>
       </Carousel.Item>
