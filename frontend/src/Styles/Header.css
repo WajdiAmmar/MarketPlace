@@ -46,7 +46,12 @@
 .navbar .btn {
   margin-left: auto; /* Force le bouton à la droite */
 }
-
+.mt-10{
+  margin-top: -10px;
+}
+.mt-15{
+  margin-top: -15px;
+}
 /* Espacement entre les icônes et le texte dans la top-bar */
 .top-bar i {
   margin-right: 40px;
@@ -72,3 +77,61 @@ align-Items: center;
   color: #F9A825;
 
 }
+.categories-menu {
+  position: absolute;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  box-shadow:  8px 8px 8px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* Ensure it appears above other content */
+  width: 60%;
+  height: 50%; /* Adjust width as needed */
+  padding: 15px;
+  top:200px;
+  left:350px;
+}
+
+/* Style for the categories menu items */
+.categories-menu h6 {
+  cursor: pointer;
+  padding: 5px 0;
+  transition: background-color 0.3s;
+}
+
+.categories-menu h6:hover {
+  background-color: #f1f1f1; /* Highlight on hover */
+}
+
+/* Style for the subcategories list */
+.categories-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Style for the images in the subcategories */
+.category-img {
+  width: 80px; /* Adjust size to make it larger */
+  height: 80px; /* Set height to the same value as width for a square shape */
+  border-radius: 50%; /* Makes the image rounded */
+  margin-right: 10px; /* Increase space between image and text */
+  object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+
+/* Optional: Add some margin to the categories */
+.categories-menu li {
+  margin: 5px 0;
+}
+
+/* Dans Header.css */
+.nav-link {
+  color: white; /* Couleur par défaut */
+  transition: color 0.3s ease; /* Pour une transition douce */
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #F9A825 !important; /* Couleur lorsque le lien est actif ou au survol */
+}
+
+
