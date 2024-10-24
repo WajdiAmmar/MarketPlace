@@ -7,6 +7,7 @@ import Ajoutproduit from '../pages/ajoutProduit';
 import HighTech from '../pages/HighTech';
 import CuisineMaison from '../pages/CuisineMaison';
 import Beaute from '../pages/Beaute';
+import Panier from '../pages/panier'
 
 const RouteList = () => {
   return (
@@ -19,6 +20,7 @@ const RouteList = () => {
       <Route path="/high-tech" element={<HighTech />} />
       <Route path="/cuisine-maison" element={<CuisineMaison />} />
       <Route path="/beaute" element={<Beaute />} />
+      <Route path="/panier" element={<Panier />} />
     </Routes>
   );
 };
