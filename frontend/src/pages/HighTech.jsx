@@ -4,9 +4,10 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar'
 const highTechItems = [
-  { title: '', image: '/o1 (1).png' },
-  { title: '', image: '/sp1.png' },
+  { title: '', image: '/lap1.jpg '},
+  { title: '', image: '/phone2.jpg' },
   { title: '', image: '/ht.png' },
+  { title: '', image: '/lap2.jpg '},
   { title: '', image: '/sw1.png' }
 ];
 
@@ -39,7 +40,7 @@ function HighTechCarousel() {
                   alt={item.title}
                   className="img-fluid"
                   style={{
-                    height: '300px',      // Taille de base de l'image
+                    height: '400px',      // Taille de base de l'image
                     transform: 'scale(1.6)', // Agrandit l’image de 20%
                     objectFit: 'contain',  // Préserve l’image sans la rogner
                     transition: 'transform 0.3s', // Animation fluide (facultatif)

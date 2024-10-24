@@ -10,16 +10,15 @@ const cuisineMaisonCategories = [
   { title: 'Fournitures de Cuisines', image: '/fourniturescuisines.png' },
 ];
 const highTechItems = [
-  { title: '', image: '/o1 (1).png' },
-  { title: '', image: '/sp1.png' },
-  { title: '', image: '/ht.png' },
-  { title: '', image: '/sw1.png' }
+  { title: '', image: '/cuisinz.jpg' },
+  { title: '', image: '/électroménager1.jpg' },
+  { title: '', image: '/electromenager.webp' },
 ];
 
 
 function CuisineMaison() {
   return (
-    <div className='bg-white'>
+    <div className='bg-gray'>
     <Header />
     <div className="row">
 <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
@@ -39,7 +38,7 @@ function CuisineMaison() {
                   alt={item.title}
                   className="img-fluid"
                   style={{
-                    height: '300px',      // Taille de base de l'image
+                    height: '400px',      // Taille de base de l'image
                     transform: 'scale(1.6)', // Agrandit l’image de 20%
                     objectFit: 'contain',  // Préserve l’image sans la rogner
                     transition: 'transform 0.3s', // Animation fluide (facultatif)
