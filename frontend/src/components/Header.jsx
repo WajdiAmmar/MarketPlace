@@ -9,6 +9,9 @@ function Header() {
   const [activeCategory, setActiveCategory] = useState(null); // État pour la catégorie active
   const [activeLink, setActiveLink] = useState(""); // État pour le lien actif
 
+  const handlePanierClick = () => {
+    navigate("/panier");
+  };
   const handleLoginClick = () => {
     navigate("/login");
   };
@@ -63,7 +66,7 @@ function Header() {
               </h1>
             </Col>
             <Col>
-              <Button variant="outlined" id="panier-btn">
+              <Button variant="outlined" id="panier-btn" onClick={handlePanierClick}>
                 <img src="/panier.png" alt="Logo" />
                 Panier
               </Button>
