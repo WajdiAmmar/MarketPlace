@@ -72,8 +72,10 @@
 
 /* Conteneur principal du carrousel */
 .carousel {
-  width: 80%; /* Largeur du carrousel ajustée */
-  margin: 0 auto; /* Centrage horizontal */
+  height: '300px';
+  transform: 'scale(1.6)';
+  margin-left: 20px;
+  transition: 'transform 0.3s';
 }
 
 /* Positionnement des légendes du carrousel */

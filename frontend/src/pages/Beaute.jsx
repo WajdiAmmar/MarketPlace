@@ -22,7 +22,7 @@ const beautyCategories = [
 
 function BeautyCarousel() {
   return (
-    <div className='bg-white'>
+    <div className='bg-gray'>
       <Header />
       <div className="row">
         <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
