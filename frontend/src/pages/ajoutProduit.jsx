@@ -106,8 +106,6 @@ const Ajoutproduit = () => {
                 <option value="Beauté">Beauté</option>
               </Form.Select>
             </Form.Group>
-
-            {/* Condition */}
             <Form.Group className="mb-4" controlId="formCondition">
               <Form.Label>État</Form.Label>
               <Form.Select
