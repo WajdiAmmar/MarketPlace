@@ -10,7 +10,7 @@ import CarouselComponent from '../components/CarouselComponent';
 const Home = () => {
   return (
     
-<div className="App">
+<div className="App bg-light">
 <Header />
 <div className="row">
 <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">

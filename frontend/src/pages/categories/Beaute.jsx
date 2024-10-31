@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Carousel } from 'react-bootstrap';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
-
+import { useNavigate } from 'react-router-dom';
 // Produits de Beauté
 const beautyItems = [
   { title: '', image: '/creme1.jpg' },
@@ -16,13 +16,45 @@ const beautyItems = [
 const beautyCategories = [
   { title: 'Soins de la peau', image: '/soin.jpg' },
   { title: 'Maquillage', image: '/makeup.jpg' },
-  { title: 'Parfums', image: '/parfum.png' },
-  { title: 'Cheveux', image: '/cheveux.jpg' }
+  { title: 'Parfums', image: '/Parfum-.png' },
+  { title: 'Coiffure', image: '/cheveux.jpg' }
 ];
 
+
 function BeautyCarousel() {
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/products/category/Beauté');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des produits');
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+  const handleParfumClick = () => {
+    navigate('/parfum');
+  };
+  const handleMaquillageClick = () => {
+    navigate('/maquillage');
+  };
+  const handleSoinsClick = () => {
+    navigate('/soins');
+  };
+  const handleCoiffureClick = () => {
+    navigate('/coiffure');
+  };
   return (
-    <div className='bg-gray'>
+    <div className='bg-light'>
       <Header />
       <div className="row">
         <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
@@ -69,8 +101,47 @@ function BeautyCarousel() {
                       height: '150px',
                       objectFit: 'cover'
                     }}
+                    onClick={
+                      category.title === 'Parfums'
+                        ? handleParfumClick :
+                        category.title === 'Maquillage'
+                        ? handleMaquillageClick :
+                        category.title === 'Soins de la peau'
+                        ? handleSoinsClick: 
+                        category.title === 'Coiffure'
+                        ? handleCoiffureClick 
+                        : null
+                      }
                   />
-                  <h6 className="mt-2">{category.title}</h6>
+                  <h6 className="mt-2"onClick={
+                      category.title === 'Parfums'
+                        ? handleParfumClick :
+                        category.title === 'Maquillage'
+                        ? handleMaquillageClick :
+                        category.title === 'Soins de la peau'
+                        ? handleSoinsClick:
+                        category.title === 'Coiffure'
+                        ? handleCoiffureClick 
+                        : null
+                      }>{category.title}</h6>
+                </Col>
+              ))}
+            </Row>
+            <h3 className="text-center my-4">Tous les produits Beauté</h3>
+            <Row>
+              {products.map((product, index) => (
+                <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
+                  <div className="product-card">
+                    <div className="product-image-container">
+                      <img src={product.imageUrl} alt={product.title} className="product-image" />
+                    </div>
+                    <div className="product-info">
+                      <h2 className="product-title">{product.title}</h2>
+                      <p className="product-price">{product.price} DT</p>
+                      <p className="product-description">{product.description}</p>
+                      <button className="buy-now-button">Ajouter au panier</button>
+                    </div>
+                  </div>
                 </Col>
               ))}
             </Row>

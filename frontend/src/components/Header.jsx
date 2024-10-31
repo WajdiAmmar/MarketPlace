@@ -24,6 +24,39 @@ function Header() {
   const handleBeauteClick = () => {
     navigate("/beaute");
   };
+  const handleSmartphoneClick = () => {
+    navigate('/smartphone');
+  };
+  const handleOrdinateurClick = () => {
+    navigate('/ordinateur');
+  };
+  const handleSmartwatchClick = () => {
+    navigate('/smartwatch');
+  };
+  const handleTabletteClick = () => {
+    navigate('/tablette');
+  };
+  const handleElectroClick = () => {
+    navigate('/electro');
+  };
+  const handleMeubleClick = () => {
+    navigate('/meuble');
+  };
+  const handleFournituresClick = () => {
+    navigate('/fourniture');
+  };
+  const handleParfumClick = () => {
+    navigate('/parfum');
+  };
+  const handleMaquillageClick = () => {
+    navigate('/maquillage');
+  };
+  const handleSoinsClick = () => {
+    navigate('/soins');
+  };
+  const handleCoiffureClick = () => {
+    navigate('/coiffure');
+  };
   const handleMouseEnter = () => {
     setShowCategories(true); // Affiche le menu au survol
   };
@@ -178,27 +211,39 @@ function Header() {
                   <Row>
                     <Col>
                       <img
-                        src="/ordinateur.webp"
+                        src="/ordinateur.jpg"
                         alt="ordinateur"
                         className="category-img"
+                        onClick={handleOrdinateurClick}
                       />
-                      <p>Ordinateurs</p>
+                      <p onClick={handleOrdinateurClick}>Ordinateurs</p>
                     </Col>
                     <Col>
                       <img
                         src="/smartphone.jpg"
                         alt="phone"
                         className="category-img"
+                        onClick={ handleSmartphoneClick }
                       />
-                      <p>Téléphones</p>
+                      <p onClick={ handleSmartphoneClick }>Smartphones</p>
+                    </Col>
+                    <Col>
+                      <img
+                        src="/tablette.jpg"
+                        alt="smartwatches"
+                        className="category-img"
+                        onClick={handleTabletteClick}
+                      />
+                      <p onClick={handleTabletteClick}>Tablettes</p>
                     </Col>
                     <Col>
                       <img
                         src="/smartwatch.jpg"
                         alt="smartwatches"
                         className="category-img"
+                        onClick={handleSmartwatchClick}
                       />
-                      <p>Smartwatches</p>
+                      <p onClick={handleSmartwatchClick}>Smartwatches</p>
                     </Col>
                   </Row>
                 )}
@@ -209,24 +254,27 @@ function Header() {
                         src="/meuble.png"
                         alt="meuble"
                         className="category-img"
+                        onClick={handleMeubleClick}
                       />
-                      <p>Meubles</p>
+                      <p onClick={handleMeubleClick}>Meubles</p>
                     </Col>
                     <Col>
                       <img
                         src="/electromenager.png"
                         alt="electromenager"
                         className="category-img"
+                        onClick={handleElectroClick}
                       />
-                      <p>Electroménager</p>
+                      <p onClick={handleElectroClick}>Electroménager</p>
                     </Col>
                     <Col>
                       <img
                         src="/fourniturescuisines.png"
                         alt="fourniturescuisines"
                         className="category-img"
+                        onClick={handleFournituresClick}
                       />
-                      <p>Fournitures de Cuisines</p>
+                      <p onClick={handleFournituresClick} >Fournitures de Cuisines</p>
                     </Col>
                   </Row>
                   
@@ -235,27 +283,39 @@ function Header() {
                   <Row>
                     <Col>
                       <img
-                        src="/beaute.jpg"
+                        src="/soin.jpg"
                         alt="Beauté"
                         className="category-img"
+                        onClick={handleSoinsClick}
                       />
-                      <p>Maquillage</p>
+                      <p onClick={handleSoinsClick}>Soins de la peau</p>
                     </Col>
                     <Col>
                       <img
-                        src="/cremes.png"
+                        src="/Makeup.jpg"
+                        alt="Beauté"
+                        className="category-img"
+                        onClick={handleMaquillageClick}
+                      />
+                      <p onClick={handleMaquillageClick}>Maquillage</p>
+                    </Col>
+                    <Col>
+                      <img
+                        src="/Parfum-.png"
                         alt="Crèmes"
                         className="category-img"
+                        onClick={handleParfumClick}
                       />
-                      <p>Crèmes</p>
+                      <p onClick={handleParfumClick}>Parfums</p>
                     </Col>
                     <Col>
                       <img
-                        src="/outilsbeaute.png"
+                        src="/coiffure.jpg"
                         alt="outilsbeaute"
                         className="category-img"
+                        onClick={handleCoiffureClick}
                       />
-                      <p>Outils de beauté</p>
+                      <p onClick={handleCoiffureClick}>Coiffure</p>
                     </Col>
                     
                   </Row>

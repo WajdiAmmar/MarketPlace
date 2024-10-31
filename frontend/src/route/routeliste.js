@@ -12,7 +12,13 @@ import Smartphone from '../pages/produits/smartphones'
 import Ordinateur from '../pages/produits/ordinateurs'
 import Smartwatches from '../pages/produits/smartwatches'
 import Tablettes from '../pages/produits/tablette';
-
+import Parfums from '../pages/produits/parfums';
+import Maquillage from '../pages/produits/maquillage';
+import Soins from '../pages/produits/soins';
+import Coiffure from '../pages/produits/coiffure';
+import Electro from '../pages/produits/electromenager';
+import Meubles from '../pages/produits/meubles';
+import Fournitures from '../pages/produits/fournitures';
 const RouteList = () => {
   return (
     <Routes>
@@ -28,6 +34,13 @@ const RouteList = () => {
       <Route path="/ordinateur" element={<Ordinateur />}/>
       <Route path="/smartwatch" element={<Smartwatches />}/>
       <Route path="/tablette" element={<Tablettes />}/>
+      <Route path="/parfum" element={<Parfums />}/>
+      <Route path="/maquillage" element={<Maquillage />}/>
+      <Route path="/soins" element={<Soins />}/>
+      <Route path="/coiffure" element={<Coiffure />}/>
+      <Route path="/electro" element={<Electro />}/>
+      <Route path="/meuble" element={<Meubles/>}/>
+      <Route path="/fourniture" element={<Fournitures/>}/>
     </Routes>
   );
 };

@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import '../../Styles/card.css';
+import Sidebar from '../../components/Sidebar';
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
+import { Container } from 'react-bootstrap';
 
 function Tablettes() {
   const [products, setProducts] = useState([]);
-  
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -21,18 +26,34 @@ function Tablettes() {
   }, []);
 
   return (
-    <div>
-      <h1>Tablettes</h1>
-      <ul>
-        {products.map(product => (
-          <li key={product.id}>
-            <h2>{product.title}</h2>
-            <p>{product.description}</p>
-            <p>{product.price} €</p>
-            <img src={product.imageUrl} alt={product.title} style={{ width: '100px' }} />
-          </li>
-        ))}
-      </ul>
+    <div className='bg-light'>
+      <Header />
+      <div className="row">
+        <div className="sidebarArea col-xl-2 sidebar">
+          <Sidebar />
+        </div>
+        <div className="col-xl-10">
+          <Container>
+            <h2 className="text-center my-4">Tablettes</h2>
+            <div className="product-row">
+              {products.map(product => (
+                <div key={product.id} className="product-card">
+                  <div className="product-image-container">
+                    <img src={product.imageUrl} alt={product.title} className="product-image" />
+                  </div>
+                  <div className="product-info">
+                    <h2 className="product-title">{product.title}</h2>
+                    <p className="product-price">{product.price} DT</p>
+                    <p className="product-description">{product.description}</p>
+                    <button className="buy-now-button">Ajouter au panier</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Container>
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }

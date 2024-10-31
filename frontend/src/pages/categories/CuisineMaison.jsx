@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col,Carousel } from 'react-bootstrap';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import Sidebar from '../../components/Sidebar'
+import Sidebar from '../../components/Sidebar';
+import { useNavigate } from 'react-router-dom';
+
 
 const cuisineMaisonCategories = [
   { title: 'Électroménager', image: '/electromenager.png' },
@@ -17,8 +19,36 @@ const highTechItems = [
 
 
 function CuisineMaison() {
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/products/category/Cuisine et maison');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des produits');
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleElectroClick = () => {
+    navigate('/electro');
+  };
+  const handleMeubleClick = () => {
+    navigate('/meuble');
+  };
+  const handleFournituresClick = () => {
+    navigate('/fourniture');
+  };
   return (
-    <div className='bg-gray'>
+    <div className='bg-light'>
     <Header />
     <div className="row">
 <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
@@ -66,11 +96,47 @@ function CuisineMaison() {
                 height: '150px',
                 objectFit: 'cover' // Garde un bon rendu dans un cercle
               }}
+              onClick={
+                category.title==='Électroménager'
+                ? handleElectroClick:
+                category.title==='Meubles'
+                ? handleMeubleClick:
+                category.title==='Fournitures de Cuisines'
+                ? handleFournituresClick:
+                null
+              }
             />
-            <h6 className="mt-2">{category.title}</h6>
+            <h6 className="mt-2"
+            onClick={
+              category.title==='Électroménager'
+              ? handleElectroClick:
+              category.title==='Meubles'
+              ? handleMeubleClick:
+              category.title==='Fournitures de Cuisines'
+              ? handleFournituresClick:
+              null
+            }>{category.title}</h6>
           </Col>
         ))}
       </Row>
+      <h3 className="text-center my-4">Tous les produits Cuisines et Maisons</h3>
+            <Row>
+              {products.map((product, index) => (
+                <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
+                  <div className="product-card">
+                    <div className="product-image-container">
+                      <img src={product.imageUrl} alt={product.title} className="product-image" />
+                    </div>
+                    <div className="product-info">
+                      <h2 className="product-title">{product.title}</h2>
+                      <p className="product-price">{product.price} DT</p>
+                      <p className="product-description">{product.description}</p>
+                      <button className="buy-now-button">Ajouter au panier</button>
+                    </div>
+                  </div>
+                </Col>
+              ))}
+            </Row>
     </Container>
     </div>
     </div>
