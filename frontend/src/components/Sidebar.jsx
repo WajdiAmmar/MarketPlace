@@ -3,7 +3,7 @@ import '../Styles/sidebar.css';
 import { Link , useNavigate } from 'react-router-dom'; 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const handleLoginClick = () => {     
+  const handleAddProductClick = () => {     
     navigate('/ajoutProduit'); 
   };  
   const showMobilemenu = () => {
@@ -20,16 +20,16 @@ const Sidebar = () => {
         </Button>
           <ul className="list">
           <li className="list-group-item">
-              <Link to="#">{('Tableaudebord')}</Link>
+              <Link to="#">{('Filtrage')}</Link>
             </li>
             <li className="list-group-item">
-              <Link to="#">{('Gatégories')}</Link>
+              <Link to="#">{('Catégories')}</Link>
             </li>
             <li className="list-group-item">
               <Link to="#">{('Produit')}</Link>
             </li>
           </ul>
-          <Button variant="outline-light" id="connecter-btn" onClick={handleLoginClick}>Ajouter Votre Produit</Button>
+          <Button block="true" variant="outline-light" id="connecter-btn" onClick={handleAddProductClick}>Ajouter Votre Produit</Button>
         </div>
   );
 };
