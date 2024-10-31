@@ -5,22 +5,54 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import '../Styles/Ajoutproduit.css';
 
+// Exemples de produits selon les catégories
+const productsByCategory = {
+  "High-Tech": [
+    { id: 1, name: "Ordinateur" },
+    { id: 2, name: "Smartphone" },
+    { id: 3, name: "Tablette" },
+    { id: 4, name: "Smartwatch" },
+  ],
+  "Cuisine et maison": [
+    { id: 4, name: "Casserole" },
+    { id: 5, name: "Grille-Pain" },
+  ],
+  "Beauté": [
+    { id: 6, name: "Crème Hydratante" },
+    { id: 7, name: "Parfum" },
+  ],
+};
+
 const Ajoutproduit = () => {
   const [product, setProduct] = useState({
     title: "",
     price: "",
     category: "",
+    Product: "",
     condition: "",
     description: "",
     image: null,
+      // Ajout d'un champ pour le produit sélectionné
   });
 
   const [previewImage, setPreviewImage] = useState(null);
   const fileInputRef = useRef(null);
+  const [availableProducts, setAvailableProducts] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
+  };
+
+  const handleCategoryChange = (e) => {
+    const selectedCategory = e.target.value;
+    setProduct({ ...product, category: selectedCategory, Product: "" });
+    // Mettre à jour les produits disponibles selon la catégorie sélectionnée
+    if (selectedCategory) {
+      setAvailableProducts(productsByCategory[selectedCategory]);
+    } else {
+      setAvailableProducts([]);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -41,20 +73,21 @@ const Ajoutproduit = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Empêcher le comportement par défaut du formulaire
-
-    const formData = new FormData(); // Créer un nouvel objet FormData
+    e.preventDefault();
+    const formData = new FormData();
     formData.append('title', product.title);
     formData.append('price', product.price);
     formData.append('category', product.category);
+    formData.append('Product', product.Product);
     formData.append('condition', product.condition);
     formData.append('description', product.description);
-    formData.append('image', product.image); // Ajouter le fichier image
+    formData.append('image', product.image);
+     
 
     try {
       const response = await fetch('http://localhost:5000/api/products/add', {
         method: 'POST',
-        body: formData, // Ajouter formData au corps de la requête
+        body: formData,
       });
 
       if (!response.ok) {
@@ -64,16 +97,17 @@ const Ajoutproduit = () => {
       const data = await response.json();
       console.log('Produit ajouté avec succès:', data);
 
-      // Réinitialiser le formulaire après soumission
       setProduct({
         title: "",
         price: "",
         category: "",
+        Product: "",
         condition: "",
         description: "",
         image: null,
+         
       });
-      setPreviewImage(null); // Réinitialiser l'aperçu
+      setPreviewImage(null);
     } catch (error) {
       console.error('Erreur lors de l\'ajout du produit:', error);
     }
@@ -115,7 +149,7 @@ const Ajoutproduit = () => {
               <Form.Select
                 name="category"
                 value={product.category}
-                onChange={handleInputChange}
+                onChange={handleCategoryChange}
                 required
               >
                 <option value="">Sélectionnez une catégorie</option>
@@ -125,6 +159,22 @@ const Ajoutproduit = () => {
               </Form.Select>
             </Form.Group>
             
+            {/* Select pour les produits selon la catégorie */}
+            <Form.Group className="mb-4" controlId="formProduct">
+              <Form.Label>Produit</Form.Label>
+              <Form.Select
+                name="Product" 
+                onChange={handleInputChange}
+                value={product.Product}
+                required
+              >
+                <option value="">Sélectionnez un produit</option>
+                {availableProducts.map((prod) => (
+                  <option key={prod.id} value={prod.name}>{prod.name}</option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
             <Form.Group className="mb-4" controlId="formCondition">
               <Form.Label>État</Form.Label>
               <Form.Select
@@ -202,6 +252,7 @@ const Ajoutproduit = () => {
                 <p><strong>Titre: </strong>{product.title}</p>
                 <p><strong>Prix: </strong>{product.price} TND</p>
                 <p><strong>Catégorie: </strong>{product.category}</p>
+                <p><strong>Produit: </strong>{product.Product}</p> 
                 <p><strong>État: </strong>{product.condition}</p>
                 <p><strong>Description: </strong>{product.description}</p>
               </div>

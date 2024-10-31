@@ -10,7 +10,8 @@ import Beaute from '../pages/categories/Beaute';
 import Panier from '../pages/panier'
 import Smartphone from '../pages/produits/smartphones'
 import Ordinateur from '../pages/produits/ordinateurs'
-
+import Smartwatches from '../pages/produits/smartwatches'
+import Tablettes from '../pages/produits/tablette';
 
 const RouteList = () => {
   return (
@@ -25,6 +26,8 @@ const RouteList = () => {
       <Route path="/panier" element={<Panier />} />
       <Route path="/smartphone" element={<Smartphone />}/>
       <Route path="/ordinateur" element={<Ordinateur />}/>
+      <Route path="/smartwatch" element={<Smartwatches />}/>
+      <Route path="/tablette" element={<Tablettes />}/>
     </Routes>
   );
 };

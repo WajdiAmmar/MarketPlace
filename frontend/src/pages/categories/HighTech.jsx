@@ -29,6 +29,12 @@ function HighTechCarousel() {
   const handleOrdinateurClick = () => {
     navigate('/ordinateur');
   };
+  const handleSmartwatchClick = () => {
+    navigate('/smartwatch');
+  };
+  const handleTabletteClick = () => {
+    navigate('/tablette');
+  };
 
   return (
     <div className='bg-white'>
@@ -83,6 +89,10 @@ function HighTechCarousel() {
                         ? handleSmartphoneClick
                         : category.title === 'Laptops'
                         ? handleOrdinateurClick
+                        : category.title === 'Smartwatches'
+                        ? handleSmartwatchClick
+                        : category.title === 'Tablettes'
+                        ? handleTabletteClick
                         : null
                     } // Clic sur l’image
                   />
@@ -93,6 +103,10 @@ function HighTechCarousel() {
                         ? handleSmartphoneClick
                         : category.title === 'Laptops'
                         ? handleOrdinateurClick
+                        : category.title === 'Smartwatches'
+                        ? handleSmartwatchClick
+                        : category.title === 'Tablettes'
+                        ? handleTabletteClick
                         : null
                     } // Clic sur le titre
                   >
