@@ -6,7 +6,7 @@ function Ordinateur() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products/category/High-Tech');
+        const response = await fetch('http://localhost:5000/api/products/product/Ordinateur');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des produits');
         }
@@ -22,7 +22,7 @@ function Ordinateur() {
 
   return (
     <div>
-      <h1>Smartphones</h1>
+      <h1>Ordinateurs</h1>
       <ul>
         {products.map(product => (
           <li key={product.id}>

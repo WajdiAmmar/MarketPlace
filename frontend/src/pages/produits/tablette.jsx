@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-function Smartphones() {
+function Tablettes() {
   const [products, setProducts] = useState([]);
   
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products/product/Smartphone');
+        const response = await fetch('http://localhost:5000/api/products/product/Tablette');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des produits');
         }
@@ -22,7 +22,7 @@ function Smartphones() {
 
   return (
     <div>
-      <h1>Smartphones</h1>
+      <h1>Tablettes</h1>
       <ul>
         {products.map(product => (
           <li key={product.id}>
@@ -37,4 +37,4 @@ function Smartphones() {
   );
 }
 
-export default Smartphones;
+export default Tablettes;

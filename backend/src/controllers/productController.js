@@ -1,7 +1,7 @@
 // src/controllers/productController.js
 const { firestore, storage } = require('../config/firebase'); // Assurez-vous d'importer Firestore et Storage
 const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
-const { collection, addDoc, query, where, getDocs } = require('firebase/firestore'); // Ajoutez query, where et getDocs
+const { collection, addDoc, query, where, getDocs, getDoc } = require('firebase/firestore'); // Ajoutez getDoc si besoin
 
 // Fonction pour ajouter un produit
 const addProduct = async (req, res) => {
@@ -9,11 +9,11 @@ const addProduct = async (req, res) => {
     console.log("Requête reçue :", req.body); // Log le corps de la requête
     console.log("Fichier reçu :", req.file); // Log le fichier reçu
     
-    const { title, price, category, condition, description } = req.body;
+    const { title, price, category, Product, condition, description } = req.body; // Ajout de Product
     const image = req.file; // Utilisé si tu as configuré multer pour gérer les images
 
     // Vérification des champs requis
-    if (!title || !price || !category || !condition || !description) {
+    if (!title || !price || !category || !Product || !condition || !description) { // Vérification ajoutée pour Product
       return res.status(400).json({ message: "Tous les champs sont requis." });
     }
 
@@ -32,6 +32,7 @@ const addProduct = async (req, res) => {
         title,
         price: parseFloat(price),
         category,
+        Product, 
         condition,
         description,
         imageUrl,
@@ -52,6 +53,31 @@ const addProduct = async (req, res) => {
   }
 };
 
+const getProductByProduct = async (req, res) => {
+  try {
+    const productField = req.params.Product;
+    console.log("Recherche de produits avec Product =", productField);
+
+    const productsRef = collection(firestore, 'products');
+    const q = query(productsRef, where('Product', '==', productField));
+
+    const querySnapshot = await getDocs(q);
+    const products = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    if (products.length === 0) {
+      console.log("Aucun produit trouvé pour Product =", productField);
+      return res.status(404).json({ message: "Aucun produit trouvé." });
+    }
+
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Erreur lors de la récupération du produit :", error);
+    return res.status(500).json({ message: "Erreur lors de la récupération du produit" });
+  }
+};
 // Fonction pour obtenir les produits par catégorie
 const getProductsByCategory = async (req, res) => {
   try {
@@ -76,4 +102,4 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, getProductsByCategory };
+module.exports = { addProduct, getProductByProduct, getProductsByCategory };
