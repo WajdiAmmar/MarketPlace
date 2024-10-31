@@ -55,7 +55,7 @@ const Panier = () => {
   };
 
   return (
-    <div className="bg-gray">
+    <div className="bg-white">
       <Header />
       <div className="row">
         <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">

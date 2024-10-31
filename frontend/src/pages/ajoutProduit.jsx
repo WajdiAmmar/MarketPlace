@@ -14,12 +14,15 @@ const productsByCategory = {
     { id: 4, name: "Smartwatch" },
   ],
   "Cuisine et maison": [
-    { id: 4, name: "Casserole" },
-    { id: 5, name: "Grille-Pain" },
+    { id: 4, name: "Meubles" },
+    { id: 5, name: "Fournitures de cuisines" },
+    { id: 6, name: "Électroménager" },
   ],
   "Beauté": [
-    { id: 6, name: "Crème Hydratante" },
-    { id: 7, name: "Parfum" },
+    { id: 7, name: "Maquillage" },
+    { id: 8, name: "Parfum" },
+    { id: 9, name: "Soins de Peau" },
+    { id: 10, name: "Coiffure" },
   ],
 };
 
@@ -114,7 +117,7 @@ const Ajoutproduit = () => {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-light">
       <Header />
       <Row>
         <Col md={3} className="p-4 bg-black text-white">

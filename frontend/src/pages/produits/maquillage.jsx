@@ -5,13 +5,13 @@ import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import { Container, Row, Col } from 'react-bootstrap';
 
-function Smartphones() {
+function  Maquillage() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products/product/Smartphone');
+        const response = await fetch('http://localhost:5000/api/products/product/Maquillage');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des produits');
         }
@@ -34,7 +34,7 @@ function Smartphones() {
         </div>
         <div className="col-xl-10">
           <Container>
-            <h2 className="text-center my-4">High-Tech - Smartphones</h2>
+            <h2 className="text-center my-4">Maquillage</h2>
             <Row>
               {products.map(product => (
                 <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
@@ -60,4 +60,4 @@ function Smartphones() {
   );
 }
 
-export default Smartphones;
+export default Maquillage;
