@@ -102,4 +102,29 @@ const getProductsByCategory = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, getProductByProduct, getProductsByCategory };
+const getAllProducts = async (req, res) => {
+  try {
+    console.log("Récupération de tous les produits.");
+
+    const productsRef = collection(firestore, 'products');
+    const querySnapshot = await getDocs(productsRef);
+    const products = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    if (products.length === 0) {
+      console.log("Aucun produit trouvé.");
+      return res.status(404).json({ message: "Aucun produit trouvé." });
+    }
+
+    console.log("Produits récupérés :", products); // Log des produits récupérés
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des produits :", error);
+    return res.status(500).json({ message: "Erreur lors de la récupération des produits" });
+  }
+};
+
+// Ajoutez cette fonction à l'exportation
+module.exports = { addProduct, getProductByProduct, getProductsByCategory, getAllProducts };
