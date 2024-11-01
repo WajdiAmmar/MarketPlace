@@ -1,14 +1,18 @@
 import React from 'react';
-import '../Styles/SearchBar.css'; // Import du fichier CSS
+import '../Styles/SearchBar.css';
 
-
-function SearchBar() {
+function SearchBar({ searchTerm, onSearchChange }) {
   return (
     <div className="search-container">
       <div className="search-bar">
-        <input type="text" placeholder="E-commerce" className="search-input" />
+        <input 
+          type="text" 
+          placeholder="Rechercher" 
+          className="search-input" 
+          value={searchTerm} 
+          onChange={(e) => onSearchChange(e.target.value)} 
+        />
         <button className="search-button">
-          {/* Utilise le chemin relatif à public pour l'image */}
           <img src="/search-icon.png" alt="search" className="search-icon" />
         </button>
       </div>

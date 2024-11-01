@@ -1,19 +1,19 @@
 // src/controllers/productController.js
 const { firestore, storage } = require('../config/firebase'); // Assurez-vous d'importer Firestore et Storage
 const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
-const { collection, addDoc, query, where, getDocs, getDoc } = require('firebase/firestore'); // Ajoutez getDoc si besoin
+const { collection, addDoc, query, where, getDocs } = require('firebase/firestore'); // Ajoutez getDoc si besoin
 
 // Fonction pour ajouter un produit
 const addProduct = async (req, res) => {
   try {
     console.log("Requête reçue :", req.body); // Log le corps de la requête
     console.log("Fichier reçu :", req.file); // Log le fichier reçu
-    
-    const { title, price, category, Product, condition, description } = req.body; // Ajout de Product
+
+    const { title, price, category, Product, condition, description, keywords } = req.body; // Ajout de keywords
     const image = req.file; // Utilisé si tu as configuré multer pour gérer les images
 
     // Vérification des champs requis
-    if (!title || !price || !category || !Product || !condition || !description) { // Vérification ajoutée pour Product
+    if (!title || !price || !category || !Product || !condition || !description || !keywords) { // Vérification ajoutée pour keywords
       return res.status(400).json({ message: "Tous les champs sont requis." });
     }
 
@@ -27,16 +27,19 @@ const addProduct = async (req, res) => {
       // Récupérer l'URL de l'image
       const imageUrl = await getDownloadURL(imageRef);
 
-      // Créer le nouveau produit avec l'URL de l'image
+      const keywordsArray = JSON.parse(keywords); 
+
+
       const newProduct = {
-        title,
-        price: parseFloat(price),
-        category,
-        Product, 
-        condition,
-        description,
-        imageUrl,
-        createdAt: new Date().toISOString(),
+          title,
+          price: parseFloat(price),
+          category,
+          Product,
+          condition,
+          description,
+          imageUrl,
+          keywords: keywordsArray, // Stocker les mots clés sous forme de tableau
+          createdAt: new Date().toISOString(),
       };
 
       // Ajouter le produit à Firestore
@@ -53,6 +56,7 @@ const addProduct = async (req, res) => {
   }
 };
 
+// Fonction pour obtenir un produit par Product
 const getProductByProduct = async (req, res) => {
   try {
     const productField = req.params.Product;
@@ -78,6 +82,7 @@ const getProductByProduct = async (req, res) => {
     return res.status(500).json({ message: "Erreur lors de la récupération du produit" });
   }
 };
+
 // Fonction pour obtenir les produits par catégorie
 const getProductsByCategory = async (req, res) => {
   try {

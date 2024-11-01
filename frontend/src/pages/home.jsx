@@ -1,54 +1,71 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';  // Importer le Header
-import MainBanner from '../components/MainBanner';  // Importer le MainBanner
-import CategoriesGrid from '../components/CategoriesGrid';  // Importer la grille des catégories
-import Footer from '../components/Footer';  // Importer le Footer
+import Header from '../components/Header';
+import CategoriesGrid from '../components/CategoriesGrid';
+import Footer from '../components/Footer';
 import SearchBar from '../components/SearchBar';
 import Sidebar from '../components/Sidebar';
 import CarouselComponent from '../components/CarouselComponent';
-import { Container, Row, Col } from 'react-bootstrap';  // Importer les composants de Bootstrap
+import { Container, Row, Col } from 'react-bootstrap';
 
 const Home = () => {
-  const [products, setProducts] = useState([]); // État pour stocker les produits
+  const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPriceRange, setSelectedPriceRange] = useState([0, 20000]);
+  const [selectedCategory, setSelectedCategory] = useState(''); // État pour la catégorie sélectionnée
 
-  // Fonction pour récupérer tous les produits
   useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/products/products'); // Assurez-vous que le chemin est correct
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des produits');
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/products/products');
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des produits');
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des produits :", error);
       }
-      const data = await response.json(); // Convertir la réponse en JSON
-      setProducts(data); // Mettre à jour l'état avec les produits récupérés
-    } catch (error) {
-      console.error("Erreur lors de la récupération des produits :", error);
-    }
-  };
-
-  // Utiliser useEffect pour récupérer les produits au chargement du composant
+    };
 
     fetchProducts();
-  }, []); // Le tableau vide signifie que cela ne s'exécute qu'au chargement initial
+  }, []);
+
+  // Filtrer les produits par terme de recherche, catégorie et plage de prix
+  const filteredProducts = products.filter(product => {
+    const searchLower = searchTerm.toLowerCase();
+    const isInPriceRange = product.price >= selectedPriceRange[0] && product.price <= selectedPriceRange[1];
+    const matchesCategory = selectedCategory === '' || product.category === selectedCategory;
+    const matchesSearchTerm = 
+      product.title.toLowerCase().includes(searchLower) ||
+      product.Product.toLowerCase().includes(searchLower) ||
+      product.description.toLowerCase().includes(searchLower) ||
+      (product.keywords && product.keywords.some(keyword =>
+        keyword.toLowerCase().includes(searchLower))
+      );
+
+    return matchesSearchTerm && isInPriceRange && matchesCategory;
+  });
 
   return (
     <div className="App bg-light">
       <Header />
       <div className="row">
         <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
-          <Sidebar />
+          <Sidebar 
+            onPriceChange={setSelectedPriceRange} 
+            onCategoryChange={setSelectedCategory} // Passer la fonction de changement de catégorie
+          />
         </div>
-        <div className="col-xl-10 main-content"> 
-          <SearchBar />
+        <div className="col-xl-10 main-content">
+          <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
           <CarouselComponent />
           <div style={{ marginTop: '30px' }} />
           <CategoriesGrid />
           
-          {/* Affichage des produits */}
           <Container>
             <h2 className="text-center my-4">Tous les Produits</h2>
             <Row>
-              {products.map(product => (
+              {filteredProducts.map(product => (
                 <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
                   <div className="product-card">
                     <div className="product-image-container">

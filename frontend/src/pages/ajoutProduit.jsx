@@ -26,6 +26,21 @@ const productsByCategory = {
   ],
 };
 
+// Mots clés associés à chaque produit
+const keywordsByProduct = {
+  "Ordinateur": ["ordinateur", "PC", "technologie", "high-tech", "portable"],
+  "Smartphone": ["smartphone", "téléphone", "mobile", "technologie", "high-tech","telephone"],
+  "Tablette": ["tablette", "écran tactile", "high-tech", "mobile"],
+  "Smartwatch": ["montre intelligente", "high-tech", "wearable", "technologie"],
+  "Meubles": ["meubles", "déco", "maison", "mobilier"],
+  "Fournitures de cuisines": ["cuisine", "fournitures", "maison", "accessoires"],
+  "Électroménager": ["électroménager", "maison", "cuisine", "appareil"],
+  "Maquillage": ["beauté", "maquillage", "cosmétiques", "soins"],
+  "Parfum": ["parfum", "beauté", "fragrance", "soins"],
+  "Soins de Peau": ["beauté", "soins", "peau", "cosmétiques"],
+  "Coiffure": ["coiffure", "beauté", "cheveux", "soins"],
+};
+
 const Ajoutproduit = () => {
   const [product, setProduct] = useState({
     title: "",
@@ -35,7 +50,6 @@ const Ajoutproduit = () => {
     condition: "",
     description: "",
     image: null,
-      // Ajout d'un champ pour le produit sélectionné
   });
 
   const [previewImage, setPreviewImage] = useState(null);
@@ -84,8 +98,12 @@ const Ajoutproduit = () => {
     formData.append('Product', product.Product);
     formData.append('condition', product.condition);
     formData.append('description', product.description);
+    
+    // Ajout des mots clés en fonction du produit sélectionné
+    const keywords = keywordsByProduct[product.Product] || [];
+    formData.append('keywords', JSON.stringify(keywords)); // Stocker les mots clés sous forme de JSON
+
     formData.append('image', product.image);
-     
 
     try {
       const response = await fetch('http://localhost:5000/api/products/add', {
@@ -100,6 +118,7 @@ const Ajoutproduit = () => {
       const data = await response.json();
       console.log('Produit ajouté avec succès:', data);
 
+      // Réinitialiser le formulaire
       setProduct({
         title: "",
         price: "",
@@ -108,7 +127,6 @@ const Ajoutproduit = () => {
         condition: "",
         description: "",
         image: null,
-         
       });
       setPreviewImage(null);
     } catch (error) {
