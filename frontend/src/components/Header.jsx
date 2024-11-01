@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Navbar, Nav, Container, Button, Row, Col } from "react-bootstrap";
 import "../Styles/Header.css";
 import { useNavigate } from "react-router-dom";
+import { useCart } from '../context/CartContext'; // Importer le contexte du panier
 
 function Header() {
   const navigate = useNavigate();
+  const { cartItems } = useCart(); // Récupérer les items du panier
+  const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0); // Calculer la quantité totale
   const [showCategories, setShowCategories] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null); // État pour la catégorie active
   const [activeLink, setActiveLink] = useState(""); // État pour le lien actif
@@ -99,10 +102,28 @@ function Header() {
               </h1>
             </Col>
             <Col>
-              <Button variant="outlined" id="panier-btn" onClick={handlePanierClick}>
-                <img src="/panier.png" alt="Logo" />
-                Panier
-              </Button>
+              <div style={{ position: 'relative' }}>
+                {/* Compteur de produits dans le panier */}
+                {totalQuantity > 0 && (
+                  <span className="cart-count" style={{
+                    position: 'absolute',
+                    Left: '-20px',
+                    background: 'red',
+                    color: 'white',
+                    borderRadius: '50%',
+                    padding: '5px 10px',
+                    fontSize: '9px',
+                    marginLeft:'90px',
+                    marginTop:'20px'
+                  }}>
+                    {totalQuantity}
+                  </span>
+                )}
+                <Button variant="outlined" id="panier-btn" onClick={handlePanierClick}>
+                  <img src="/panier.png" alt="Logo" />
+                  Panier
+                </Button>
+              </div>
             </Col>
           </Row>
         </Container>

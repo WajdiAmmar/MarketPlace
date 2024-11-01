@@ -3,56 +3,19 @@ import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import { useCart } from '../context/CartContext'; // Importer le contexte
+import CheckoutForm from './CheckoutForm'; // Importer le formulaire
 
 const Panier = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'Bottes Benyl XL - Doublure Softex',
-      price: 77.0,
-      quantity: 1,
-      category: 'Chaussures',
-      condition: 'Neuf',
-      description: 'Bottes de protection confortables avec doublure Softex, idéales pour la randonnée en terrain humide.',
-      image: 'https://via.placeholder.com/150',
-    },
-    {
-      id: 2,
-      name: 'Gants de Protection en Cuir',
-      price: 25.0,
-      quantity: 2,
-      category: 'Accessoires',
-      condition: 'Neuf',
-      description: 'Gants de protection résistants, fabriqués en cuir véritable pour une durabilité maximale.',
-      image: 'https://via.placeholder.com/150',
-    },
-  ]);
-
-  const incrementQuantity = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  const decrementQuantity = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
-
-  const removeFromCart = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
+  const { cartItems, incrementQuantity, decrementQuantity, removeFromCart } = useCart(); // Accéder aux items du panier et aux fonctions
+  const [showCheckout, setShowCheckout] = useState(false); // État pour gérer l'affichage du formulaire
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
+
+  const handleShowCheckout = () => setShowCheckout(true); // Ouvrir le formulaire
+  const handleCloseCheckout = () => setShowCheckout(false); // Fermer le formulaire
 
   return (
     <div className="bg-white">
@@ -73,21 +36,12 @@ const Panier = () => {
                     {cartItems.map((item) => (
                       <Row key={item.id} className="mb-4 align-items-center">
                         <Col xs={3}>
-                          <img src={item.image} alt={item.name} width="150" />
+                          <img src={item.imageUrl} alt={item.title} width="150" /> {/* Afficher l'image */}
                         </Col>
                         <Col xs={8}>
-                          <p className="mb-1 font-weight-bold">{item.name}</p>
+                          <p className="mb-1 font-weight-bold">{item.title}</p>
                           <p className="mb-0 text-muted">
                             <strong>Prix:</strong> {item.price.toFixed(2)} DT
-                          </p>
-                          <p className="mb-0 text-muted">
-                            <strong>Catégorie:</strong> {item.category}
-                          </p>
-                          <p className="mb-0 text-muted">
-                            <strong>État:</strong> {item.condition}
-                          </p>
-                          <p className="mb-0 text-muted">
-                            <strong>Description:</strong> {item.description}
                           </p>
                           <div className="d-flex align-items-center my-3">
                             <Button
@@ -139,13 +93,14 @@ const Panier = () => {
                         <span>{calculateTotal().toFixed(2)} DT</span>
                       </div>
                       <Button
-                        variant="outine-light"
+                        variant="outline-light"
                         className="w-100 my-3 bg-black"
                         id="connecter-btn"
                         size="lg"
+                        onClick={handleShowCheckout} // Ouvrir le formulaire au clic
                       >
                         Valider mon panier
-                      </Button >
+                      </Button>
                       <p className="text-center">
                         <a href="/" className='text-warning'>Ou poursuivre les achats</a>
                       </p>
@@ -158,6 +113,7 @@ const Panier = () => {
         </div>
       </div>
       <Footer />
+      <CheckoutForm show={showCheckout} handleClose={handleCloseCheckout} /> {/* Afficher le formulaire ici */}
     </div>
   );
 };
