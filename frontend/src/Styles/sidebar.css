@@ -1,5 +1,4 @@
 
-
 /* Quand la sidebar est ouverte */
 .sidebar.showSidebar {
   transform: translateX(0);
@@ -19,6 +18,10 @@
 
 /* Style des liens */
 .list-group-item a {
+  color: #F9A825;
+  text-decoration: none;
+}
+label{
   color: #F9A825;
   text-decoration: none;
 }
