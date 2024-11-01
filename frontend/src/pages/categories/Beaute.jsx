@@ -17,7 +17,7 @@ const beautyCategories = [
   { title: 'Soins de la peau', image: '/soin.jpg' },
   { title: 'Maquillage', image: '/makeup.jpg' },
   { title: 'Parfums', image: '/Parfum-.png' },
-  { title: 'Coiffure', image: '/cheveux.jpg' }
+  { title: 'Coiffure', image: '/coiffure.jpg' }
 ];
 
 
