@@ -15,7 +15,7 @@ function CategoriesGrid() {
       <Row className="justify-content-center">
         {categories.map((category, index) => (
           <Col md={4} key={index}> 
-            <Link to={category.link}> {/* Utilisation de Link pour la redirection */}
+            <Link to={category.link}>
               <Card className="category-card">
                 <Card.Img 
                   variant="top" 
