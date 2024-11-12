@@ -9,11 +9,11 @@ const addProduct = async (req, res) => {
     console.log("Requête reçue :", req.body); // Log le corps de la requête
     console.log("Fichier reçu :", req.file); // Log le fichier reçu
 
-    const { title, price, category, Product, condition, description, keywords } = req.body; // Ajout de keywords
+    const { title, price, category, Product, condition, description, keywords } = req.body; 
     const image = req.file; // Utilisé si tu as configuré multer pour gérer les images
 
     // Vérification des champs requis
-    if (!title || !price || !category || !Product || !condition || !description || !keywords) { // Vérification ajoutée pour keywords
+    if (!title || !price || !category || !Product || !condition || !description || !keywords) { 
       return res.status(400).json({ message: "Tous les champs sont requis." });
     }
 
@@ -87,7 +87,7 @@ const getProductByProduct = async (req, res) => {
 const getProductsByCategory = async (req, res) => {
   try {
     const category = req.params.category;
-    console.log("Catégorie reçue :", category); // Log de la catégorie reçue
+    console.log("Catégorie reçue :", category);
 
     const productsRef = collection(firestore, 'products');
     const q = query(productsRef, where('category', '==', category));
