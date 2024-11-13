@@ -22,24 +22,24 @@ function Login() {
         try {
             const response = await fetch('http://localhost:5000/api/auth/signin', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, motDePasse }),
             });
             const data = await response.json();
+            console.log("Données reçues du serveur :", data);
+    
             if (response.ok) {
-                alert(data.message); // Message de succès
-                navigate('/'); // Rediriger vers la page d'accueil ou tableau de bord
+                alert(`Connexion réussie en tant que ${data.role}`);
+                navigate('/');
             } else {
-                alert(data.message); // Message d'erreur
+                alert(data.message);
             }
         } catch (error) {
-            console.error('Erreur lors de la connexion : ', error);
+            console.error("Erreur lors de la requête de connexion :", error);
             alert('Erreur lors de la connexion. Veuillez réessayer.');
         }
     };
-
+    
     return (
         <Container>
             <Row className='d-flex justify-content-center align-items-center h-100'>
