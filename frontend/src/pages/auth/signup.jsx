@@ -15,7 +15,6 @@ function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      // Créer un utilisateur en faisant une requête POST à votre serveur
       const response = await fetch('http://localhost:5000/api/auth/signup', {
         method: 'POST',
         headers: {
@@ -30,7 +29,6 @@ function Signup() {
         }),
       });
 
-      // Vérifier la réponse du serveur
       if (!response.ok) {
         throw new Error('Erreur lors de l\'inscription');
       }
@@ -46,10 +44,6 @@ function Signup() {
     }
   };
 
-  const handleHomeClick = () => {
-    navigate('/'); // Rediriger vers la page d'accueil
-  };
-
   return (
     <Container>
       <Row className='d-flex justify-content-center align-items-center h-100'>
@@ -61,9 +55,6 @@ function Signup() {
               </Col>
               <Col md='6'>
                 <Card.Body className='text-black d-flex flex-column justify-content-center'>
-                  <div className="mx-auto mb-3">
-                    <Image src="/logo.png" alt="Logo" className="logo-img" fluid onClick={handleHomeClick} />
-                  </div> 
                   <Form>
                     <Form.Group className="mb-4">
                       <Form.Control
@@ -81,7 +72,6 @@ function Signup() {
                         onChange={(e) => setPrenom(e.target.value)}
                       />
                     </Form.Group>
-
                     <Form.Group className="mb-4">
                       <Form.Label className="fw-bold">Genre:</Form.Label>
                       <Form.Check 
@@ -109,7 +99,6 @@ function Signup() {
                         onChange={(e) => setGenre(e.target.value)} 
                       />
                     </Form.Group>
-
                     <Form.Group className="mb-4">
                       <Form.Control
                         placeholder='Adresse Email'
@@ -126,15 +115,6 @@ function Signup() {
                         onChange={(e) => setMotDePasse(e.target.value)}
                       />
                     </Form.Group>
-                    <Row>
-                      <Col>
-                        <p className="small mb-3 pb-lg-2">
-                          <a className="text-black-50" href="#!" onClick={() => navigate('/Login')}>
-                            Vous avez déjà un compte ?
-                          </a>
-                        </p>
-                      </Col>
-                    </Row>
                     <Button
                       variant="warning"
                       size='lg'
@@ -144,16 +124,6 @@ function Signup() {
                       S'inscrire
                     </Button>
                   </Form>
-                  <p className="mt-3">Ou :</p>
-                  <Button variant="light" className="mb-2 w-100" size='lg'>
-                    <i className="fab fa-google mx-3 google-icon"></i> Continuer Avec Google
-                  </Button>
-                  <Button variant="light" className="mb-2 w-100" size='lg'>
-                    <i className="fab fa-facebook mx-3 facebook-icon"></i> Continuer Avec Facebook
-                  </Button>
-                  <Button variant="light" className="mb-2 w-100" size='lg'>
-                    <i className="fab fa-twitter mx-3 twitter-icon"></i> Continuer Avec Twitter
-                  </Button>
                 </Card.Body>
               </Col>
             </Row>
