@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Importer useNavigate
 import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
-import { useCart } from '../context/CartContext'; // Importer le contexte
-import CheckoutForm from './CheckoutForm'; // Importer le formulaire
+import { useCart } from '../context/CartContext';
+import "../Styles/checkout.css";
 
 const Panier = () => {
-  const { cartItems, incrementQuantity, decrementQuantity, removeFromCart } = useCart(); // Accéder aux items du panier et aux fonctions
-  const [showCheckout, setShowCheckout] = useState(false); // État pour gérer l'affichage du formulaire
+  const { cartItems, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
+  const navigate = useNavigate();  // Hook pour la navigation
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
-
-  const handleShowCheckout = () => setShowCheckout(true); // Ouvrir le formulaire
-  const handleCloseCheckout = () => setShowCheckout(false); // Fermer le formulaire
+  const handleCheckout = () => {
+    // Rediriger vers la page Checkout
+    navigate('/checkout');
+  };
 
   return (
     <div className="bg-white">
@@ -36,7 +38,7 @@ const Panier = () => {
                     {cartItems.map((item) => (
                       <Row key={item.id} className="mb-4 align-items-center">
                         <Col xs={3}>
-                          <img src={item.imageUrl} alt={item.title} width="150" /> {/* Afficher l'image */}
+                          <img src={item.imageUrl} alt={item.title} width="150" />
                         </Col>
                         <Col xs={8}>
                           <p className="mb-1 font-weight-bold">{item.title}</p>
@@ -95,15 +97,11 @@ const Panier = () => {
                       <Button
                         variant="outline-light"
                         className="w-100 my-3 bg-black"
-                        id="connecter-btn"
                         size="lg"
-                        onClick={handleShowCheckout} // Ouvrir le formulaire au clic
+                        onClick={handleCheckout}  // Action qui déclenche la redirection
                       >
                         Valider mon panier
                       </Button>
-                      <p className="text-center">
-                        <a href="/" className='text-warning'>Ou poursuivre les achats</a>
-                      </p>
                     </div>
                   </Col>
                 </Row>
@@ -113,7 +111,6 @@ const Panier = () => {
         </div>
       </div>
       <Footer />
-      <CheckoutForm show={showCheckout} handleClose={handleCloseCheckout} /> {/* Afficher le formulaire ici */}
     </div>
   );
 };
