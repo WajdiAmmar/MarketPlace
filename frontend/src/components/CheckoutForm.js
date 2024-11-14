@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import PersonalInfoForm from './PersonalInfo';
 import DeliveryForm from './DeliveryMethod';
 import PaymentForm from './PaymentInfo';
+import axios from 'axios';
 import "../Styles/checkout.css";
 
 const CheckoutForm = () => {
   const { cartItems } = useCart();
   const [step, setStep] = useState(1);
 
-  // State to manage form data
+  // State pour gérer les données du formulaire
   const [formData, setFormData] = useState({
     fullName: '',
     phoneNumber: '',
@@ -25,23 +26,35 @@ const CheckoutForm = () => {
     cvv: ''
   });
 
+  // Calcul du total du panier
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // Navigation handlers
+  // Handlers de navigation entre les étapes
   const handleNext = () => setStep((prevStep) => Math.min(prevStep + 1, 3));
   const handlePrevious = () => setStep((prevStep) => Math.max(prevStep - 1, 1));
 
-  // Function to update form data
+  // Fonction pour mettre à jour les données du formulaire
   const handleFormDataChange = (field, value) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
+  };
+
+  // Fonction pour confirmer la commande et envoyer les données au backend
+  const handleConfirmOrder = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/confirm-order', { formData });
+      alert(response.data.message); // Afficher un message de confirmation
+    } catch (error) {
+      console.error('Erreur lors de la confirmation de la commande:', error);
+      alert('Une erreur est survenue lors de la confirmation de votre commande.');
+    }
   };
 
   return (
     <Container className="checkout-page">
       <Row>
-        {/* Left Column: Forms */}
+        {/* Colonne gauche : Formulaires */}
         <Col md={8} className="form-section">
           {step === 1 && (
             <div>
@@ -63,7 +76,7 @@ const CheckoutForm = () => {
           )}
         </Col>
 
-        {/* Right Column: Order Summary */}
+        {/* Colonne droite : Récapitulatif de la commande */}
         <Col md={4} className="summary-section order-summary">
           <h3>Récapitulatif de la Commande</h3>
           <div className="summary-content">
@@ -98,6 +111,7 @@ const CheckoutForm = () => {
               <strong>Total de la commande: </strong>
               <span>{calculateTotal().toFixed(2)} DT</span>
             </div>
+            <Button onClick={handleConfirmOrder} variant="success">Confirmer la commande</Button>
           </div>
         </Col>
       </Row>

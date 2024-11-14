@@ -7,7 +7,6 @@ import DeliveryMethod from '../components/DeliveryMethod';
 const DeliveryPage = ({ onNext, onPrevious }) => {
   return (
     <div>
-      <h2>Méthode de Livraison</h2>
       <DeliveryMethod />
       <div className="button-group">
         <Button variant="secondary" onClick={onPrevious}>
