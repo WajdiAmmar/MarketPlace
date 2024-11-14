@@ -7,7 +7,6 @@ import PaymentInfo from '../components/PaymentInfo';
 const PaymentPage = ({ onPrevious, onConfirm }) => {
   return (
     <div>
-      <h2>Informations de Paiement</h2>
       <PaymentInfo />
       <div className="button-group">
         <Button variant="secondary" onClick={onPrevious}>
