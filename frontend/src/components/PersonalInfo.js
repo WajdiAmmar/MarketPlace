@@ -1,9 +1,10 @@
 import React from 'react';
 
 const PersonalInfoForm = ({ formData, onNext, onChange }) => {
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
-    onChange(name, value); // Update the form data in CheckoutForm
+    onChange(name, value);
   };
 
   return (
