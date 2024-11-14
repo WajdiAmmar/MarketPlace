@@ -8,16 +8,12 @@ const authRoutes = require('./src/routes/authRoutes');
 
 const app = express();
 
-// Middleware CORS
-app.use(cors({
-  origin: process.env.ClientURL || 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  maxAgeSeconds: 3600
-}));
+// Middleware CORS (simplifié pour les tests)
+app.use(cors()); // Permet toutes les origines pour tester
 
+// Middleware JSON et URL-encoded
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Ajoutez cette ligne
+app.use(express.urlencoded({ extended: true }));
 
 // Définition des routes
 app.use('/api/products', productRoutes);
