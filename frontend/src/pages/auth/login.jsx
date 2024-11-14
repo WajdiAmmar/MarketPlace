@@ -30,7 +30,12 @@ function Login() {
     
             if (response.ok) {
                 alert(`Connexion réussie en tant que ${data.role}`);
-                navigate('/');
+                if(data.role ==='admin'){
+                navigate('/dashboard');
+            }
+                else{
+                    navigate('/');
+                }
             } else {
                 alert(data.message);
             }

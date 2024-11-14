@@ -23,6 +23,7 @@ import CheckoutPage from '../pages/CheckoutPage';
 import PersonalInfoPage from '../pages/PersonalInfoPage';
 import PaymentPage from '../pages/PaymentPage';
 import DeliveryPage from '../pages/DeliveryPage';
+import Dashboard from '../admin/dashboard';
 const RouteList = () => {
   return (
     <Routes>
@@ -49,6 +50,7 @@ const RouteList = () => {
       <Route path="/personal-info" element={<PersonalInfoPage/>} />
       <Route path="/delivery-method" element={<DeliveryPage />} />
       <Route path="/payment-info" element={<PaymentPage />} />
+      <Route path="/dashboard" element={<Dashboard/>} />
     </Routes>
   );
 };
