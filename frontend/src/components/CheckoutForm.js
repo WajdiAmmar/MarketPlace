@@ -4,7 +4,6 @@ import { useCart } from '../context/CartContext';
 import PersonalInfoForm from './PersonalInfo';
 import DeliveryForm from './DeliveryMethod';
 import PaymentForm from './PaymentInfo';
-import axios from 'axios';
 import "../Styles/checkout.css";
 
 const CheckoutForm = () => {
@@ -41,15 +40,28 @@ const CheckoutForm = () => {
   };
 
   // Fonction pour confirmer la commande et envoyer les données au backend
-  const handleConfirmOrder = async () => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/confirm-order', { formData });
-      alert(response.data.message); // Afficher un message de confirmation
-    } catch (error) {
-      console.error('Erreur lors de la confirmation de la commande:', error);
-      alert('Une erreur est survenue lors de la confirmation de votre commande.');
+const handleConfirmOrder = async () => {
+  try {
+    const response = await fetch('http://localhost:5000/api/confirm-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ formData }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP : ${response.status}`);
     }
-  };
+
+    const data = await response.json();
+    alert(data.message); // Afficher un message de confirmation
+  } catch (error) {
+    console.error('Erreur lors de la confirmation de la commande:', error);
+    alert('Une erreur est survenue lors de la confirmation de votre commande.');
+  }
+};
+
 
   return (
     <Container className="checkout-page">
@@ -58,19 +70,16 @@ const CheckoutForm = () => {
         <Col md={8} className="form-section">
           {step === 1 && (
             <div>
-              <h2>Information du Client</h2>
               <PersonalInfoForm formData={formData} onNext={handleNext} onChange={handleFormDataChange} />
             </div>
           )}
           {step === 2 && (
             <div>
-              <h2>Méthode de Livraison</h2>
               <DeliveryForm formData={formData} onNext={handleNext} onPrevious={handlePrevious} onChange={handleFormDataChange} />
             </div>
           )}
           {step === 3 && (
             <div>
-              <h2>Informations de Paiement</h2>
               <PaymentForm formData={formData} onPrevious={handlePrevious} onChange={handleFormDataChange} />
             </div>
           )}

@@ -2,46 +2,55 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const router = express.Router();
 
-router.post('/confirm-order', (req, res) => {
-  const { formData } = req.body;  // Récupérer les données de commande envoyées par le frontend
+router.post('/confirm-order', async (req, res) => {
+  try {
+    const { formData } = req.body;
 
-  // Configurer le transporteur de mail (Nodemailer)
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+    // Vérification des données de commande
+    if (!formData || !formData.email || !formData.fullName) {
+      console.log("Données manquantes:", formData);
+      return res.status(400).json({ message: 'Données de commande incomplètes.' });
     }
-  });
 
-  // Configuration de l'email pour le client
-  const mailOptionsClient = {
-    from: process.env.EMAIL_USER,
-    to: formData.email,
-    subject: 'Confirmation de votre commande',
-    text: `Bonjour ${formData.fullName},\n\nVotre commande a été confirmée.\nDétails: ${JSON.stringify(formData)}`
-  };
+    console.log("Utilisateur:", process.env.EMAIL_USER); // Vérification de la variable d'environnement
+    console.log("Données de la commande:", formData); // Vérification des données de commande
 
-  // Configuration de l'email pour l'administrateur
-  const mailOptionsAdmin = {
-    from: process.env.EMAIL_USER,
-    to: 'admin@example.com', // Remplacez par l'email de l'administrateur
-    subject: 'Nouvelle commande',
-    text: `Une nouvelle commande a été passée.\nDétails: ${JSON.stringify(formData)}`
-  };
-
-  // Envoyer les emails
-  transporter.sendMail(mailOptionsClient, (error, info) => {
-    if (error) {
-      return res.status(500).json({ message: 'Erreur lors de l\'envoi de l\'email au client.' });
-    }
-    transporter.sendMail(mailOptionsAdmin, (error, info) => {
-      if (error) {
-        return res.status(500).json({ message: 'Erreur lors de l\'envoi de l\'email à l\'administrateur.' });
+    // Configuration du transporteur
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       }
-      res.status(200).json({ message: 'Commande confirmée et emails envoyés.' });
     });
-  });
+
+    // Tester la connexion
+    await transporter.verify();
+
+    // Définition des options d'email
+    const mailOptionsClient = {
+      from: process.env.EMAIL_USER,
+      to: formData.email,
+      subject: 'Confirmation de votre commande',
+      text: `Bonjour ${formData.fullName},\n\nVotre commande a été confirmée.\nDétails: ${JSON.stringify(formData, null, 2)}`
+    };
+
+    const mailOptionsAdmin = {
+      from: process.env.EMAIL_USER,
+      to: 'wajdiammar010@gmail.com',
+      subject: 'Nouvelle commande',
+      text: `Une nouvelle commande a été passée.\nDétails: ${JSON.stringify(formData, null, 2)}`
+    };
+
+    // Envoi de l'email au client et à l'administrateur
+    await transporter.sendMail(mailOptionsClient);
+    await transporter.sendMail(mailOptionsAdmin);
+
+    res.status(200).json({ message: 'Commande confirmée et emails envoyés.' });
+  } catch (error) {
+    console.error('Erreur lors de la confirmation de la commande:', error);
+    res.status(500).json({ message: 'Erreur interne du serveur lors de la confirmation de la commande.' });
+  }
 });
 
 module.exports = router;

@@ -23,8 +23,8 @@
   }
   
   .form-container button {
-    background-color: #FF0000; /* Red button */
-    color: white;
+    background-color: #000000; /* Red button */
+    color: #F9A825;
     font-weight: bold;
   }
   

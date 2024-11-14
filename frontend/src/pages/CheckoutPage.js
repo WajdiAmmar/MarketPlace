@@ -1,4 +1,3 @@
-// src/pages/CheckoutPage.js
 import React, { useState } from 'react';
 import CheckoutForm from '../components/CheckoutForm';
 
