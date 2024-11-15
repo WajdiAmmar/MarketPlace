@@ -1,6 +1,7 @@
 const { auth, firestore } = require('../config/firebase');
 const { createUserWithEmailAndPassword, signInWithEmailAndPassword } = require('firebase/auth');
 const { collection, addDoc, getDoc, setDoc, doc } = require('firebase/firestore');
+const jwt = require('jsonwebtoken'); // Import de jwt
 
 const signup = async (req, res) => {
   const { nom, prenom, genre, email, motDePasse } = req.body;
@@ -28,35 +29,44 @@ const signup = async (req, res) => {
 };
 
 
+
+const JWT_SECRET = process.env.JWT_SECRET || '4b15bd0e5769471e9e4c56180fdec52a6c661dd35fa192a461d32c4a7da663730003f26dddf36c843fa219c63daefe42d7c85f1d3863051dd1b64a64f3fbd571';
+
 const signin = async (req, res) => {
   const { email, motDePasse } = req.body;
   console.log("Tentative de connexion avec :", email);
 
   try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, motDePasse);
-      const user = userCredential.user;
-      console.log("Utilisateur authentifié :", user.uid);
+    // Authentification avec Firebase
+    const userCredential = await signInWithEmailAndPassword(auth, email, motDePasse);
+    const user = userCredential.user;
+    console.log("Utilisateur authentifié :", user.uid);
 
-      const userDoc = await getDoc(doc(firestore, 'users', user.uid));
-      if (!userDoc.exists()) {
-          throw new Error("Utilisateur introuvable dans Firestore.");
-      }
+    // Récupérer les données de l'utilisateur dans Firestore
+    const userDoc = await getDoc(doc(firestore, 'users', user.uid));
+    if (!userDoc.exists()) {
+      throw new Error("Utilisateur introuvable dans Firestore.");
+    }
 
-      const userData = userDoc.data();
-      console.log("Données de l'utilisateur dans Firestore :", userData);
+    const userData = userDoc.data();
+    console.log("Données de l'utilisateur dans Firestore :", userData);
 
-      res.status(200).json({
-          uid: user.uid,
-          email: user.email,
-          role: userData.role,
-          message: 'Connexion réussie !',
-      });
+    // Générer un token JWT
+    const token = jwt.sign(
+      { uid: user.uid, email: user.email, role: userData.role },
+      JWT_SECRET,  
+      { expiresIn: '24h' }  
+    );
+
+    // Réponse avec le token JWT
+    res.status(200).json({
+      token,  // Renvoi du token au client
+      message: 'Connexion réussie !'
+    });
   } catch (error) {
-      console.error("Erreur lors de la connexion :", error.message);
-      res.status(401).json({ message: 'Erreur lors de la connexion. Vérifiez vos informations d\'identification.' });
+    console.error("Erreur lors de la connexion :", error.message);
+    res.status(401).json({ message: 'Erreur lors de la connexion. Vérifiez vos informations d\'identification.' });
   }
 };
-
-
 
 module.exports = { signup, signin };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Navbar, Nav, Container, Button, Row, Col } from "react-bootstrap";
 import "../Styles/Header.css";
 import { useNavigate } from "react-router-dom";
@@ -12,12 +12,36 @@ function Header() {
   const [activeCategory, setActiveCategory] = useState(null); // État pour la catégorie active
   const [activeLink, setActiveLink] = useState(""); // État pour le lien actif
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // État pour vérifier la connexion de l'utilisateur
+
+  // Vérification de l'état de l'utilisateur à chaque chargement du composant
+  useEffect(() => {
+    const token = localStorage.getItem("authToken"); // Vérifier la présence du token dans localStorage
+    if (token) {
+      setIsAuthenticated(true); // L'utilisateur est connecté
+    } else {
+      setIsAuthenticated(false); // L'utilisateur n'est pas connecté
+    }
+  }, []);
+
   const handlePanierClick = () => {
     navigate("/panier");
   };
+
   const handleLoginClick = () => {
-    navigate("/login");
+    if (isAuthenticated) {
+      handleLogout();
+    } else {
+      navigate("/login");
+    }
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken"); 
+    setIsAuthenticated(false); 
+    navigate("/"); 
+  };
+
   const handleHighTechClick = () => {
     navigate("/high-tech");
   };
@@ -192,7 +216,7 @@ function Header() {
               onClick={handleLoginClick}
               className="ms-6"
             >
-              Se connecter
+              {isAuthenticated ? "Se déconnecter" : "Se connecter"}
             </Button>
           </Navbar.Collapse>
         </Container>
