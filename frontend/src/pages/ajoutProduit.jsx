@@ -1,9 +1,11 @@
 // src/pages/Ajoutproduit.js
 import React, { useState, useRef } from "react";
 import { Form, Button, Row, Col, Image } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";  // Importer useNavigate
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import '../Styles/Ajoutproduit.css';
+import Swal from "sweetalert2";
 
 // Exemples de produits selon les catégories
 const productsByCategory = {
@@ -45,6 +47,7 @@ const Ajoutproduit = () => {
   const [product, setProduct] = useState({
     title: "",
     price: "",
+    quantity: "", 
     category: "",
     Product: "",
     condition: "",
@@ -60,6 +63,7 @@ const Ajoutproduit = () => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
+  const navigate = useNavigate();  // Initialiser le hook useNavigate
 
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
@@ -91,37 +95,120 @@ const Ajoutproduit = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Vérification des champs obligatoires
+    if (!product.title || product.title.trim().length < 3) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de validation',
+        text: 'Le titre doit contenir au moins 3 caractères.',
+      });
+      return;
+    }
+  
+    if (!product.price || isNaN(product.price) || product.price <= 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de prix',
+        text: 'Le prix doit être un nombre positif.',
+      });
+      return;
+    }
+  
+    if (!product.quantity || isNaN(product.quantity) || product.quantity <= 0 || !Number.isInteger(Number(product.quantity))) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de quantité',
+        text: 'La quantité doit être un entier positif.',
+      });
+      return;
+    }
+  
+    if (!product.category) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de catégorie',
+        text: 'Veuillez sélectionner une catégorie.',
+      });
+      return;
+    }
+  
+    if (!product.Product) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de produit',
+        text: 'Veuillez sélectionner un produit.',
+      });
+      return;
+    }
+  
+    if (!product.condition) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur d\'état',
+        text: 'Veuillez sélectionner l\'état du produit.',
+      });
+      return;
+    }
+  
+    if (!product.description || product.description.trim().length < 10) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de description',
+        text: 'La description doit contenir au moins 10 caractères.',
+      });
+      return;
+    }
+  
+    if (!product.image) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur d\'image',
+        text: 'Veuillez ajouter une image du produit.',
+      });
+      return;
+    }
+  
+    // Création du FormData pour l'envoi
     const formData = new FormData();
     formData.append('title', product.title);
     formData.append('price', product.price);
+    formData.append('quantity', product.quantity);
     formData.append('category', product.category);
     formData.append('Product', product.Product);
     formData.append('condition', product.condition);
     formData.append('description', product.description);
-    
-    // Ajout des mots clés en fonction du produit sélectionné
+  
     const keywords = keywordsByProduct[product.Product] || [];
-    formData.append('keywords', JSON.stringify(keywords)); // Stocker les mots clés sous forme de JSON
-
+    formData.append('keywords', JSON.stringify(keywords));
+  
     formData.append('image', product.image);
-
+  
     try {
       const response = await fetch('http://localhost:5000/api/products/add', {
         method: 'POST',
         body: formData,
       });
-
+  
       if (!response.ok) {
         throw new Error('Erreur lors de l\'ajout du produit');
       }
-
+  
       const data = await response.json();
       console.log('Produit ajouté avec succès:', data);
-
+  
+      // Affichage du message de succès
+      Swal.fire({
+        icon: 'success',
+        title: 'Produit ajouté avec succès',
+        text: 'Votre produit a été ajouté avec succès à la marketplace.',
+      });
+  
       // Réinitialiser le formulaire
       setProduct({
         title: "",
         price: "",
+        quantity: "",
         category: "",
         Product: "",
         condition: "",
@@ -129,10 +216,20 @@ const Ajoutproduit = () => {
         image: null,
       });
       setPreviewImage(null);
+  
+      // Rediriger vers la page d'accueil
+      navigate('/');  // Redirection vers la page d'accueil
+  
     } catch (error) {
       console.error('Erreur lors de l\'ajout du produit:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Une erreur est survenue lors de l\'ajout du produit. Veuillez réessayer.',
+      });
     }
   };
+  
 
   return (
     <div className="bg-light">
@@ -164,7 +261,17 @@ const Ajoutproduit = () => {
                 required
               />
             </Form.Group>
-
+            <Form.Group className="mb-4" controlId="formQuantity">
+             <Form.Label>Quantité</Form.Label>
+             <Form.Control
+              type="number"
+              name="quantity"
+              placeholder="Entrez la quantité disponible"
+              value={product.quantity}
+               onChange={handleInputChange}
+              required
+                  />
+             </Form.Group>
             <Form.Group className="mb-4" controlId="formCategory">
               <Form.Label>Catégorie</Form.Label>
               <Form.Select
@@ -272,6 +379,7 @@ const Ajoutproduit = () => {
               <div className="p-3 border rounded">
                 <p><strong>Titre: </strong>{product.title}</p>
                 <p><strong>Prix: </strong>{product.price} TND</p>
+                <p><strong> Quantité: </strong>{product.quantity}</p>
                 <p><strong>Catégorie: </strong>{product.category}</p>
                 <p><strong>Produit: </strong>{product.Product}</p> 
                 <p><strong>État: </strong>{product.condition}</p>
