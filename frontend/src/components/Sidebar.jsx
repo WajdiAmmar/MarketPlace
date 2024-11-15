@@ -1,15 +1,38 @@
 import { Button, Form } from 'react-bootstrap';
 import '../Styles/sidebar.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('');
   const [price, setPrice] = useState(20000); // Starting with max price
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Etat pour la vérification de la connexion
+
+  // Vérification de la connexion de l'utilisateur lors du chargement
+  useEffect(() => {
+    const token = localStorage.getItem("authToken"); // Vérifie si le token est présent
+    if (token) {
+      setIsAuthenticated(true); // L'utilisateur est connecté
+    } else {
+      setIsAuthenticated(false); // L'utilisateur n'est pas connecté
+    }
+  }, []);
 
   const handleAddProductClick = () => {
-    navigate('/ajoutProduit');
+    if (isAuthenticated) {
+      navigate('/ajoutProduit'); // Si l'utilisateur est connecté, il peut accéder à l'ajout de produit
+    } else {
+      // Rediriger vers la page de login si l'utilisateur n'est pas connecté
+      Swal.fire({
+        icon: 'warning',
+        title: 'Non connecté',
+        text: 'Vous devez vous connecter pour ajouter un produit au panier.',
+      }).then(() => {
+        navigate('/login'); // Redirection vers la page de login
+      });
+    }
   };
 
   const handleCategoryChange = (e) => {
