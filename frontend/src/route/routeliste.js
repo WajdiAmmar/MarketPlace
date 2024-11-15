@@ -20,9 +20,6 @@ import Electro from '../pages/produits/electromenager';
 import Meubles from '../pages/produits/meubles';
 import Fournitures from '../pages/produits/fournitures';
 import CheckoutPage from '../pages/CheckoutPage';
-import PersonalInfoPage from '../pages/PersonalInfoPage';
-import PaymentPage from '../pages/PaymentPage';
-import DeliveryPage from '../pages/DeliveryPage';
 import Dashboard from '../admin/dashboard';
 const RouteList = () => {
   return (
@@ -46,10 +43,7 @@ const RouteList = () => {
       <Route path="/electro" element={<Electro />}/>
       <Route path="/meuble" element={<Meubles/>}/>
       <Route path="/fourniture" element={<Fournitures/>}/>
-      <Route path="/checkout" element={<CheckoutPage />} /> {/* Page Checkout */}
-      <Route path="/personal-info" element={<PersonalInfoPage/>} />
-      <Route path="/delivery-method" element={<DeliveryPage />} />
-      <Route path="/payment-info" element={<PaymentPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/dashboard" element={<Dashboard/>} />
     </Routes>
   );

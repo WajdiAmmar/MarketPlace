@@ -5,6 +5,28 @@ const PaymentForm = ({ formData, onPrevious, onChange }) => {
     const { name, value } = e.target;
     onChange(name, value);
   };
+ // Fonction pour confirmer la commande et envoyer les données au backend
+ const handleConfirmOrder = async () => {
+  try {
+    const response = await fetch('http://localhost:5000/api/confirm-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ formData }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+
+    const data = await response.json();
+    alert(data.message); // Afficher un message de confirmation
+  } catch (error) {
+    console.error('Erreur lors de la confirmation de la commande:', error);
+    alert('Une erreur est survenue lors de la confirmation de votre commande.');
+  }
+};
 
   return (
     <div className="form-container">
@@ -30,7 +52,7 @@ const PaymentForm = ({ formData, onPrevious, onChange }) => {
       <label>Date d'expiration</label>
       <div style={{ display: 'flex', gap: '10px' }}>
         <input
-          type="text"
+          type="date"
           name="expirationDate"
           placeholder="MM/AA"
           value={formData.expirationDate}
@@ -49,6 +71,7 @@ const PaymentForm = ({ formData, onPrevious, onChange }) => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <button onClick={onPrevious}>Précédent</button>
+        <button onClick={handleConfirmOrder} variant="success">Confirmer la commande</button>
       </div>
     </div>
   );
