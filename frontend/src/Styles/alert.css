@@ -1,0 +1,70 @@
+/* Personnalisation de la fenêtre SweetAlert2 */
+.swal2-popup {
+    font-family: 'Arial', sans-serif; /* Choisissez une police élégante */
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre subtile */
+    background-color: #fdfdfd; /* Couleur de fond douce */
+    border: 2px solid #ffcc00; /* Bordure personnalisée */
+  }
+  
+  /* Style du titre de l'alerte */
+  .swal2-title {
+    color: #333333; /* Couleur du texte */
+    font-size: 20px; /* Taille du texte */
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Style du texte de contenu */
+  .swal2-html-container {
+    color: #555555;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  /* Bouton principal (OK/Confirm) */
+  .swal2-confirm {
+    background-color: #ffcc00;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 20px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .swal2-confirm:hover {
+    background-color: #e6b800; /* Effet survol */
+  }
+  
+  /* Bouton secondaire (Annuler) */
+  .swal2-cancel {
+    background-color: #cccccc;
+    color: #333333;
+    border-radius: 5px;
+    padding: 10px 20px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .swal2-cancel:hover {
+    background-color: #b3b3b3; /* Effet survol */
+  }
+  
+  /* Icônes personnalisées */
+  .swal2-icon.swal2-success {
+    border-color: #4caf50; /* Bordure verte pour succès */
+  }
+  
+  .swal2-icon.swal2-error {
+    border-color: #f44336; /* Bordure rouge pour erreur */
+  }
+  
+  .swal2-icon.swal2-warning {
+    border-color: #ffcc00; /* Bordure jaune pour avertissement */
+  }
+  
+  .swal2-icon.swal2-info {
+    border-color: #2196f3; /* Bordure bleue pour information */
+  }
+  

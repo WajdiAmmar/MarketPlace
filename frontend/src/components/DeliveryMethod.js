@@ -11,8 +11,11 @@ const DeliveryForm = ({ formData, onNext, onPrevious, onChange }) => {
       <h2>Mode de livraison</h2>
       <label>Choisissez un mode de livraison</label>
       <select name="deliveryMethod" value={formData.deliveryMethod} onChange={handleChange}>
+        {/* Option par défaut */}
+        <option value="" disabled>Choisissez un mode de livraison</option>
         <option value="standard">Livraison standard (2-5 jours)</option>
         <option value="express">Livraison express (1-2 jours)</option>
+        <option value="sameDay">Livraison le jour même</option>
       </select>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
