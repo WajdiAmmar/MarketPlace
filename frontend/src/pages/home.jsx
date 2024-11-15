@@ -1,4 +1,3 @@
-// src/pages/Home.js
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import CategoriesGrid from '../components/CategoriesGrid';
@@ -8,6 +7,8 @@ import Sidebar from '../components/Sidebar';
 import CarouselComponent from '../components/CarouselComponent';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom'; // Import de useNavigate pour la redirection
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,10 @@ const Home = () => {
   const [selectedPriceRange, setSelectedPriceRange] = useState([0, 20000]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const { addToCart } = useCart(); // Destructure addToCart from useCart
+  const navigate = useNavigate(); // Hook pour la navigation
+
+  // Vérification du token JWT dans le localStorage
+  const isAuthenticated = localStorage.getItem('authToken');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -47,6 +52,21 @@ const Home = () => {
     return matchesSearchTerm && isInPriceRange && matchesCategory;
   });
 
+  const handleAddToCart = (product) => {
+    if (isAuthenticated) {
+      addToCart(product); // Ajouter au panier si l'utilisateur est connecté
+    } else {
+      // Rediriger vers la page de login si l'utilisateur n'est pas connecté
+      Swal.fire({
+        icon: 'warning',
+        title: 'Non connecté',
+        text: 'Vous devez vous connecter pour ajouter un produit au panier.',
+      }).then(() => {
+        navigate('/login'); // Redirection vers la page de login
+      });
+    }
+  };
+
   return (
     <div className="App bg-light">
       <Header />
@@ -78,7 +98,7 @@ const Home = () => {
                       <p className="product-description">{product.description}</p>
                       <button
                         className="buy-now-button"
-                        onClick={() => addToCart(product)} // Add to Cart functionality
+                        onClick={() => handleAddToCart(product)} // Ajout au panier avec vérification
                       >
                         Ajouter au panier
                       </button>

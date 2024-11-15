@@ -33,21 +33,24 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!validerChamps()) {
             return; // Si la validation échoue, on ne fait rien
         }
-
+    
         try {
             const response = await fetch('http://localhost:5000/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, motDePasse }),
             });
-
+    
             const data = await response.json();
-
+    
             if (response.ok) {
+                // Stocker le token dans le localStorage
+                localStorage.setItem('authToken', data.token);
+    
                 Swal.fire({
                     icon: 'success',
                     title: 'Connexion réussie',
@@ -63,6 +66,7 @@ function Login() {
             setErreurs({ ...erreurs, global: 'Une erreur est survenue. Veuillez réessayer.' });
         }
     };
+    
 
     return (
         <Container>
