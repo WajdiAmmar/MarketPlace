@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
 import PersonalInfoForm from './PersonalInfo';
 import DeliveryForm from './DeliveryMethod';
@@ -38,30 +38,6 @@ const CheckoutForm = () => {
   const handleFormDataChange = (field, value) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
-
-  // Fonction pour confirmer la commande et envoyer les données au backend
-const handleConfirmOrder = async () => {
-  try {
-    const response = await fetch('http://localhost:5000/api/confirm-order', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ formData }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP : ${response.status}`);
-    }
-
-    const data = await response.json();
-    alert(data.message); // Afficher un message de confirmation
-  } catch (error) {
-    console.error('Erreur lors de la confirmation de la commande:', error);
-    alert('Une erreur est survenue lors de la confirmation de votre commande.');
-  }
-};
-
 
   return (
     <Container className="checkout-page">
@@ -119,8 +95,7 @@ const handleConfirmOrder = async () => {
             <div className="total">
               <strong>Total de la commande: </strong>
               <span>{calculateTotal().toFixed(2)} DT</span>
-            </div>
-            <Button onClick={handleConfirmOrder} variant="success">Confirmer la commande</Button>
+              </div>
           </div>
         </Col>
       </Row>
