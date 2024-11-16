@@ -49,9 +49,9 @@ function Login() {
             });
     
             const data = await response.json();
-    
+            console.log('Réponse backend:', data);
             if (response.ok) {
-                // Dispatch l'action login pour stocker l'utilisateur et le token dans Redux
+                
                 dispatch(login(data.token, data.user));
 
                 Swal.fire({
