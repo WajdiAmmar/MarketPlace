@@ -50,7 +50,7 @@ const signin = async (req, res) => {
     const token = jwt.sign(
       { uid: user.uid, email: user.email, role: userData.role },
       JWT_SECRET,  
-      { expiresIn: '24h' }  
+      { expiresIn: '1h' }  
     );
 
     // Inclure les données utilisateur dans la réponse

@@ -9,7 +9,6 @@ import CarouselComponent from '../components/CarouselComponent';
 import { Container } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { login } from '../actions/authActions';
-import { useNavigate } from 'react-router-dom';
 import CardGrid from '../components/CardGrid';  // Importation du composant CardGrid
 
 const Home = () => {

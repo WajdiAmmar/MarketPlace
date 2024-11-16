@@ -1,6 +1,6 @@
 const initialState = {
-    isAuthenticated: !!localStorage.getItem('authToken'),  // Vérifier la présence du token dans localStorage
-    token: localStorage.getItem('authToken'),  // Sauvegarder le token dans le state initial
+    isAuthenticated: false,  
+    token: null, 
   };
   
   const authReducer = (state = initialState, action) => {

@@ -1,7 +1,5 @@
-// actions/authActions.js
-
 export const login = (token, user) => {
-  localStorage.setItem('authToken', token);  // Sauvegarde du token dans le localStorage
+  localStorage.setItem('authToken', token); 
   return {
     type: 'LOGIN',
     payload: { token, user }
