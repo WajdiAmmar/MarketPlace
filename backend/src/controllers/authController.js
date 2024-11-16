@@ -28,8 +28,6 @@ const signup = async (req, res) => {
   }
 };
 
-
-
 const JWT_SECRET = process.env.JWT_SECRET || '4b15bd0e5769471e9e4c56180fdec52a6c661dd35fa192a461d32c4a7da663730003f26dddf36c843fa219c63daefe42d7c85f1d3863051dd1b64a64f3fbd571';
 
 const signin = async (req, res) => {
@@ -57,7 +55,6 @@ const signin = async (req, res) => {
       JWT_SECRET,  
       { expiresIn: '24h' }  
     );
-
     // Réponse avec le token JWT
     res.status(200).json({
       token,  // Renvoi du token au client

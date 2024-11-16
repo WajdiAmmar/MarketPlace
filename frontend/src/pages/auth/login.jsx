@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Button, Container, Card, Row, Col, Form, Image } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // Utiliser dispatch pour envoyer les actions
+import { login } from '../../actions/authActions'; // Importer l'action de login
 
 function Login() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();  // Hook pour dispatch l'action
     const [email, setEmail] = useState('');
     const [motDePasse, setMotDePasse] = useState('');
     const [erreurs, setErreurs] = useState({ email: '', motDePasse: '' });
@@ -48,15 +51,15 @@ function Login() {
             const data = await response.json();
     
             if (response.ok) {
-                // Stocker le token dans le localStorage
-                localStorage.setItem('authToken', data.token);
-    
+                // Dispatch l'action login pour stocker l'utilisateur et le token dans Redux
+                dispatch(login(data.token, data.user));
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Connexion réussie',
-                    text: `Bienvenue ${data.role}!`,
+                    text: `Bienvenue ${data.user.role}!`,
                 }).then(() => {
-                    navigate(data.role === 'admin' ? '/dashboard' : '/');
+                    navigate(data.user.role === 'admin' ? '/dashboard' : '/');
                 });
             } else {
                 setErreurs({ ...erreurs, global: data.message || 'Erreur de connexion. Veuillez vérifier vos informations.' });

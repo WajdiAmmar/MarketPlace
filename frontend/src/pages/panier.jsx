@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Importer useNavigate
+// Panier.js
+
+import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Importer useNavigate
 import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
-import { useCart } from '../context/CartContext';
+import { useDispatch, useSelector } from 'react-redux'; // Importer useDispatch et useSelector
+import { incrementQuantity, decrementQuantity, removeFromCart } from '../actions/cartActions'; // Importer les actions
 import "../Styles/checkout.css";
 
 const Panier = () => {
-  const { cartItems, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
+  const dispatch = useDispatch(); // Hook pour dispatcher les actions Redux
   const navigate = useNavigate();  // Hook pour la navigation
 
+  // Récupérer les éléments du panier depuis Redux
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  // Calculer le total du panier
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
+
+  // Gérer la validation du panier
   const handleCheckout = () => {
     // Rediriger vers la page Checkout
     navigate('/checkout');
@@ -49,7 +58,7 @@ const Panier = () => {
                             <Button
                               variant="outline-secondary"
                               size="sm"
-                              onClick={() => decrementQuantity(item.id)}
+                              onClick={() => dispatch(decrementQuantity(item.id))}
                               disabled={item.quantity === 1}
                             >
                               -
@@ -58,7 +67,7 @@ const Panier = () => {
                             <Button
                               variant="outline-secondary"
                               size="sm"
-                              onClick={() => incrementQuantity(item.id)}
+                              onClick={() => dispatch(incrementQuantity(item.id))}
                             >
                               +
                             </Button>
@@ -67,7 +76,7 @@ const Panier = () => {
                             variant="danger"
                             size="sm"
                             className="ml-3"
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={() => dispatch(removeFromCart(item.id))}
                           >
                             Supprimer
                           </Button>
