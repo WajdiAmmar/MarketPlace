@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useCart } from '../context/CartContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart, removeFromCart, incrementQuantity, decrementQuantity } from '../actions/cartActions';  // Actions importées
 import PersonalInfoForm from './PersonalInfo';
 import DeliveryForm from './DeliveryMethod';
 import PaymentForm from './PaymentInfo';
 import "../Styles/checkout.css";
 
 const CheckoutForm = () => {
-  const { cartItems } = useCart();
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);  // Utilisation de Redux pour accéder au panier
   const [step, setStep] = useState(1);
 
   // State pour gérer les données du formulaire
@@ -37,6 +39,19 @@ const CheckoutForm = () => {
   // Fonction pour mettre à jour les données du formulaire
   const handleFormDataChange = (field, value) => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
+  };
+
+  // Gestion des actions du panier
+  const handleRemoveFromCart = (id) => {
+    dispatch(removeFromCart(id));  // Supprimer un article du panier
+  };
+
+  const handleIncrementQuantity = (id) => {
+    dispatch(incrementQuantity(id));  // Augmenter la quantité d'un article
+  };
+
+  const handleDecrementQuantity = (id) => {
+    dispatch(decrementQuantity(id));  // Diminuer la quantité d'un article
   };
 
   return (
@@ -71,6 +86,12 @@ const CheckoutForm = () => {
                 <p>
                   {item.price.toFixed(2)} DT x {item.quantity} = {(item.price * item.quantity).toFixed(2)} DT
                 </p>
+                <div className="quantity-controls">
+                  <button onClick={() => handleIncrementQuantity(item.id)}>+</button>
+                  <span>{item.quantity}</span>
+                  <button onClick={() => handleDecrementQuantity(item.id)}>-</button>
+                </div>
+                <button onClick={() => handleRemoveFromCart(item.id)} className="remove-item">Supprimer</button>
               </div>
             ))}
             <hr />
@@ -95,7 +116,7 @@ const CheckoutForm = () => {
             <div className="total">
               <strong>Total de la commande: </strong>
               <span>{calculateTotal().toFixed(2)} DT</span>
-              </div>
+            </div>
           </div>
         </Col>
       </Row>

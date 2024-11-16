@@ -1,13 +1,14 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Container, Button, Row, Col } from "react-bootstrap";
 import "../Styles/Header.css";
 import { useNavigate } from "react-router-dom";
-import { useCart } from '../context/CartContext'; // Importer le contexte du panier
+import { useDispatch, useSelector } from 'react-redux'; // Remplace useCart par useSelector et useDispatch
+
 
 function Header() {
   const navigate = useNavigate();
-  const { cartItems } = useCart(); // Récupérer les items du panier
-  const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0); // Calculer la quantité totale
+  const cartItems = useSelector((state) => state.cart.items); // Remplace useCart par Redux pour récupérer les items du panier
+  const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0); // Calcule la quantité totale
   const [showCategories, setShowCategories] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null); // État pour la catégorie active
   const [activeLink, setActiveLink] = useState(""); // État pour le lien actif
@@ -37,59 +38,73 @@ function Header() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken"); 
-    setIsAuthenticated(false); 
-    navigate("/"); 
+    localStorage.removeItem("authToken");
+    setIsAuthenticated(false);
+    navigate("/");
   };
 
   const handleHighTechClick = () => {
     navigate("/high-tech");
   };
+
   const handleMaisonClick = () => {
     navigate("/cuisine-maison");
   };
+
   const handleBeauteClick = () => {
     navigate("/beaute");
   };
+
   const handleSmartphoneClick = () => {
     navigate('/smartphone');
   };
+
   const handleOrdinateurClick = () => {
     navigate('/ordinateur');
   };
+
   const handleSmartwatchClick = () => {
     navigate('/smartwatch');
   };
+
   const handleTabletteClick = () => {
     navigate('/tablette');
   };
+
   const handleElectroClick = () => {
     navigate('/electro');
   };
+
   const handleMeubleClick = () => {
     navigate('/meuble');
   };
+
   const handleFournituresClick = () => {
     navigate('/fourniture');
   };
+
   const handleParfumClick = () => {
     navigate('/parfum');
   };
+
   const handleMaquillageClick = () => {
     navigate('/maquillage');
   };
+
   const handleSoinsClick = () => {
     navigate('/soins');
   };
+
   const handleCoiffureClick = () => {
     navigate('/coiffure');
   };
+
   const handleMouseEnter = () => {
     setShowCategories(true); // Affiche le menu au survol
   };
 
   const handleMouseLeave = () => {
-    setShowCategories(false); // À utiliser uniquement si la souris quitte le menu
+    setShowCategories(false); // Masque le menu si la souris quitte
   };
 
   const handleCategoryMouseEnter = (category) => {
@@ -131,20 +146,20 @@ function Header() {
                 {totalQuantity > 0 && (
                   <span className="cart-count" style={{
                     position: 'absolute',
-                    Left: '-20px',
+                    left: '-20px',
                     background: 'red',
                     color: 'white',
                     borderRadius: '50%',
                     padding: '5px 10px',
                     fontSize: '9px',
-                    marginLeft:'90px',
-                    marginTop:'20px'
+                    marginLeft: '90px',
+                    marginTop: '20px'
                   }}>
                     {totalQuantity}
                   </span>
                 )}
                 <Button variant="outlined" id="panier-btn" onClick={handlePanierClick}>
-                  <img src="/panier.png" alt="Logo" />
+                  <img src="/panier.png" alt="Panier" />
                   Panier
                 </Button>
               </div>
@@ -166,44 +181,32 @@ function Header() {
               >
                 Home
               </Nav.Link>
-
               <Nav.Link
                 href="#Catégories"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                className={`nav-link ${
-                  activeLink === "#Catégories" ? "active" : ""
-                }`}
+                className={`nav-link ${activeLink === "#Catégories" ? "active" : ""}`}
                 onClick={() => handleLinkClick("#Catégories")}
               >
                 Catégories <i className="fa-solid fa-angle-down"></i>
               </Nav.Link>
-
               <Nav.Link
                 href="#Offres et Promotions"
-                className={`nav-link ${
-                  activeLink === "#Offres et Promotions" ? "active" : ""
-                }`}
+                className={`nav-link ${activeLink === "#Offres et Promotions" ? "active" : ""}`}
                 onClick={() => handleLinkClick("#Offres et Promotions")}
               >
                 Offres et Promotions
               </Nav.Link>
-
               <Nav.Link
                 href="#Vendre un Produit"
-                className={`nav-link ${
-                  activeLink === "#Vendre un Produit" ? "active" : ""
-                }`}
+                className={`nav-link ${activeLink === "#Vendre un Produit" ? "active" : ""}`}
                 onClick={() => handleLinkClick("#Vendre un Produit")}
               >
                 Vendre un Produit
               </Nav.Link>
-
               <Nav.Link
                 href="#contact"
-                className={`nav-link ${
-                  activeLink === "#contact" ? "active" : ""
-                }`}
+                className={`nav-link ${activeLink === "#contact" ? "active" : ""}`}
                 onClick={() => handleLinkClick("#contact")}
               >
                 Contact
@@ -224,29 +227,28 @@ function Header() {
 
       {/* Menu des catégories affiché au survol */}
       {showCategories && (
-        <div className="categories-menu" onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}>
+        <div className="categories-menu" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           <Container>
             <Row>
               <Col md={3}>
                 <h6
                   onClick={handleHighTechClick}
                   onMouseEnter={() => handleCategoryMouseEnter("highTech")}
-                  onMouseLeave={handleCategoryMouseLeave} // Gardez ici si vous voulez désactiver
+                  onMouseLeave={handleCategoryMouseLeave}
                 >
                   High-Tech <i className="fa-solid fa-angle-right"></i>
                 </h6>
                 <h6
                   onClick={handleMaisonClick}
                   onMouseEnter={() => handleCategoryMouseEnter("maisonCuisine")}
-                  onMouseLeave={handleCategoryMouseLeave} // Gardez ici si vous voulez désactiver
+                  onMouseLeave={handleCategoryMouseLeave}
                 >
                   Cuisine et Maison <i className="fa-solid fa-angle-right"></i>
                 </h6>
                 <h6
                   onClick={handleBeauteClick}
                   onMouseEnter={() => handleCategoryMouseEnter("beaute")}
-                  onMouseLeave={handleCategoryMouseLeave} // Gardez ici si vous voulez désactiver
+                  onMouseLeave={handleCategoryMouseLeave}
                 >
                   Beauté <i className="fa-solid fa-angle-right"></i>
                 </h6>
@@ -268,101 +270,19 @@ function Header() {
                         src="/smartphone.jpg"
                         alt="phone"
                         className="category-img"
-                        onClick={ handleSmartphoneClick }
+                        onClick={handleSmartphoneClick}
                       />
-                      <p onClick={ handleSmartphoneClick }>Smartphones</p>
+                      <p onClick={handleSmartphoneClick}>Smartphones</p>
                     </Col>
                     <Col>
                       <img
                         src="/tablette.jpg"
-                        alt="smartwatches"
+                        alt="tablette"
                         className="category-img"
                         onClick={handleTabletteClick}
                       />
                       <p onClick={handleTabletteClick}>Tablettes</p>
                     </Col>
-                    <Col>
-                      <img
-                        src="/smartwatch.jpg"
-                        alt="smartwatches"
-                        className="category-img"
-                        onClick={handleSmartwatchClick}
-                      />
-                      <p onClick={handleSmartwatchClick}>Smartwatches</p>
-                    </Col>
-                  </Row>
-                )}
-                {activeCategory === "maisonCuisine" && (
-                  <Row>
-                    <Col>
-                      <img
-                        src="/meuble.png"
-                        alt="meuble"
-                        className="category-img"
-                        onClick={handleMeubleClick}
-                      />
-                      <p onClick={handleMeubleClick}>Meubles</p>
-                    </Col>
-                    <Col>
-                      <img
-                        src="/electromenager.png"
-                        alt="electromenager"
-                        className="category-img"
-                        onClick={handleElectroClick}
-                      />
-                      <p onClick={handleElectroClick}>Electroménager</p>
-                    </Col>
-                    <Col>
-                      <img
-                        src="/fourniturescuisines.png"
-                        alt="fourniturescuisines"
-                        className="category-img"
-                        onClick={handleFournituresClick}
-                      />
-                      <p onClick={handleFournituresClick} >Fournitures de Cuisines</p>
-                    </Col>
-                  </Row>
-                  
-                )}
-                {activeCategory === "beaute" && (
-                  <Row>
-                    <Col>
-                      <img
-                        src="/soin.jpg"
-                        alt="Beauté"
-                        className="category-img"
-                        onClick={handleSoinsClick}
-                      />
-                      <p onClick={handleSoinsClick}>Soins de la peau</p>
-                    </Col>
-                    <Col>
-                      <img
-                        src="/Makeup.jpg"
-                        alt="Beauté"
-                        className="category-img"
-                        onClick={handleMaquillageClick}
-                      />
-                      <p onClick={handleMaquillageClick}>Maquillage</p>
-                    </Col>
-                    <Col>
-                      <img
-                        src="/Parfum-.png"
-                        alt="Crèmes"
-                        className="category-img"
-                        onClick={handleParfumClick}
-                      />
-                      <p onClick={handleParfumClick}>Parfums</p>
-                    </Col>
-                    <Col>
-                      <img
-                        src="/coiffure.jpg"
-                        alt="outilsbeaute"
-                        className="category-img"
-                        onClick={handleCoiffureClick}
-                      />
-                      <p onClick={handleCoiffureClick}>Coiffure</p>
-                    </Col>
-                    
                   </Row>
                 )}
               </Col>

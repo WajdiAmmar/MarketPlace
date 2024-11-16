@@ -6,7 +6,8 @@ import SearchBar from '../components/SearchBar';
 import Sidebar from '../components/Sidebar';
 import CarouselComponent from '../components/CarouselComponent';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useCart } from '../context/CartContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart, incrementQuantity, decrementQuantity } from '../actions/cartActions';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom'; // Import de useNavigate pour la redirection
 
@@ -15,8 +16,10 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState([0, 20000]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const { addToCart } = useCart(); // Destructure addToCart from useCart
+  const cartItems = useSelector((state) => state.cart.cartItems); // Récupérer les produits du panier depuis Redux
   const navigate = useNavigate(); // Hook pour la navigation
+  const dispatch = useDispatch(); // Utiliser dispatch pour envoyer des actions
+
 
   // Vérification du token JWT dans le localStorage
   const isAuthenticated = localStorage.getItem('authToken');
@@ -51,12 +54,15 @@ const Home = () => {
 
     return matchesSearchTerm && isInPriceRange && matchesCategory;
   });
-
   const handleAddToCart = (product) => {
     if (isAuthenticated) {
-      addToCart(product); // Ajouter au panier si l'utilisateur est connecté
+      const existingProduct = cartItems.find(item => item.id === product.id);
+      if (existingProduct) {
+        dispatch(incrementQuantity(product.id)); // Augmenter la quantité si déjà dans le panier
+      } else {
+        dispatch(addToCart(product)); // Ajouter le produit au panier
+      }
     } else {
-      // Rediriger vers la page de login si l'utilisateur n'est pas connecté
       Swal.fire({
         icon: 'warning',
         title: 'Non connecté',
@@ -66,7 +72,14 @@ const Home = () => {
       });
     }
   };
-
+  const handleIncrementQuantity = (productId) => {
+    dispatch(incrementQuantity(productId)); // Incrémenter la quantité d'un produit
+  };
+  
+  const handleDecrementQuantity = (productId) => {
+    dispatch(decrementQuantity(productId)); // Décrémenter la quantité d'un produit
+  };
+  
   return (
     <div className="App bg-light">
       <Header />
