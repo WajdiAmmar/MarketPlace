@@ -3,7 +3,8 @@ import '../../Styles/card.css';
 import Sidebar from '../../components/Sidebar';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container} from 'react-bootstrap';
+import CardGrid from '../../components/CardGrid';
 
 function  Coiffure() {
   const [products, setProducts] = useState([]);
@@ -35,23 +36,7 @@ function  Coiffure() {
         <div className="col-xl-10">
           <Container>
             <h2 className="text-center my-4">Coiffure</h2>
-            <Row>
-              {products.map(product => (
-                <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
-                  <div className="product-card">
-                    <div className="product-image-container">
-                      <img src={product.imageUrl} alt={product.title} className="product-image" />
-                    </div>
-                    <div className="product-info">
-                      <h2 className="product-title">{product.title}</h2>
-                      <p className="product-price">{product.price} DT</p>
-                      <p className="product-description">{product.description}</p>
-                      <button className="buy-now-button">Ajouter au panier</button>
-                    </div>
-                  </div>
-                </Col>
-              ))}
-            </Row>
+            <CardGrid products={products} />
           </Container>
         </div>
       </div>

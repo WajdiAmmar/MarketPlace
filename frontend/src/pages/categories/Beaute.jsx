@@ -4,6 +4,7 @@ import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import { useNavigate } from 'react-router-dom';
+import CardGrid from '../../components/CardGrid';
 // Produits de Beauté
 const beautyItems = [
   { title: '', image: '/creme1.jpg' },
@@ -128,23 +129,7 @@ function BeautyCarousel() {
               ))}
             </Row>
             <h3 className="text-center my-4">Tous les produits Beauté</h3>
-            <Row>
-              {products.map((product, index) => (
-                <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
-                  <div className="product-card">
-                    <div className="product-image-container">
-                      <img src={product.imageUrl} alt={product.title} className="product-image" />
-                    </div>
-                    <div className="product-info">
-                      <h2 className="product-title">{product.title}</h2>
-                      <p className="product-price">{product.price} DT</p>
-                      <p className="product-description">{product.description}</p>
-                      <button className="buy-now-button">Ajouter au panier</button>
-                    </div>
-                  </div>
-                </Col>
-              ))}
-            </Row>
+            <CardGrid products={products} />
           </Container>
         </div>
       </div>

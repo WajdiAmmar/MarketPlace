@@ -2,28 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Container, Button, Row, Col } from "react-bootstrap";
 import "../Styles/Header.css";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux'; // Remplace useCart par useSelector et useDispatch
-
+import { useDispatch, useSelector } from 'react-redux'; // Import de useDispatch et useSelector
+import { logout } from '../actions/authActions'; // Import de l'action logout
 
 function Header() {
   const navigate = useNavigate();
-  const cartItems = useSelector((state) => state.cart.items); // Remplace useCart par Redux pour récupérer les items du panier
+  const dispatch = useDispatch(); // Déclare le dispatch
+  const cartItems = useSelector((state) => state.cart.cartItems); // Cart items depuis Redux
   const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0); // Calcule la quantité totale
   const [showCategories, setShowCategories] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(null); // État pour la catégorie active
-  const [activeLink, setActiveLink] = useState(""); // État pour le lien actif
+  const [activeCategory, setActiveCategory] = useState(null); // Catégorie active
+  const [activeLink, setActiveLink] = useState(""); // Lien actif
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // État pour vérifier la connexion de l'utilisateur
-
-  // Vérification de l'état de l'utilisateur à chaque chargement du composant
-  useEffect(() => {
-    const token = localStorage.getItem("authToken"); // Vérifier la présence du token dans localStorage
-    if (token) {
-      setIsAuthenticated(true); // L'utilisateur est connecté
-    } else {
-      setIsAuthenticated(false); // L'utilisateur n'est pas connecté
-    }
-  }, []);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Vérifier si l'utilisateur est connecté
 
   const handlePanierClick = () => {
     navigate("/panier");
@@ -31,16 +22,11 @@ function Header() {
 
   const handleLoginClick = () => {
     if (isAuthenticated) {
-      handleLogout();
+      dispatch(logout()); // Déclenche l'action logout si l'utilisateur est connecté
+      navigate("/"); // Redirige vers la page d'accueil après la déconnexion
     } else {
-      navigate("/login");
+      navigate("/login"); // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    setIsAuthenticated(false);
-    navigate("/");
   };
 
   const handleHighTechClick = () => {
@@ -253,38 +239,67 @@ function Header() {
                   Beauté <i className="fa-solid fa-angle-right"></i>
                 </h6>
               </Col>
-              <Col md={8}>
-                {activeCategory === "highTech" && (
-                  <Row>
-                    <Col>
-                      <img
-                        src="/ordinateur.jpg"
-                        alt="ordinateur"
-                        className="category-img"
-                        onClick={handleOrdinateurClick}
-                      />
-                      <p onClick={handleOrdinateurClick}>Ordinateurs</p>
-                    </Col>
-                    <Col>
-                      <img
-                        src="/smartphone.jpg"
-                        alt="phone"
-                        className="category-img"
-                        onClick={handleSmartphoneClick}
-                      />
-                      <p onClick={handleSmartphoneClick}>Smartphones</p>
-                    </Col>
-                    <Col>
-                      <img
-                        src="/tablette.jpg"
-                        alt="tablette"
-                        className="category-img"
-                        onClick={handleTabletteClick}
-                      />
-                      <p onClick={handleTabletteClick}>Tablettes</p>
-                    </Col>
-                  </Row>
-                )}
+              <Col md={3}>
+                <h6
+                  onClick={handleSmartphoneClick}
+                  onMouseEnter={() => handleCategoryMouseEnter("smartphone")}
+                  onMouseLeave={handleCategoryMouseLeave}
+                >
+                  Smartphone <i className="fa-solid fa-angle-right"></i>
+                </h6>
+                <h6
+                  onClick={handleOrdinateurClick}
+                  onMouseEnter={() => handleCategoryMouseEnter("ordinateur")}
+                  onMouseLeave={handleCategoryMouseLeave}
+                >
+                  Ordinateur <i className="fa-solid fa-angle-right"></i>
+                </h6>
+                <h6
+                  onClick={handleSmartwatchClick}
+                  onMouseEnter={() => handleCategoryMouseEnter("smartwatch")}
+                  onMouseLeave={handleCategoryMouseLeave}
+                >
+                  Smartwatch <i className="fa-solid fa-angle-right"></i>
+                </h6>
+              </Col>
+              <Col md={3}>
+                <h6
+                  onClick={handleTabletteClick}
+                  onMouseEnter={() => handleCategoryMouseEnter("tablette")}
+                  onMouseLeave={handleCategoryMouseLeave}
+                >
+                  Tablette <i className="fa-solid fa-angle-right"></i>
+                </h6>
+                <h6
+                  onClick={handleElectroClick}
+                  onMouseEnter={() => handleCategoryMouseEnter("electro")}
+                  onMouseLeave={handleCategoryMouseLeave}
+                >
+                  Électroménager <i className="fa-solid fa-angle-right"></i>
+                </h6>
+              </Col>
+              <Col md={3}>
+                <h6
+                  onClick={handleMeubleClick}
+                  onMouseEnter={() => handleCategoryMouseEnter("meuble")}
+                  onMouseLeave={handleCategoryMouseLeave}
+                >
+                  Meubles <i className="fa-solid fa-angle-right"></i>
+                </h6>
+                <h6
+                  onClick={handleFournituresClick}
+                  onMouseEnter={() => handleCategoryMouseEnter("fourniture")}
+                  onMouseLeave={handleCategoryMouseLeave}
+                >
+                  Fournitures de bureau <i className="fa-solid fa-angle-right"></i>
+                </h6>
+                <h6
+                  onClick={handleParfumClick}
+                  onMouseEnter={() => handleCategoryMouseEnter("parfum")}
+                  onMouseLeave={handleCategoryMouseLeave}
+                >
+                  Parfumerie <i className="fa-solid fa-angle-right"></i>
+                </h6>
               </Col>
             </Row>
           </Container>

@@ -1,22 +1,25 @@
+// Pages/HighTechCarousel.js
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Carousel } from 'react-bootstrap';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
+import CardGrid from '../../components/CardGrid'; // Importer CardGrid
 import { useNavigate } from 'react-router-dom';
-import '../../Styles/card.css';
+
+
 
 const highTechItems = [
-  { title: '', image: '/lap1.jpg '},
+  { title: '', image: '/lap1.jpg' },
   { title: '', image: '/ht.png' },
-  { title: '', image: '/lap2.jpg '},
+  { title: '', image: '/lap2.jpg' },
   { title: '', image: '/sw1.png' }
 ];
 
 const highTechCategories = [
   { title: 'Ordinateurs', image: '/ordinateur.jpg' },
   { title: 'Smartphones', image: '/smartphone.jpg' },
-  { title: 'Tablettes', image: '/tablette.jpg'},
+  { title: 'Tablettes', image: '/tablette.jpg' },
   { title: 'Smartwatches', image: '/smartwatch.jpg' }
 ];
 
@@ -41,21 +44,27 @@ function HighTechCarousel() {
     fetchProducts();
   }, []);
 
-  const handleSmartphoneClick = () => {
-    navigate('/smartphone');
-  };
-  const handleOrdinateurClick = () => {
-    navigate('/ordinateur');
-  };
-  const handleSmartwatchClick = () => {
-    navigate('/smartwatch');
-  };
-  const handleTabletteClick = () => {
-    navigate('/tablette');
+  const handleCategoryClick = (category) => {
+    switch (category) {
+      case 'Smartphones':
+        navigate('/smartphone');
+        break;
+      case 'Ordinateurs':
+        navigate('/ordinateur');
+        break;
+      case 'Smartwatches':
+        navigate('/smartwatch');
+        break;
+      case 'Tablettes':
+        navigate('/tablette');
+        break;
+      default:
+        break;
+    }
   };
 
   return (
-    <div className='bg-light'>
+    <div className="bg-light">
       <Header />
       <div className="row">
         <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
@@ -102,58 +111,15 @@ function HighTechCarousel() {
                       height: '150px',
                       objectFit: 'cover'
                     }}
-                    onClick={
-                      category.title === 'Smartphones'
-                        ? handleSmartphoneClick
-                        : category.title === 'Ordinateurs'
-                        ? handleOrdinateurClick
-                        : category.title === 'Smartwatches'
-                        ? handleSmartwatchClick
-                        : category.title === 'Tablettes'
-                        ? handleTabletteClick
-                        : null
-                    } // Clic sur l’image
+                    onClick={() => handleCategoryClick(category.title)}
                   />
-                  <h6
-                    className="mt-2"
-                    onClick={
-                      category.title === 'Smartphones'
-                        ? handleSmartphoneClick
-                        : category.title === 'Ordinateurs'
-                        ? handleOrdinateurClick
-                        : category.title === 'Smartwatches'
-                        ? handleSmartwatchClick
-                        : category.title === 'Tablettes'
-                        ? handleTabletteClick
-                        : null
-                    } // Clic sur le titre
-                  >
-                    {category.title}
-                  </h6>
+                  <h6 className="mt-2">{category.title}</h6>
                 </Col>
               ))}
             </Row>
 
-            {/* Display All High-Tech Products Below the Categories */}
             <h3 className="text-center my-4">Tous les produits High-Tech</h3>
-            <Row>
-              {products.map((product, index) => (
-                <Col md={3} sm={6} xs={12} key={product.id} className="mb-4">
-                  <div className="product-card">
-                    <div className="product-image-container">
-                      <img src={product.imageUrl} alt={product.title} className="product-image" />
-                    </div>
-                    <div className="product-info">
-                      <h2 className="product-title">{product.title}</h2>
-                      <p className="product-price">{product.price} DT</p>
-                      <p className="product-description">{product.description}</p>
-                      <button className="buy-now-button">Ajouter au panier</button>
-                    </div>
-                  </div>
-                </Col>
-              ))}
-            </Row>
-
+            <CardGrid products={products} />
           </Container>
         </div>
       </div>

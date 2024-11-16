@@ -4,7 +4,7 @@ import Sidebar from '../../components/Sidebar';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import { Container } from 'react-bootstrap';
-
+import CardGrid from '../../components/CardGrid';
 function Smartwatches() {
   const [products, setProducts] = useState([]);
 
@@ -35,21 +35,7 @@ function Smartwatches() {
         <div className="col-xl-10">
           <Container>
             <h2 className="text-center my-4">Smartwatches</h2>
-            <div className="product-row">
-              {products.map(product => (
-                <div key={product.id} className="product-card">
-                  <div className="product-image-container">
-                    <img src={product.imageUrl} alt={product.title} className="product-image" />
-                  </div>
-                  <div className="product-info">
-                    <h2 className="product-title">{product.title}</h2>
-                    <p className="product-price">{product.price} DT</p>
-                    <p className="product-description">{product.description}</p>
-                    <button className="buy-now-button">Ajouter au panier</button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <CardGrid products={products} />
           </Container>
         </div>
       </div>

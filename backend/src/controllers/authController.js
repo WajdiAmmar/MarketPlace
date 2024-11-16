@@ -35,12 +35,10 @@ const signin = async (req, res) => {
   console.log("Tentative de connexion avec :", email);
 
   try {
-    // Authentification avec Firebase
     const userCredential = await signInWithEmailAndPassword(auth, email, motDePasse);
     const user = userCredential.user;
     console.log("Utilisateur authentifié :", user.uid);
 
-    // Récupérer les données de l'utilisateur dans Firestore
     const userDoc = await getDoc(doc(firestore, 'users', user.uid));
     if (!userDoc.exists()) {
       throw new Error("Utilisateur introuvable dans Firestore.");
@@ -49,16 +47,22 @@ const signin = async (req, res) => {
     const userData = userDoc.data();
     console.log("Données de l'utilisateur dans Firestore :", userData);
 
-    // Générer un token JWT
     const token = jwt.sign(
       { uid: user.uid, email: user.email, role: userData.role },
       JWT_SECRET,  
       { expiresIn: '24h' }  
     );
-    // Réponse avec le token JWT
+
+    // Inclure les données utilisateur dans la réponse
     res.status(200).json({
-      token,  // Renvoi du token au client
-      message: 'Connexion réussie !'
+      token,
+      user: {
+        role: userData.role,
+        genre: userData.genre,
+        email: user.email,
+        prenom: userData.prenom,
+        nom: userData.nom
+      }
     });
   } catch (error) {
     console.error("Erreur lors de la connexion :", error.message);
