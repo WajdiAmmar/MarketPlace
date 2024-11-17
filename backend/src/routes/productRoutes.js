@@ -1,7 +1,7 @@
 // src/routes/productRoutes.js
 const express = require('express');
 const router = express.Router();
-const { addProduct, getProductsByCategory, getProductByProduct, getAllProducts } = require('../controllers/productController'); // Ajoutez getAllProducts
+const { addProduct, getProductsByCategory, getProductByProduct, getAllProducts,getProductsByUser } = require('../controllers/productController'); // Ajoutez getAllProducts
 const multer = require('multer');
 
 const storage = multer.memoryStorage();
@@ -17,6 +17,10 @@ router.get('/product/:Product', getProductByProduct);
 router.get('/category/:category', getProductsByCategory);
 
 // Route pour récupérer tous les produits
-router.get('/products', getAllProducts); // Nouvelle route pour obtenir tous les produits
+router.get('/products', getAllProducts); 
+
+// Route pour récupérer les produits par utilisateur
+router.get('/user/:userId', getProductsByUser);
+
 
 module.exports = router;

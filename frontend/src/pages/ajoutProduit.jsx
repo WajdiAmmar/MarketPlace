@@ -169,66 +169,52 @@ const Ajoutproduit = () => {
       return;
     }
   
-    // Création du FormData pour l'envoi
-    const formData = new FormData();
-    formData.append('title', product.title);
-    formData.append('price', product.price);
-    formData.append('quantity', product.quantity);
-    formData.append('category', product.category);
-    formData.append('Product', product.Product);
-    formData.append('condition', product.condition);
-    formData.append('description', product.description);
-  
-    const keywords = keywordsByProduct[product.Product] || [];
-    formData.append('keywords', JSON.stringify(keywords));
-  
-    formData.append('image', product.image);
-  
-    try {
-      const response = await fetch('http://localhost:5000/api/products/add', {
-        method: 'POST',
-        body: formData,
-      });
-  
-      if (!response.ok) {
-        throw new Error('Erreur lors de l\'ajout du produit');
-      }
-  
-      const data = await response.json();
-      console.log('Produit ajouté avec succès:', data);
-  
-      // Affichage du message de succès
-      Swal.fire({
-        icon: 'success',
-        title: 'Produit ajouté avec succès',
-        text: 'Votre produit a été ajouté avec succès à la marketplace.',
-      });
-  
-      // Réinitialiser le formulaire
-      setProduct({
-        title: "",
-        price: "",
-        quantity: "",
-        category: "",
-        Product: "",
-        condition: "",
-        description: "",
-        image: null,
-      });
-      setPreviewImage(null);
-  
-      // Rediriger vers la page d'accueil
-      navigate('/');  // Redirection vers la page d'accueil
-  
-    } catch (error) {
-      console.error('Erreur lors de l\'ajout du produit:', error);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userId = user.ID
+    if (!userId) {
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
-        text: 'Une erreur est survenue lors de l\'ajout du produit. Veuillez réessayer.',
+        text: "Vous devez être connecté pour ajouter un produit.",
       });
+      return;
     }
-  };
+
+    const formData = new FormData();
+    formData.append("title", product.title);
+    formData.append("price", product.price);
+    formData.append("quantity", product.quantity);
+    formData.append("category", product.category);
+    formData.append("Product", product.Product);
+    formData.append("condition", product.condition);
+    formData.append("description", product.description);
+    formData.append("userId", userId);
+    formData.append("keywords", JSON.stringify(keywordsByProduct[product.Product] || []));
+    formData.append("image", product.image);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/products/add", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'ajout du produit");
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "Succès",
+        text: "Produit ajouté avec succès.",
+      });
+      navigate("/");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur",
+        text: error.message,
+      });
+    }};
   
 
   return (
