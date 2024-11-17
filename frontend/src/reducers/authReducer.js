@@ -1,24 +1,27 @@
 const initialState = {
-    isAuthenticated: false,  
+    isAuthenticated: false, 
+    user: null, 
     token: null, 
   };
   
   const authReducer = (state = initialState, action) => {
     switch (action.type) {
       case 'LOGIN':
+        console.log( "Login :",{ ...state, isAuthenticated: true, user: action.payload.user, token: action.payload.token });
         return {
           ...state,
-          isAuthenticated: true,  // L'utilisateur est connecté
-          token: action.payload.token,  // Sauvegarder le token
+          isAuthenticated: true,
+          user: action.payload.user,
+          token: action.payload.token,
         };
-  
       case 'LOGOUT':
+        console.log("Logout:", { ...state, isAuthenticated: false, user: null, token: null });
         return {
           ...state,
-          isAuthenticated: false,  // L'utilisateur est déconnecté
-          token: null,  // Effacer le token
+          isAuthenticated: false,
+          user: null,
+          token: null,
         };
-  
       default:
         return state;
     }

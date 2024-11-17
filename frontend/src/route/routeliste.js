@@ -21,6 +21,8 @@ import Meubles from '../pages/produits/meubles';
 import Fournitures from '../pages/produits/fournitures';
 import CheckoutPage from '../pages/CheckoutPage';
 import Dashboard from '../admin/dashboard';
+import Myproduct from '../pages/Mes produits';
+
 const RouteList = () => {
   return (
     <Routes>
@@ -45,6 +47,7 @@ const RouteList = () => {
       <Route path="/fourniture" element={<Fournitures/>}/>
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/dashboard" element={<Dashboard/>} />
+      <Route path="/mesproduits" element={<Myproduct/>} />
     </Routes>
   );
 };

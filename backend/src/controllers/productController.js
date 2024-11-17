@@ -9,7 +9,7 @@ const addProduct = async (req, res) => {
     console.log("Requête reçue :", req.body); // Log le corps de la requête
     console.log("Fichier reçu :", req.file); // Log le fichier reçu
 
-    const { title, price, category, Product, condition, description, keywords } = req.body; 
+    const { title, price, category, Product, condition, description, keywords,userId } = req.body; 
     const image = req.file; // Utilisé si tu as configuré multer pour gérer les images
 
     // Vérification des champs requis
@@ -38,7 +38,8 @@ const addProduct = async (req, res) => {
           condition,
           description,
           imageUrl,
-          keywords: keywordsArray, // Stocker les mots clés sous forme de tableau
+          keywords: keywordsArray, 
+          userId:userId,
           createdAt: new Date().toISOString(),
       };
 
@@ -130,6 +131,36 @@ const getAllProducts = async (req, res) => {
     return res.status(500).json({ message: "Erreur lors de la récupération des produits" });
   }
 };
+const getProductsByUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log("Récupération des produits pour l'utilisateur :", userId);
+
+    if (!userId) {
+      return res.status(400).json({ message: "ID utilisateur manquant." });
+    }
+
+    const productsRef = collection(firestore, 'products');
+    const q = query(productsRef, where('userId', '==', userId));
+
+    const querySnapshot = await getDocs(q);
+    const products = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    if (products.length === 0) {
+      console.log("Aucun produit trouvé pour cet utilisateur.");
+      return res.status(404).json({ message: "Aucun produit trouvé." });
+    }
+
+    console.log("Produits récupérés :", products);
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des produits :", error);
+    return res.status(500).json({ message: "Erreur serveur lors de la récupération des produits." });
+  }
+};
 
 // Ajoutez cette fonction à l'exportation
-module.exports = { addProduct, getProductByProduct, getProductsByCategory, getAllProducts };
+module.exports = { addProduct, getProductByProduct, getProductsByCategory, getAllProducts,getProductsByUser };

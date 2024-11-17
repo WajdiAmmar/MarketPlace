@@ -48,7 +48,7 @@ const signin = async (req, res) => {
     console.log("Données de l'utilisateur dans Firestore :", userData);
 
     const token = jwt.sign(
-      { uid: user.uid, email: user.email, role: userData.role },
+      { uid: user.uid, email: user.email, role: userData.role, },
       JWT_SECRET,  
       { expiresIn: '1h' }  
     );
@@ -57,12 +57,13 @@ const signin = async (req, res) => {
     res.status(200).json({
       token,
       user: {
+        ID: user.uid,
+        nom: userData.nom,
+        prenom: userData.prenom,
         role: userData.role,
         genre: userData.genre,
         email: user.email,
-        prenom: userData.prenom,
-        nom: userData.nom
-      }
+        }
     });
   } catch (error) {
     console.error("Erreur lors de la connexion :", error.message);

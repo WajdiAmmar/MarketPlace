@@ -7,8 +7,6 @@ import SearchBar from '../components/SearchBar';
 import Sidebar from '../components/Sidebar';
 import CarouselComponent from '../components/CarouselComponent';
 import { Container } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { login } from '../actions/authActions';
 import CardGrid from '../components/CardGrid';  // Importation du composant CardGrid
 
 const Home = () => {
@@ -16,15 +14,7 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState([0, 20000]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const dispatch = useDispatch();
 
-  // Vérification de l'authentification au démarrage de la page
-  useEffect(() => {
-    const token = localStorage.getItem('authToken'); // Vérifie si le token est présent dans localStorage
-    if (token) {  // Si un token existe
-      dispatch(login(token));  // Déclenche l'action pour connecter l'utilisateur
-    }
-  }, [dispatch]); // Cette vérification ne se fait qu'une seule fois au démarrage
 
   useEffect(() => {
     const fetchProducts = async () => {

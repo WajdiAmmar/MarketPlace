@@ -4,14 +4,18 @@ import './App.css'; // Optionnel si vous avez des styles personnalisés
 import RouteList from './route/routeliste';
 import { BrowserRouter as Router } from 'react-router-dom'; 
 import { useDispatch } from 'react-redux';
-import { AuthState } from './config/firebase';
+import { login} from './actions/authActions';
 
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    AuthState(dispatch);
+    const token = localStorage.getItem('authToken');
+    const user = JSON.parse(localStorage.getItem('user'));
+  if (token && user) {
+    dispatch(login(token, user));
+    }
   }, [dispatch]);
   return (
     <Router>

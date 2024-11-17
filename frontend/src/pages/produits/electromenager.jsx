@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import '../../Styles/card.css';
 import Sidebar from '../../components/Sidebar';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import { Container} from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import CardGrid from '../../components/CardGrid';
 
 function Electro() {
@@ -27,7 +26,7 @@ function Electro() {
   }, []);
 
   return (
-    <div className='bg-light'>
+    <div>
       <Header />
       <div className="row">
         <div className="sidebarArea col-xl-2 sidebar">
