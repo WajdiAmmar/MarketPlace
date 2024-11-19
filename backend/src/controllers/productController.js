@@ -1,19 +1,16 @@
 // src/controllers/productController.js
 const { firestore, storage } = require('../config/firebase'); // Assurez-vous d'importer Firestore et Storage
 const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
-const { collection, addDoc, query, where, getDocs } = require('firebase/firestore'); // Ajoutez getDoc si besoin
+const { collection, addDoc, query, where, getDocs,doc,deleteDoc } = require('firebase/firestore'); // Ajoutez getDoc si besoin
 
 // Fonction pour ajouter un produit
 const addProduct = async (req, res) => {
   try {
-    console.log("Requête reçue :", req.body); // Log le corps de la requête
-    console.log("Fichier reçu :", req.file); // Log le fichier reçu
-
-    const { title, price, category, Product, condition, description, keywords,userId } = req.body; 
-    const image = req.file; // Utilisé si tu as configuré multer pour gérer les images
+    const { title, price, category, Product, condition, description, keywords, quantity, userId } = req.body; 
+    const image = req.file;
 
     // Vérification des champs requis
-    if (!title || !price || !category || !Product || !condition || !description || !keywords) { 
+    if (!title || !price || !category || !Product || !condition || !description || !keywords || !quantity) {
       return res.status(400).json({ message: "Tous les champs sont requis." });
     }
 
@@ -27,8 +24,7 @@ const addProduct = async (req, res) => {
       // Récupérer l'URL de l'image
       const imageUrl = await getDownloadURL(imageRef);
 
-      const keywordsArray = JSON.parse(keywords); 
-
+      const keywordsArray = JSON.parse(keywords);
 
       const newProduct = {
           title,
@@ -37,9 +33,10 @@ const addProduct = async (req, res) => {
           Product,
           condition,
           description,
+          quantity: parseInt(quantity), // La quantité est convertie en nombre entier
           imageUrl,
-          keywords: keywordsArray, 
-          userId:userId,
+          keywords: keywordsArray,
+          userId,
           createdAt: new Date().toISOString(),
       };
 
@@ -56,6 +53,7 @@ const addProduct = async (req, res) => {
     return res.status(500).json({ message: "Erreur lors de l'ajout du produit" });
   }
 };
+
 
 // Fonction pour obtenir un produit par Product
 const getProductByProduct = async (req, res) => {
@@ -161,6 +159,26 @@ const getProductsByUser = async (req, res) => {
     return res.status(500).json({ message: "Erreur serveur lors de la récupération des produits." });
   }
 };
+const deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId; // Récupérer l'ID du produit à partir de l'URL
 
+    if (!productId) {
+      return res.status(400).json({ message: "ID du produit manquant." });
+    }
+
+    // Référence au produit dans Firestore
+    const productRef = doc(firestore, 'products', productId);
+
+    // Supprimer le produit de Firestore
+    await deleteDoc(productRef);
+
+    // Répondre avec succès
+    return res.status(200).json({ message: "Produit supprimé avec succès." });
+  } catch (error) {
+    console.error("Erreur lors de la suppression du produit :", error);
+    return res.status(500).json({ message: "Erreur lors de la suppression du produit" });
+  }
+};
 // Ajoutez cette fonction à l'exportation
-module.exports = { addProduct, getProductByProduct, getProductsByCategory, getAllProducts,getProductsByUser };
+module.exports = { addProduct, getProductByProduct, getProductsByCategory, getAllProducts,getProductsByUser,deleteProduct };
