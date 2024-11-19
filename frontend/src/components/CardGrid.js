@@ -1,27 +1,16 @@
-// components/CardGrid.js
 import React from 'react';
-import { Row, Col, Button } from 'react-bootstrap'; // Importation des composants nécessaires
-import '../Styles/card.css'; // Assure-toi que ce fichier est bien importé
-import { useDispatch, useSelector } from 'react-redux'; // Importation de redux pour l'état global
-import { addToCart, incrementQuantity } from '../actions/cartActions'; // Importation des actions
-import Swal from 'sweetalert2'; // Importation de SweetAlert2
+import { Row, Col, Button } from 'react-bootstrap';
+import '../Styles/card.css'; // Style du composant
+import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
-const CardGrid = ({ products }) => {
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const connected = useSelector((state) => state.auth.isAuthenticated); // Vérification si l'utilisateur est connecté
+const CardGrid = ({ products, isMyProductsPage, handleDelete }) => {
+  const isConnected = useSelector((state) => state.auth.isAuthenticated); // Vérifie si l'utilisateur est connecté
+  const userId = useSelector((state) => state.auth.user?.ID); // ID de l'utilisateur connecté
 
   // Fonction pour ajouter un produit au panier
-  const handleAddToCart = (product) => {
-    if (connected) {
-      const existingProduct = cartItems.find(item => item.id === product.id);
-      if (existingProduct) {
-        dispatch(incrementQuantity(product.id)); // Incrémente la quantité si déjà dans le panier
-      } else {
-        dispatch(addToCart(product)); // Ajoute le produit au panier
-      }
-    } else {
-      // Remplacement de l'alerte native par un SweetAlert2
+  const handleAddToCart = async (product) => {
+    if (!isConnected) {
       Swal.fire({
         icon: 'warning',
         title: 'Non connecté',
@@ -31,20 +20,75 @@ const CardGrid = ({ products }) => {
         cancelButtonText: 'Annuler',
       }).then((result) => {
         if (result.isConfirmed) {
-          // Redirige vers la page de connexion si l'utilisateur confirme
-          window.location.href = '/login';
+          window.location.href = '/login'; // Redirige vers la page de connexion
         }
+      });
+      return;
+    }
+
+    try {
+      // Requête vers le backend pour ajouter le produit
+      const response = await fetch('http://localhost:5000/api/cart/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          userId,
+          product,
+          quantity: 1,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Ajouté au panier',
+          text: `${product.title} a été ajouté avec succès !`,
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: data.message || 'Une erreur est survenue.',
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout au panier:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Une erreur interne est survenue.',
       });
     }
   };
 
+  // Fonction pour supprimer un produit
+  const handleDeleteClick = (productId) => {
+    Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: 'Cette action supprimera définitivement le produit.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Supprimer',
+      cancelButtonText: 'Annuler',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete(productId);
+      }
+    });
+  };
+
   return (
     <div className="content-layout">
-      <Row xs={1} md={2} lg={4} className="g-4"> 
+      <Row xs={1} md={2} lg={4} className="g-4">
         {products.map((product) => (
           <Col key={product.id}>
             <div className="product-card">
-              {/* Conteneur d'image */}
+              {/* Image produit */}
               <div className="product-image-container">
                 <img
                   src={product.imageUrl}
@@ -57,12 +101,23 @@ const CardGrid = ({ products }) => {
               <h2 className="product-title">{product.title}</h2>
               <p className="product-price">{product.price} DT</p>
               <p className="product-description">{product.description}</p>
-              <Button 
-                className="buy-now-button"
-                onClick={() => handleAddToCart(product)} // Appel à la fonction interne de gestion du panier
-              >
-                Ajouter au panier
-              </Button>
+
+              {/* Bouton conditionnel */}
+              {isMyProductsPage ? (
+                <Button
+                  className="buy-now-button"
+                  onClick={() => handleDeleteClick(product.id)} // Supprimer le produit
+                >
+                  Supprimer
+                </Button>
+              ) : (
+                <Button
+                  className="buy-now-button"
+                  onClick={() => handleAddToCart(product)} // Ajouter au panier
+                >
+                  Ajouter au panier
+                </Button>
+              )}
             </div>
           </Col>
         ))}

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import CardGrid from '../components/CardGrid'; // Assurez-vous que le chemin est correct
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 
 const Myproduct = () => {
   const [products, setProducts] = useState([]);
+  const userId=useSelector((state)=>state.auth.user?.ID);
 
   useEffect(() => {
-
-
     const fetchProducts = async () => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const userId = user.ID
       try {
         const response = await fetch(`http://localhost:5000/api/products/user/${userId}`);
         if (!response.ok) {
@@ -23,18 +25,55 @@ const Myproduct = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [userId]);
 
-  return (
-    <div>
-      <h2>Mes produits</h2>
-      {products.length === 0 ? (
-        <p>Aucun produit trouvé.</p>
-      ) : (
-        <CardGrid products={products} /> // Intégration du composant CardGrid
-      )}
-    </div>
-  );
+const handleDelete = async (productId) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/products/products/${productId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la suppression du produit');
+    }
+
+    // Supprimer le produit de l'état local après la suppression réussie
+    setProducts(products.filter(product => product.id !== productId));
+    Swal.fire({
+      icon: 'success',
+      title: 'Produit supprimé',
+      text: 'Le produit a été supprimé avec succès.',
+    });
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Erreur',
+      text: 'Une erreur est survenue lors de la suppression du produit.',
+    });
+  }
 };
 
+  
+    return (
+      <div className="bg-white">
+        <Header />
+        <div className="row">
+          <div className="sidebarArea col-xl-2 sidebar" id="sidebarArea">
+            <Sidebar />
+          </div>
+          <div className="col-xl-10">
+            <h2>Mes produits</h2>
+            {products.length === 0 ? (
+              <p>Aucun produit trouvé.</p>
+            ) : (
+              <CardGrid products={products} isMyProductsPage={true} handleDelete={handleDelete} />
+
+            )}
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  };
 export default Myproduct;

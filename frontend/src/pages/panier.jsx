@@ -1,30 +1,111 @@
-// Panier.js
-
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Importer useNavigate
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
-import { useDispatch, useSelector } from 'react-redux'; // Importer useDispatch et useSelector
-import { incrementQuantity, decrementQuantity, removeFromCart } from '../actions/cartActions'; // Importer les actions
 import "../Styles/checkout.css";
+import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
 const Panier = () => {
-  const dispatch = useDispatch(); // Hook pour dispatcher les actions Redux
-  const navigate = useNavigate();  // Hook pour la navigation
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const userId = useSelector((state) => state.auth.user?.ID) // Remplacez par une méthode appropriée pour obtenir l'ID utilisateur
 
-  // Récupérer les éléments du panier depuis Redux
-  const cartItems = useSelector((state) => state.cart.cartItems);
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (!userId) {
+        setError("Vous devez être connecté pour accéder au panier.");
+        return;
+      }
 
-  // Calculer le total du panier
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:5000/api/cart/cart/${userId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setCartItems(data.data.products || []);
+        } else {
+          setError(data.message || 'Erreur lors du chargement du panier.');
+        }
+      } catch (err) {
+        setError('Erreur réseau ou serveur.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCart();
+  }, [userId]);
+
+  const handleUpdateQuantity = async (productId, change) => {
+    if (!userId) {
+      alert("Vous devez être connecté pour gérer votre panier.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/cart/update-quantity`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, productId, change }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCartItems(data.products || []);
+      } else {
+        alert(data.message || 'Erreur lors de la mise à jour de la quantité.');
+      }
+    } catch (error) {
+      alert('Erreur réseau ou serveur. Veuillez réessayer plus tard.');
+    }
+  };
+
+  const handleRemoveItem = async (productId) => {
+    if (!userId) {
+      alert("Vous devez être connecté pour gérer votre panier.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/cart/remove`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, productId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCartItems(data.products || []);
+        Swal.fire({
+          icon: 'success',
+          title: 'Produit supprimé',
+          text: 'Le produit a été supprimé de votre panier.',
+        });
+      } else {
+        alert(data.message || 'Erreur lors de la suppression du produit.');
+      }
+    } catch (error) {
+      alert('Erreur réseau ou serveur. Veuillez réessayer plus tard.');
+    }
+  };
+
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // Gérer la validation du panier
   const handleCheckout = () => {
-    // Rediriger vers la page Checkout
     navigate('/checkout');
   };
 
@@ -38,7 +119,11 @@ const Panier = () => {
         <div className="col-xl-10">
           <Container className="mt-5">
             <h1>Votre Panier</h1>
-            {cartItems.length === 0 ? (
+            {loading ? (
+              <Alert variant="info">Chargement du panier...</Alert>
+            ) : error ? (
+              <Alert variant="danger">{error}</Alert>
+            ) : cartItems.length === 0 ? (
               <Alert variant="info">Votre panier est vide.</Alert>
             ) : (
               <>
@@ -58,7 +143,7 @@ const Panier = () => {
                             <Button
                               variant="outline-secondary"
                               size="sm"
-                              onClick={() => dispatch(decrementQuantity(item.id))}
+                              onClick={() => handleUpdateQuantity(item.id, -1)}
                               disabled={item.quantity === 1}
                             >
                               -
@@ -67,7 +152,7 @@ const Panier = () => {
                             <Button
                               variant="outline-secondary"
                               size="sm"
-                              onClick={() => dispatch(incrementQuantity(item.id))}
+                              onClick={() => handleUpdateQuantity(item.id, 1)}
                             >
                               +
                             </Button>
@@ -75,23 +160,21 @@ const Panier = () => {
                           <Button
                             variant="danger"
                             size="sm"
-                            className="ml-3"
-                            onClick={() => dispatch(removeFromCart(item.id))}
+                            className="mt-3"
+                            onClick={() => handleRemoveItem(item.id)} // Appel à la fonction pour supprimer
                           >
                             Supprimer
                           </Button>
                         </Col>
                         <Col xs={12} className="d-flex justify-content-end">
-                          <div>
-                            <p>
-                              <span className="text-danger font-weight-bold">
-                                {item.price.toFixed(2)} DT x {item.quantity}
-                              </span>
-                              <span className="ml-2">
-                                = {(item.price * item.quantity).toFixed(2)} DT
-                              </span>
-                            </p>
-                          </div>
+                          <p>
+                            <span className="text-danger font-weight-bold">
+                              {item.price.toFixed(2)} DT x {item.quantity}
+                            </span>
+                            <span className="ml-2">
+                              = {(item.price * item.quantity).toFixed(2)} DT
+                            </span>
+                          </p>
                         </Col>
                       </Row>
                     ))}
@@ -107,7 +190,7 @@ const Panier = () => {
                         variant="outline-light"
                         className="w-100 my-3 bg-black"
                         size="lg"
-                        onClick={handleCheckout}  // Action qui déclenche la redirection
+                        onClick={handleCheckout}
                       >
                         Valider mon panier
                       </Button>

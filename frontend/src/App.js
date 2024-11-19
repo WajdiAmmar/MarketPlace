@@ -9,7 +9,6 @@ import { login} from './actions/authActions';
 
 function App() {
   const dispatch = useDispatch();
-
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     const user = JSON.parse(localStorage.getItem('user'));

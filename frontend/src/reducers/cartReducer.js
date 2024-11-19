@@ -1,6 +1,3 @@
-// reducers/cartReducer.js
-
-// Récupérer les données du panier depuis le localStorage
 const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
 
 const initialState = {

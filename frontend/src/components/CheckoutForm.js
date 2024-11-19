@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import { addToCart, removeFromCart, incrementQuantity, decrementQuantity } from '../actions/cartActions';  // Actions importées
+import { useSelector } from 'react-redux';
 import PersonalInfoForm from './PersonalInfo';
 import DeliveryForm from './DeliveryMethod';
 import PaymentForm from './PaymentInfo';
 import "../Styles/checkout.css";
 
 const CheckoutForm = () => {
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.items);  // Utilisation de Redux pour accéder au panier
+  const cartItems = useSelector((state) => state.cart.cartItems);  // Utilisation de Redux pour accéder au panier
   const [step, setStep] = useState(1);
 
   // State pour gérer les données du formulaire
@@ -41,18 +39,6 @@ const CheckoutForm = () => {
     setFormData((prevData) => ({ ...prevData, [field]: value }));
   };
 
-  // Gestion des actions du panier
-  const handleRemoveFromCart = (id) => {
-    dispatch(removeFromCart(id));  // Supprimer un article du panier
-  };
-
-  const handleIncrementQuantity = (id) => {
-    dispatch(incrementQuantity(id));  // Augmenter la quantité d'un article
-  };
-
-  const handleDecrementQuantity = (id) => {
-    dispatch(decrementQuantity(id));  // Diminuer la quantité d'un article
-  };
 
   return (
     <Container className="checkout-page">
@@ -86,12 +72,6 @@ const CheckoutForm = () => {
                 <p>
                   {item.price.toFixed(2)} DT x {item.quantity} = {(item.price * item.quantity).toFixed(2)} DT
                 </p>
-                <div className="quantity-controls">
-                  <button onClick={() => handleIncrementQuantity(item.id)}>+</button>
-                  <span>{item.quantity}</span>
-                  <button onClick={() => handleDecrementQuantity(item.id)}>-</button>
-                </div>
-                <button onClick={() => handleRemoveFromCart(item.id)} className="remove-item">Supprimer</button>
               </div>
             ))}
             <hr />
