@@ -2,25 +2,23 @@ import { Button, Form } from 'react-bootstrap';
 import '../Styles/sidebar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import {useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
 const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [price, setPrice] = useState(20000); // Starting with max price
+  const [price, setPrice] = useState(10000); // Starting with max price
   const connected = useSelector((state) => state.auth.isAuthenticated);
-
 
   const handleAddProductClick = () => {
     if (connected) {
       navigate('/ajoutProduit'); // Si l'utilisateur est connecté, il peut accéder à l'ajout de produit
     } else {
-      // Rediriger vers la page de login si l'utilisateur n'est pas connecté
       Swal.fire({
         icon: 'warning',
         title: 'Non connecté',
-        text: 'Vous devez être connecté pour ajouter des produits .',
+        text: 'Vous devez être connecté pour ajouter des produits.',
         confirmButtonText: 'Se connecter',
         showCancelButton: true,
         cancelButtonText: 'Annuler',
@@ -34,13 +32,51 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
   };
 
   const handleCategoryChange = (e) => {
+    if (!connected) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Non connecté',
+        text: 'Vous devez être connecté pour filtrer par catégorie.',
+      });
+      return;
+    }
+
     setSelectedCategory(e.target.value);
     onCategoryChange(e.target.value); // Appeler la fonction de changement de catégorie
   };
 
   const handlePriceChange = (value) => {
+    if (!connected) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Non connecté',
+        text: 'Vous devez être connecté pour filtrer par prix.',
+      });
+      return;
+    }
+
     setPrice(value);
     onPriceChange([0, value]); 
+  };
+
+  const handleCategoryClick = () => {
+    if (!connected) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Non connecté',
+        text: 'Vous devez être connecté pour filtrer par catégorie.',
+      });
+    }
+  };
+
+  const handlePriceClick = () => {
+    if (!connected) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Non connecté',
+        text: 'Vous devez être connecté pour filtrer par prix.',
+      });
+    }
   };
 
   return (
@@ -65,6 +101,8 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
               value="" 
               checked={selectedCategory === ''}
               onChange={handleCategoryChange} 
+              onClick={handleCategoryClick} // Affiche l'avertissement si l'utilisateur est déconnecté
+              disabled={!connected} // Désactive les options si non connecté
             />
             <Form.Check 
               type="radio" 
@@ -72,6 +110,8 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
               value="High-Tech" 
               checked={selectedCategory === 'High-Tech'}
               onChange={handleCategoryChange} 
+              onClick={handleCategoryClick} // Affiche l'avertissement si l'utilisateur est déconnecté
+              disabled={!connected} // Désactive les options si non connecté
             />
             <Form.Check 
               type="radio" 
@@ -79,6 +119,8 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
               value="Cuisine et maison" 
               checked={selectedCategory === 'Cuisine et maison'}
               onChange={handleCategoryChange} 
+              onClick={handleCategoryClick} // Affiche l'avertissement si l'utilisateur est déconnecté
+              disabled={!connected} // Désactive les options si non connecté
             />
             <Form.Check 
               type="radio" 
@@ -86,6 +128,8 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
               value="Beauté" 
               checked={selectedCategory === 'Beauté'}
               onChange={handleCategoryChange} 
+              onClick={handleCategoryClick} // Affiche l'avertissement si l'utilisateur est déconnecté
+              disabled={!connected} // Désactive les options si non connecté
             />
             {/* Ajouter d'autres catégories ici si nécessaire */}
           </div>
@@ -96,12 +140,13 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
             type="range"
             value={price}
             onChange={(e) => handlePriceChange(e.target.value)}
+            onClick={handlePriceClick} // Affiche l'avertissement si l'utilisateur est déconnecté
             min={0}
-            max={20000}
-            step={50}
+            max={10000}
+            step={100}
             className="form-range"
+            disabled={!connected} // Désactive le contrôle si non connecté
           />
-          <p className="text-muted">Prix maximum: {price} DT</p>
         </li>
       </ul>
       <Button block="true" variant="outline-light" id="connecter-btn" onClick={handleAddProductClick}>

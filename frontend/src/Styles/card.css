@@ -96,3 +96,21 @@
     gap: 20px;
     padding: 20px 0;
 }
+.product-quantity {
+    font-size: 14px;
+    color: #555;
+    margin: 8px 0;
+  }
+  /* Style pour l'indication de stock */
+.stock-status {
+    font-weight: bold;
+  }
+  
+  .in-stock {
+    color: green; /* Texte en vert pour "En stock" */
+  }
+  
+  .out-of-stock {
+    color: red; /* Texte en rouge pour "Pas disponible" */
+  }
+  

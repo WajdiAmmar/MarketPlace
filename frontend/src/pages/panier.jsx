@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, Alert, Spinner } from 'react-bootstrap';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
@@ -13,7 +13,7 @@ const Panier = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const userId = useSelector((state) => state.auth.user?.ID) // Remplacez par une méthode appropriée pour obtenir l'ID utilisateur
+  const userId = useSelector((state) => state.auth.user?.ID);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -43,17 +43,10 @@ const Panier = () => {
   }, [userId]);
 
   const handleUpdateQuantity = async (productId, change) => {
-    if (!userId) {
-      alert("Vous devez être connecté pour gérer votre panier.");
-      return;
-    }
-
     try {
       const response = await fetch(`http://localhost:5000/api/cart/update-quantity`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, productId, change }),
       });
 
@@ -70,24 +63,19 @@ const Panier = () => {
   };
 
   const handleRemoveItem = async (productId) => {
-    if (!userId) {
-      alert("Vous devez être connecté pour gérer votre panier.");
-      return;
-    }
-
     try {
       const response = await fetch(`http://localhost:5000/api/cart/remove`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, productId }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
+        // Mettez à jour cartItems avec les produits restants
         setCartItems(data.products || []);
+        
         Swal.fire({
           icon: 'success',
           title: 'Produit supprimé',
@@ -106,7 +94,15 @@ const Panier = () => {
   };
 
   const handleCheckout = () => {
-    navigate('/checkout');
+    if (cartItems.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Panier vide',
+        text: 'Ajoutez des produits avant de passer à la commande.',
+      });
+    } else {
+      navigate('/checkout');
+    }
   };
 
   return (
@@ -120,7 +116,9 @@ const Panier = () => {
           <Container className="mt-5">
             <h1>Votre Panier</h1>
             {loading ? (
-              <Alert variant="info">Chargement du panier...</Alert>
+              <div className="d-flex justify-content-center my-4">
+                <Spinner animation="border" />
+              </div>
             ) : error ? (
               <Alert variant="danger">{error}</Alert>
             ) : cartItems.length === 0 ? (
@@ -161,7 +159,7 @@ const Panier = () => {
                             variant="danger"
                             size="sm"
                             className="mt-3"
-                            onClick={() => handleRemoveItem(item.id)} // Appel à la fonction pour supprimer
+                            onClick={() => handleRemoveItem(item.id)}
                           >
                             Supprimer
                           </Button>
@@ -182,7 +180,15 @@ const Panier = () => {
                   <Col md={4}>
                     <div className="p-3 border rounded bg-hover-light shadow text-black p-4 ml-5 mt-2 mb-5 container">
                       <h5>Récapitulatif</h5>
-                      <div className="d-flex justify-content-between">
+                      <ul>
+                        {cartItems.map((item) => (
+                          <li key={item.id}>
+                            {item.title} : {item.price.toFixed(2)} DT x {item.quantity} ={' '}
+                            {(item.price * item.quantity).toFixed(2)} DT
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="d-flex justify-content-between mt-3">
                         <span>Total de la commande</span>
                         <span>{calculateTotal().toFixed(2)} DT</span>
                       </div>
