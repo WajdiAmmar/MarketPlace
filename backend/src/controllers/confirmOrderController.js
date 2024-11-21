@@ -1,3 +1,4 @@
+const { doc, getDoc, setDoc, writeBatch } = require('firebase/firestore');
 const { firestore } = require('../config/firebase');
 const nodemailer = require('nodemailer');
 
@@ -5,37 +6,34 @@ const confirmation = async (req, res) => {
   try {
     const { formData, userId } = req.body;
 
-    // Vérification des données de commande
     if (!formData || !formData.email || !formData.fullName || !userId) {
       return res.status(400).json({ message: 'Données de commande ou utilisateur manquantes.' });
     }
 
-    console.log("Données de la commande:", formData);
+    const cartRef = doc(firestore, 'Panier', userId);
+    const cartDoc = await getDoc(cartRef);
 
-    // Récupération du panier depuis Firestore pour l'utilisateur
-    const cartRef = firestore.collection('cart').doc(userId);
-    const cartDoc = await cartRef.get();
-
-    if (!cartDoc.exists) {
-      return res.status(404).json({ message: 'Panier non trouvé pour cet utilisateur.' });
+    if (!cartDoc.exists()) {
+      return res.status(404).json({ message: 'Panier introuvable.' });
     }
 
     const cartData = cartDoc.data();
-    const productsInCart = cartData.products || [];
+    const productsInCart = Array.isArray(cartData.products) ? cartData.products : [];
 
     if (productsInCart.length === 0) {
       return res.status(400).json({ message: 'Le panier est vide.' });
     }
 
-    // Mettre à jour les quantités des produits dans Firestore
-    const batch = firestore.batch();
+    const updateBatch = writeBatch(firestore);
+    const insufficientStock = [];
+    let totalAmount = 0; // Initialisation du total
 
     for (const item of productsInCart) {
-      const productRef = firestore.collection('products').doc(item.productId);
-      const productDoc = await productRef.get();
+      const productRef = doc(firestore, 'products', item.id);
+      const productDoc = await getDoc(productRef);
 
-      if (!productDoc.exists) {
-        console.error(`Produit non trouvé pour l'ID: ${item.productId}`);
+      if (!productDoc.exists()) {
+        insufficientStock.push(`Produit non trouvé pour l'ID ${item.id}`);
         continue;
       }
 
@@ -43,21 +41,26 @@ const confirmation = async (req, res) => {
       const newQuantity = productData.quantity - item.quantity;
 
       if (newQuantity < 0) {
-        return res.status(400).json({ 
-          message: `La quantité demandée pour le produit ${productData.title} dépasse le stock disponible.` 
-        });
+        insufficientStock.push(`Stock insuffisant pour ${productData.title}`);
+        continue;
       }
 
-      batch.update(productRef, { quantity: newQuantity });
+      updateBatch.update(productRef, { quantity: newQuantity });
+
+      // Ajout du montant total pour chaque produit
+      totalAmount += item.price * item.quantity;
     }
 
-    // Exécuter les mises à jour
-    await batch.commit();
+    if (insufficientStock.length > 0) {
+      return res.status(400).json({
+        message: 'Certains produits ont un stock insuffisant.',
+        details: insufficientStock,
+      });
+    }
 
-    // Vider le panier de l'utilisateur
-    await cartRef.set({ products: [] });
+    await updateBatch.commit();
+    await setDoc(cartRef, { products: [] });
 
-    // Envoi d'emails de confirmation au client et à l'administrateur
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -68,27 +71,36 @@ const confirmation = async (req, res) => {
 
     await transporter.verify();
 
+    // Préparer le contenu des emails avec le total
+    const productsClient = productsInCart.map(item => {
+      return `Produit: ${item.title}\nType de produit: ${item.Product}\nCatégorie: ${item.category}\nPrix: ${item.price} DT\nQuantité: ${item.quantity}\nMode de livraison: ${formData.deliveryMethod}\n\n`;
+    }).join('');
+
     const mailOptionsClient = {
       from: process.env.EMAIL_USER,
       to: formData.email,
       subject: 'Confirmation de votre commande',
-      text: `Bonjour ${formData.fullName},\n\nVotre commande a été confirmée avec succès.\nDétails: ${JSON.stringify(productsInCart, null, 2)}`,
+      text: `Bonjour ${formData.fullName},\n\nVotre commande a été confirmée.\n\nInformations Produits:\n\n${productsClient}\n\nTotal de la commande: ${totalAmount.toFixed(2)} DT`,
     };
+
+    const productsAdmin = productsInCart.map(item => {
+      return `Produit: ${item.title}\nType de produit: ${item.Product}\nCatégorie: ${item.category}\nPrix: ${item.price} DT\nQuantité: ${item.quantity}\n\n`;
+    }).join('');
 
     const mailOptionsAdmin = {
       from: process.env.EMAIL_USER,
       to: 'wajdiammar010@gmail.com',
-      subject: 'Nouvelle commande reçue',
-      text: `Une nouvelle commande a été passée par ${formData.fullName}.\nDétails: ${JSON.stringify(productsInCart, null, 2)}`,
+      subject: 'Nouvelle commande',
+      text: `Nouvelle commande par ${formData.fullName}.\n\nInformations client:\nNom complet: ${formData.fullName}\nEmail: ${formData.email}\nAdresse: ${formData.address}\nVille: ${formData.city}\nCode postal: ${formData.postalCode}\nTéléphone: ${formData.phoneNumber}\nDate de la commande: ${new Date().toLocaleString()}\nMode de livraison: ${formData.deliveryMethod}\n\nProduits:\n\n${productsAdmin}\n\nTotal de la commande: ${totalAmount.toFixed(2)} DT`,
     };
 
     await transporter.sendMail(mailOptionsClient);
     await transporter.sendMail(mailOptionsAdmin);
 
-    res.status(200).json({ message: 'Commande confirmée, emails envoyés, produits mis à jour et panier vidé.' });
+    res.status(200).json({ message: 'Commande confirmée, emails envoyés.' });
   } catch (error) {
-    console.error('Erreur lors de la confirmation de la commande:', error);
-    res.status(500).json({ message: 'Erreur interne du serveur lors de la confirmation de la commande.' });
+    console.error('Erreur:', error);
+    res.status(500).json({ message: 'Erreur interne.' });
   }
 };
 

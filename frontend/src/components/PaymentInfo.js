@@ -3,11 +3,14 @@ import InputMask from 'react-input-mask'; // Importer InputMask
 import Swal from 'sweetalert2'; // Importer SweetAlert2
 import '../Styles/alert.css'
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const PaymentForm = ({ formData, onPrevious, onChange }) => {
-  const userId = useSelector((state) => state.auth.user?.ID);
+
+  const navigate = useNavigate();
+  const userId=useSelector((state)=>state.auth.user?.ID);
 
   const [errors, setErrors] = useState({
     cardName: '',
@@ -113,13 +116,10 @@ const PaymentForm = ({ formData, onPrevious, onChange }) => {
     return isValid;
   };
 
-  // Fonction pour confirmer la commande et envoyer les données au backend
   const handleConfirmOrder = async () => {
-    // Vérifier si tous les champs sont valides
     const isValid = validateAllFields();
-
+  
     if (!isValid) {
-      // Afficher une alerte d'erreur si des erreurs existent
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -127,37 +127,39 @@ const PaymentForm = ({ formData, onPrevious, onChange }) => {
       });
       return;
     }
-
-    // Si toutes les données sont correctes, envoyer la commande
+  
     try {
       const response = await fetch('http://localhost:5000/api/confirmOrder/confirm-order', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ formData, userId }),
       });
-
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`);
-      }
-
+  
       const data = await response.json();
-      // Afficher un message de succès si la commande a été confirmée avec succès
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Une erreur est survenue.');
+      }
+  
       Swal.fire({
         icon: 'success',
         title: 'Commande confirmée',
-        text: data.message, // Afficher le message de succès
+        text: data.message,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/'); // Redirige vers la page d'accueil ou autre page
+        }
       });
+      
     } catch (error) {
-      console.error('Erreur lors de la confirmation de la commande:', error);
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
-        text: 'Une erreur est survenue lors de la confirmation de votre commande.',
+        text: error.message,
       });
     }
   };
+  
 
   return (
     <div className="form-container">

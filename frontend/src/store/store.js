@@ -1,13 +1,23 @@
-// store.js
 import { configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // Utilise localStorage
 import authReducer from '../reducers/authReducer';
-import cartReducer from '../reducers/cartReducer';
+
+
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+};
+
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 
 const store = configureStore({
   reducer: {
-    auth: authReducer,
-    cart: cartReducer,
+    auth: persistedAuthReducer,
+
   },
 });
 
-export default store;
+const persistor = persistStore(store);
+
+export { store, persistor };

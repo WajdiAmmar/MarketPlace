@@ -102,8 +102,12 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete }) => {
               <p className="product-price">{product.price} DT</p>
               <p className="product-description">{product.description}</p>
 
-              {/* Ajout de la quantité du produit */}
-              <p className="product-quantity">Quantité : {product.quantity}</p>
+              {/* Indication de stock */}
+              <p
+                className={`stock-status ${product.quantity > 0 ? 'in-stock' : 'out-of-stock'}`}
+              >
+                {product.quantity > 0 ? 'En stock' : 'Pas disponible'}
+              </p>
 
               {/* Bouton conditionnel */}
               {isMyProductsPage ? (

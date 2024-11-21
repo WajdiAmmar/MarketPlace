@@ -4,12 +4,13 @@ import "../Styles/Header.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'; // Import de useDispatch et useSelector
 import { logout } from '../actions/authActions'; // Import de l'action logout
+import Swal from 'sweetalert2'; // Importer SweetAlert2
+
+
 
 function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch(); // Déclare le dispatch
-  const cartItems = useSelector((state) => state.cart.cartItems); // Cart items depuis Redux
-  const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0); // Calcule la quantité totale
   const [showCategories, setShowCategories] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null); // Catégorie active
   const [activeLink, setActiveLink] = useState(""); // Lien actif
@@ -28,64 +29,45 @@ function Header() {
       navigate("/login"); // Redirige vers la page de connexion si l'utilisateur n'est pas connecté
     }
   };
-  const handleMyproductClick = () => {
-    navigate('/mesproduits');
-  };
-  const handleHighTechClick = () => {
-    navigate("/high-tech");
-  };
 
-  const handleMaisonClick = () => {
-    navigate("/cuisine-maison");
-  };
 
-  const handleBeauteClick = () => {
-    navigate("/beaute");
-  };
 
-  const handleSmartphoneClick = () => {
-    navigate('/smartphone');
-  };
+ // Fonction générique de gestion de navigation
+const handleNavigation = (targetPath) => {
+  if (isAuthenticated) {
+    navigate(targetPath);
+  } else {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Connectez-vous',
+      text: 'Vous devez être connecté pour accéder à cette page.',
+      confirmButtonText: 'Se connecter',
+      showCancelButton: true,
+      cancelButtonText: 'Annuler',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate('/login'); // Rediriger vers la page de login
+      }
+    });
+  }
+};
 
-  const handleOrdinateurClick = () => {
-    navigate('/ordinateur');
-  };
+const handleMyproductClick = () => handleNavigation('/mesproduits');
+const handleHighTechClick = () => handleNavigation("/high-tech");
+const handleMaisonClick = () => handleNavigation("/cuisine-maison");
+const handleBeauteClick = () => handleNavigation("/beaute");
+const handleSmartphoneClick = () => handleNavigation('/smartphone');
+const handleOrdinateurClick = () => handleNavigation('/ordinateur');
+const handleSmartwatchClick = () => handleNavigation('/smartwatch');
+const handleTabletteClick = () => handleNavigation('/tablette');
+const handleElectroClick = () => handleNavigation('/electro');
+const handleMeubleClick = () => handleNavigation('/meuble');
+const handleFournituresClick = () => handleNavigation('/fourniture');
+const handleParfumClick = () => handleNavigation('/parfum');
+const handleMaquillageClick = () => handleNavigation('/maquillage');
+const handleSoinsClick = () => handleNavigation('/soins');
+const handleCoiffureClick = () => handleNavigation('/coiffure');
 
-  const handleSmartwatchClick = () => {
-    navigate('/smartwatch');
-  };
-
-  const handleTabletteClick = () => {
-    navigate('/tablette');
-  };
-
-  const handleElectroClick = () => {
-    navigate('/electro');
-  };
-
-  const handleMeubleClick = () => {
-    navigate('/meuble');
-  };
-
-  const handleFournituresClick = () => {
-    navigate('/fourniture');
-  };
-
-  const handleParfumClick = () => {
-    navigate('/parfum');
-  };
-
-  const handleMaquillageClick = () => {
-    navigate('/maquillage');
-  };
-
-  const handleSoinsClick = () => {
-    navigate('/soins');
-  };
-
-  const handleCoiffureClick = () => {
-    navigate('/coiffure');
-  };
 
   const handleMouseEnter = () => {
     setShowCategories(true); // Affiche le menu au survol
@@ -97,11 +79,6 @@ function Header() {
 
   const handleCategoryMouseEnter = (category) => {
     setActiveCategory(category); // Définit la catégorie active au survol
-  };
-
-  const handleCategoryMouseLeave = () => {
-    // Vous pouvez choisir de garder activeCategory comme est ou le réinitialiser
-    // setActiveCategory(null); // Si vous voulez désactiver la catégorie en quittant
   };
 
   const handleLinkClick = (link) => {
@@ -131,7 +108,7 @@ function Header() {
             <Col>
               <div style={{ position: 'relative' }}>
                 {/* Compteur de produits dans le panier */}
-                {totalQuantity > 0 && (
+                 (
                   <span className="cart-count" style={{
                     position: 'absolute',
                     left: '-20px',
@@ -143,9 +120,9 @@ function Header() {
                     marginLeft: '90px',
                     marginTop: '20px'
                   }}>
-                    {totalQuantity}
+
                   </span>
-                )}
+                )
                 <Button variant="outlined" id="panier-btn" onClick={handlePanierClick}>
                   <img src="/panier.png" alt="Panier" />
                   Panier
@@ -213,21 +190,21 @@ function Header() {
                 <h6
                   onClick={handleHighTechClick}
                   onMouseEnter={() => handleCategoryMouseEnter("highTech")}
-                  onMouseLeave={handleCategoryMouseLeave}
+                  
                 >
                   High-Tech <i className="fa-solid fa-angle-right"></i>
                 </h6>
                 <h6
                   onClick={handleMaisonClick}
                   onMouseEnter={() => handleCategoryMouseEnter("maisonCuisine")}
-                  onMouseLeave={handleCategoryMouseLeave}
+    
                 >
                   Cuisine et Maison <i className="fa-solid fa-angle-right"></i>
                 </h6>
                 <h6
                   onClick={handleBeauteClick}
                   onMouseEnter={() => handleCategoryMouseEnter("beaute")}
-                  onMouseLeave={handleCategoryMouseLeave}
+                 
                 >
                   Beauté <i className="fa-solid fa-angle-right"></i>
                 </h6>
