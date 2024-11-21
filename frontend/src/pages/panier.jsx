@@ -13,7 +13,7 @@ const Panier = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const userId = useSelector((state) => state.auth.user?.ID) // Remplacez par une méthode appropriée pour obtenir l'ID utilisateur
+  const userId = useSelector((state) => state.auth.user?.ID);
 
   useEffect(() => {
     const fetchCart = async () => {

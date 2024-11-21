@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import InputMask from 'react-input-mask'; // Importer InputMask
 import Swal from 'sweetalert2'; // Importer SweetAlert2
 import '../Styles/alert.css'
+import { useSelector } from 'react-redux';
+
+
+
 const PaymentForm = ({ formData, onPrevious, onChange }) => {
+  const userId = useSelector((state) => state.auth.user?.ID);
+
   const [errors, setErrors] = useState({
     cardName: '',
     cardNumber: '',
@@ -124,12 +130,12 @@ const PaymentForm = ({ formData, onPrevious, onChange }) => {
 
     // Si toutes les données sont correctes, envoyer la commande
     try {
-      const response = await fetch('http://localhost:5000/api/confirm-order', {
+      const response = await fetch('http://localhost:5000/api/confirmOrder/confirm-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ formData }),
+        body: JSON.stringify({ formData, userId }),
       });
 
       if (!response.ok) {

@@ -57,7 +57,7 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete }) => {
         });
       }
     } catch (error) {
-      console.error('Erreur lors de l\'ajout au panier:', error);
+      console.error("Erreur lors de l'ajout au panier:", error);
       Swal.fire({
         icon: 'error',
         title: 'Erreur',
@@ -101,6 +101,9 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete }) => {
               <h2 className="product-title">{product.title}</h2>
               <p className="product-price">{product.price} DT</p>
               <p className="product-description">{product.description}</p>
+
+              {/* Ajout de la quantité du produit */}
+              <p className="product-quantity">Quantité : {product.quantity}</p>
 
               {/* Bouton conditionnel */}
               {isMyProductsPage ? (
