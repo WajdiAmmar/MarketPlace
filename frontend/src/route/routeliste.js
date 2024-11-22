@@ -22,6 +22,7 @@ import Fournitures from '../pages/produits/fournitures';
 import CheckoutPage from '../pages/CheckoutPage';
 import Dashboard from '../admin/dashboard';
 import Myproduct from '../pages/Mes produits';
+import ApercuProduit from '../pages/apercuProduit';
 
 const RouteList = () => {
   return (
@@ -48,6 +49,7 @@ const RouteList = () => {
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/dashboard" element={<Dashboard/>} />
       <Route path="/mesproduits" element={<Myproduct/>} />
+      <Route path="/apercuproduit/:productId"element={<ApercuProduit/>} />
     </Routes>
   );
 };

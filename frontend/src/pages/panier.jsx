@@ -93,18 +93,62 @@ const Panier = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  const handleCheckout = () => {
+
+  const handleCheckout = async () => {
     if (cartItems.length === 0) {
       Swal.fire({
         icon: 'warning',
         title: 'Panier vide',
         text: 'Ajoutez des produits avant de passer à la commande.',
       });
-    } else {
+      return;
+    }
+  
+    try {
+      for (const item of cartItems) {
+        const response = await fetch(`http://localhost:5000/api/products/products/${item.id}`);
+        const productData = await response.json();
+  
+        if (!response.ok) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: `Erreur lors de la vérification du produit ${item.title}.`,
+          });
+          return;
+        }
+  
+        // Comparaison des quantités
+        if (productData.quantity === 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Produit indisponible',
+            text: `Le produit "${item.title}" est en rupture de stock.`,
+          });
+          return;
+        }
+  
+        if (item.quantity > productData.quantity) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Quantité insuffisante',
+            text: `La quantité demandée pour "${item.title}" dépasse le stock disponible (${productData.quantity}).`,
+          });
+          return;
+        }
+      }
+  
+      // Si tout est OK, procéder à la validation
       navigate('/checkout');
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Une erreur est survenue lors de la vérification des produits. Veuillez réessayer.',
+      });
     }
   };
-
+  
   return (
     <div className="bg-white">
       <Header />
