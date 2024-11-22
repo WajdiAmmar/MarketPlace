@@ -17,10 +17,6 @@ function Header() {
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Vérifier si l'utilisateur est connecté
 
-  const handlePanierClick = () => {
-    navigate("/panier");
-  };
-
   const handleLoginClick = () => {
     if (isAuthenticated) {
       dispatch(logout()); // Déclenche l'action logout si l'utilisateur est connecté
@@ -51,7 +47,7 @@ const handleNavigation = (targetPath) => {
     });
   }
 };
-
+const handlePanierClick = () => handleNavigation('/panier');
 const handleMyproductClick = () => handleNavigation('/mesproduits');
 const handleHighTechClick = () => handleNavigation("/high-tech");
 const handleMaisonClick = () => handleNavigation("/cuisine-maison");

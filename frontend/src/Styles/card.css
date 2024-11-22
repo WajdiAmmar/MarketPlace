@@ -113,4 +113,16 @@
   .out-of-stock {
     color: red; /* Texte en rouge pour "Pas disponible" */
   }
+  .action-icon {
+    cursor: pointer;
+    margin: 0 5px;
+  }
+  
+  .edit-icon {
+    color: #007bff;
+  }
+  
+  .delete-icon {
+    color: #dc3545;
+  }
   

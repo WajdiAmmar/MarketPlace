@@ -1,7 +1,7 @@
 // src/controllers/productController.js
 const { firestore, storage } = require('../config/firebase'); // Assurez-vous d'importer Firestore et Storage
 const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
-const { collection, addDoc, query, where, getDocs,doc,deleteDoc } = require('firebase/firestore'); // Ajoutez getDoc si besoin
+const { collection, addDoc, query, where, getDocs,doc,deleteDoc, updateDoc, getDoc} = require('firebase/firestore'); // Ajoutez getDoc si besoin
 
 // Fonction pour ajouter un produit
 const addProduct = async (req, res) => {
@@ -65,7 +65,7 @@ const getProductByProduct = async (req, res) => {
     const q = query(productsRef, where('Product', '==', productField));
 
     const querySnapshot = await getDocs(q);
-    const products = querySnapshot.docs.map(doc => ({
+    const products = querySnapshot.docs.map(doc => ({ 
       id: doc.id,
       ...doc.data()
     }));
@@ -180,5 +180,62 @@ const deleteProduct = async (req, res) => {
     return res.status(500).json({ message: "Erreur lors de la suppression du produit" });
   }
 };
+
+
+const updateProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const { title, price, description, quantity } = req.body;
+    const image = req.file; // Nouvelle image si elle existe
+
+    if (!productId) {
+      return res.status(400).json({ message: "ID du produit manquant." });
+    }
+
+    const productRef = doc(firestore, 'products', productId);
+    const updatedData = { title, price: parseFloat(price), description, quantity: parseInt(quantity, 10) };
+
+    // Si une nouvelle image est fournie, mettez-la à jour dans Firebase Storage
+    if (image) {
+      const imageRef = ref(storage, `products/${image.originalname}`);
+      await uploadBytes(imageRef, image.buffer);
+      const imageUrl = await getDownloadURL(imageRef);
+      updatedData.imageUrl = imageUrl; // Met à jour l'URL de l'image
+    }
+
+    // Mise à jour du produit dans Firestore
+    await updateDoc(productRef, updatedData);
+
+    return res.status(200).json({ message: "Produit mis à jour avec succès." });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du produit :", error);
+    return res.status(500).json({ message: "Erreur lors de la mise à jour du produit." });
+  }
+};
+
+// Fonction pour récupérer un produit par ID
+const getProductById = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+
+    if (!productId) {
+      return res.status(400).json({ message: "ID du produit manquant." });
+    }
+
+    const productRef = doc(firestore, 'products', productId);
+    const productSnapshot = await getDoc(productRef);
+
+    if (!productSnapshot.exists()) {
+      return res.status(404).json({ message: "Produit non trouvé." });
+    }
+
+    return res.status(200).json({ id: productSnapshot.id, ...productSnapshot.data() });
+  } catch (error) {
+    console.error("Erreur lors de la récupération du produit :", error);
+    return res.status(500).json({ message: "Erreur serveur lors de la récupération du produit." });
+  }
+};
+
+
 // Ajoutez cette fonction à l'exportation
-module.exports = { addProduct, getProductByProduct, getProductsByCategory, getAllProducts,getProductsByUser,deleteProduct };
+module.exports = { addProduct,getProductByProduct,getProductById, getProductsByCategory, getAllProducts,getProductsByUser,deleteProduct, updateProduct };
