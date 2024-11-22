@@ -1,4 +1,4 @@
-const { doc, getDoc, setDoc, writeBatch } = require('firebase/firestore');
+const { doc, getDoc, setDoc, writeBatch, collection, addDoc } = require('firebase/firestore');
 const { firestore } = require('../config/firebase');
 const nodemailer = require('nodemailer');
 
@@ -28,28 +28,40 @@ const confirmation = async (req, res) => {
     const insufficientStock = [];
     let totalAmount = 0; // Initialisation du total
 
-    for (const item of productsInCart) {
+    const productDetails = productsInCart.map(item => {
       const productRef = doc(firestore, 'products', item.id);
-      const productDoc = await getDoc(productRef);
+      return getDoc(productRef).then(productDoc => {
+        if (!productDoc.exists()) {
+          insufficientStock.push(`Produit non trouvé pour l'ID ${item.id}`);
+          return null; // Ignore this product
+        }
 
-      if (!productDoc.exists()) {
-        insufficientStock.push(`Produit non trouvé pour l'ID ${item.id}`);
-        continue;
-      }
+        const productData = productDoc.data();
+        const newQuantity = productData.quantity - item.quantity;
 
-      const productData = productDoc.data();
-      const newQuantity = productData.quantity - item.quantity;
+        if (newQuantity < 0) {
+          insufficientStock.push(`Stock insuffisant pour ${productData.title}`);
+          return null; // Ignore this product
+        }
 
-      if (newQuantity < 0) {
-        insufficientStock.push(`Stock insuffisant pour ${productData.title}`);
-        continue;
-      }
+        updateBatch.update(productRef, { quantity: newQuantity });
+        totalAmount += item.price * item.quantity;
 
-      updateBatch.update(productRef, { quantity: newQuantity });
+        // Return only necessary product details
+        return {
+          title: productData.title,
+          Product: productData.Product,
+          category: productData.category,
+          price: item.price,
+          condition: productData.condition,
+          description: productData.description,
+          id: item.id,
+          quantity: item.quantity,
+        };
+      });
+    });
 
-      // Ajout du montant total pour chaque produit
-      totalAmount += item.price * item.quantity;
-    }
+    const productsDetails = await Promise.all(productDetails);
 
     if (insufficientStock.length > 0) {
       return res.status(400).json({
@@ -57,6 +69,24 @@ const confirmation = async (req, res) => {
         details: insufficientStock,
       });
     }
+
+    // Add order to 'commandes' collection
+    const orderData = {
+      userId,
+      fullName: formData.fullName,
+      email: formData.email,
+      address: formData.address,
+      city: formData.city,
+      postalCode: formData.postalCode,
+      phoneNumber: formData.phoneNumber,
+      deliveryMethod: formData.deliveryMethod,
+      products: productsDetails.filter(Boolean), // Filter out null products
+      totalAmount: totalAmount.toFixed(2),
+      orderDate: new Date().toISOString(), // Add order date
+    };
+
+    // Create a new document for this order in the 'commandes' collection
+    const orderRef = await addDoc(collection(firestore, 'commandes'), orderData);
 
     await updateBatch.commit();
     await setDoc(cartRef, { products: [] });
@@ -71,8 +101,7 @@ const confirmation = async (req, res) => {
 
     await transporter.verify();
 
-    // Préparer le contenu des emails avec le total
-    const productsClient = productsInCart.map(item => {
+    const productsClient = productsDetails.map(item => {
       return `Produit: ${item.title}\nType de produit: ${item.Product}\nCatégorie: ${item.category}\nPrix: ${item.price} DT\nQuantité: ${item.quantity}\nMode de livraison: ${formData.deliveryMethod}\n\n`;
     }).join('');
 
@@ -83,7 +112,7 @@ const confirmation = async (req, res) => {
       text: `Bonjour ${formData.fullName},\n\nVotre commande a été confirmée.\n\nInformations Produits:\n\n${productsClient}\n\nTotal de la commande: ${totalAmount.toFixed(2)} DT`,
     };
 
-    const productsAdmin = productsInCart.map(item => {
+    const productsAdmin = productsDetails.map(item => {
       return `Produit: ${item.title}\nType de produit: ${item.Product}\nCatégorie: ${item.category}\nPrix: ${item.price} DT\nQuantité: ${item.quantity}\n\n`;
     }).join('');
 
@@ -97,7 +126,7 @@ const confirmation = async (req, res) => {
     await transporter.sendMail(mailOptionsClient);
     await transporter.sendMail(mailOptionsAdmin);
 
-    res.status(200).json({ message: 'Commande confirmée, emails envoyés.' });
+    res.status(200).json({ message: 'Commande confirmée, emails envoyés.', orderId: orderRef.id });
   } catch (error) {
     console.error('Erreur:', error);
     res.status(500).json({ message: 'Erreur interne.' });
