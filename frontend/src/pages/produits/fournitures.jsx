@@ -3,7 +3,7 @@ import '../../Styles/card.css';
 import Sidebar from '../../components/Sidebar';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container} from 'react-bootstrap';
 import CardGrid from '../../components/CardGrid';
 function Fournitures() {
   const [products, setProducts] = useState([]);

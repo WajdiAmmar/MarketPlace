@@ -79,7 +79,8 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete, handleUpdate }) =>
           icon: 'success',
           title: 'Ajouté au panier',
           text: `${product.title} a été ajouté avec succès !`,
-        });
+        })
+        
       } else {
         Swal.fire({
           icon: 'error',
@@ -209,7 +210,6 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete, handleUpdate }) =>
           <Col key={product.id}>
             <div
               className="product-card"
-              onClick={() => handleCardClick(product.id)} // Ajout de l'événement de clic
               style={{ cursor: 'pointer' }} // Indique que la carte est cliquable
             >
               {/* Image produit */}
@@ -218,10 +218,11 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete, handleUpdate }) =>
                   src={product.imageUrl}
                   alt={product.title}
                   className="product-image"
+                  onClick={() => handleCardClick(product.id)}
                 />
               </div>
 
-              {/* Informations produit */}
+              <div  onClick={() => handleCardClick(product.id)}>
               <h2 className="product-title">{product.title}</h2>
               <p className="product-price">{product.price} DT</p>
               <p className="product-description">{product.description}</p>
@@ -232,7 +233,7 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete, handleUpdate }) =>
               >
                 {product.quantity > 0 ? 'En stock' : 'Non disponible'}
               </p>
-
+              </div>
               {/* Actions */}
               {isMyProductsPage && (
                 <div className="actions">
