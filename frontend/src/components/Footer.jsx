@@ -60,13 +60,13 @@ const Footer = () => {
             <Col md="3" lg="2" xl="2" className="mx-auto mb-4">
               <h6 className="text-uppercase fw-bold mb-4 text-white">Liens utiles</h6>
               <p className='text-white'>
-                <a href="#" className="text-reset">Panier</a>
+                <a href="/panier" className="text-reset">Panier</a>
               </p>
               <p className='text-white'>
-                <a href="#" className="text-reset">Offres et Promotions</a>
+                <a href="/mesproduits" className="text-reset">Mes Porduits</a>
               </p>
               <p className='text-white'>
-                <a href="#" className="text-reset">Vendre un Produit</a>
+                <a href="/ajoutProduit" className="text-reset">Vendre un Produit</a>
               </p>
               <p className='text-white'>
                 <a href="#" className="text-reset">Contact</a>

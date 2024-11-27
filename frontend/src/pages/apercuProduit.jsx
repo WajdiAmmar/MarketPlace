@@ -5,10 +5,12 @@ import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 
 const ApercuProduit = () => {
   const { productId } = useParams(); // Récupère l'ID depuis l'URL
   const [product, setProduct] = useState(null);
+  const userId = useSelector((state) => state.auth.user?.ID);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,15 +35,43 @@ const ApercuProduit = () => {
 
     fetchProduct();
   }, [productId, navigate]);
-
   const handleAddToCart = async () => {
     if (product && product.quantity > 0) {
-      // Logique d'ajout au panier
-      Swal.fire({
-        icon: 'success',
-        title: 'Ajouté au panier',
-        text: `${product.title} a été ajouté avec succès !`,
-      });
+      try {
+        const response = await fetch('http://localhost:5000/api/cart/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId,
+            product,
+          }),
+        });
+  
+        const data = await response.json();
+  
+        if (data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Ajouté au panier',
+            text: `${product.title} a été ajouté avec succès !`,
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: data.message || 'Une erreur est survenue.',
+          });
+        }
+      } catch (error) {
+        console.error('Erreur lors de l\'ajout au panier:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: 'Une erreur est survenue lors de l\'ajout au panier.',
+        });
+      }
     } else {
       Swal.fire({
         icon: 'error',
@@ -50,7 +80,7 @@ const ApercuProduit = () => {
       });
     }
   };
-
+  
   if (!product) return <p>Chargement...</p>;
 
   return (

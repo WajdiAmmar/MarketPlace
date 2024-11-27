@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container, Button, Row, Col } from "react-bootstrap";
 import "../Styles/Header.css";
 import { useNavigate } from "react-router-dom";
@@ -14,9 +14,35 @@ function Header() {
   const [showCategories, setShowCategories] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null); // Catégorie active
   const [activeLink, setActiveLink] = useState(""); // Lien actif
+  const [error, setError] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Vérifier si l'utilisateur est connecté
+  const userId = useSelector((state) => state.auth.user?.ID);
 
+  useEffect(() => {
+    const fetchCart = async () => {
+      if (!userId) {
+        setError("Vous devez être connecté pour accéder au panier.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:5000/api/cart/cart/${userId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setCartItems(data.data.products || []);
+        } else {
+          setError(data.message || 'Erreur lors du chargement du panier.');
+        }
+      } catch (err) {
+        setError('Erreur réseau ou serveur.');
+      }
+    };
+
+    fetchCart();
+  }, [userId]);
   const handleLoginClick = () => {
     if (isAuthenticated) {
       dispatch(logout()); // Déclenche l'action logout si l'utilisateur est connecté
@@ -28,41 +54,41 @@ function Header() {
 
 
 
- // Fonction générique de gestion de navigation
-const handleNavigation = (targetPath) => {
-  if (isAuthenticated) {
-    navigate(targetPath);
-  } else {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Connectez-vous',
-      text: 'Vous devez être connecté pour accéder à cette page.',
-      confirmButtonText: 'Se connecter',
-      showCancelButton: true,
-      cancelButtonText: 'Annuler',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate('/login'); // Rediriger vers la page de login
-      }
-    });
-  }
-};
-const handlePanierClick = () => handleNavigation('/panier');
-const handleMyproductClick = () => handleNavigation('/mesproduits');
-const handleHighTechClick = () => handleNavigation("/high-tech");
-const handleMaisonClick = () => handleNavigation("/cuisine-maison");
-const handleBeauteClick = () => handleNavigation("/beaute");
-const handleSmartphoneClick = () => handleNavigation('/smartphone');
-const handleOrdinateurClick = () => handleNavigation('/ordinateur');
-const handleSmartwatchClick = () => handleNavigation('/smartwatch');
-const handleTabletteClick = () => handleNavigation('/tablette');
-const handleElectroClick = () => handleNavigation('/electro');
-const handleMeubleClick = () => handleNavigation('/meuble');
-const handleFournituresClick = () => handleNavigation('/fourniture');
-const handleParfumClick = () => handleNavigation('/parfum');
-const handleMaquillageClick = () => handleNavigation('/maquillage');
-const handleSoinsClick = () => handleNavigation('/soins');
-const handleCoiffureClick = () => handleNavigation('/coiffure');
+  // Fonction générique de gestion de navigation
+  const handleNavigation = (targetPath) => {
+    if (isAuthenticated) {
+      navigate(targetPath);
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Connectez-vous',
+        text: 'Vous devez être connecté pour accéder à cette page.',
+        confirmButtonText: 'Se connecter',
+        showCancelButton: true,
+        cancelButtonText: 'Annuler',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/login'); // Rediriger vers la page de login
+        }
+      });
+    }
+  };
+  const handlePanierClick = () => handleNavigation('/panier');
+  const handleMyproductClick = () => handleNavigation('/mesproduits');
+  const handleHighTechClick = () => handleNavigation("/high-tech");
+  const handleMaisonClick = () => handleNavigation("/cuisine-maison");
+  const handleBeauteClick = () => handleNavigation("/beaute");
+  const handleSmartphoneClick = () => handleNavigation('/smartphone');
+  const handleOrdinateurClick = () => handleNavigation('/ordinateur');
+  const handleSmartwatchClick = () => handleNavigation('/smartwatch');
+  const handleTabletteClick = () => handleNavigation('/tablette');
+  const handleElectroClick = () => handleNavigation('/electro');
+  const handleMeubleClick = () => handleNavigation('/meuble');
+  const handleFournituresClick = () => handleNavigation('/fourniture');
+  const handleParfumClick = () => handleNavigation('/parfum');
+  const handleMaquillageClick = () => handleNavigation('/maquillage');
+  const handleSoinsClick = () => handleNavigation('/soins');
+  const handleCoiffureClick = () => handleNavigation('/coiffure');
 
 
   const handleMouseEnter = () => {
@@ -103,28 +129,31 @@ const handleCoiffureClick = () => handleNavigation('/coiffure');
             </Col>
             <Col>
               <div style={{ position: 'relative' }}>
-                {/* Compteur de produits dans le panier */}
-                 (
-                  <span className="cart-count" style={{
-                    position: 'absolute',
-                    left: '-20px',
-                    background: 'red',
-                    color: 'white',
-                    borderRadius: '50%',
-                    padding: '5px 10px',
-                    fontSize: '9px',
-                    marginLeft: '90px',
-                    marginTop: '20px'
-                  }}>
-
+                {/* Affichage conditionnel du compteur */}
+                {cartItems.some((item) => item.quantity > 0) && (
+                  <span
+                    className="cart-count"
+                    style={{
+                      position: 'absolute',
+                      background: 'black',
+                      color: '#F9A825',
+                      borderRadius: '50%',
+                      padding: '5px 10px',
+                      fontSize: '11px',
+                      marginLeft: '90px',
+                      marginTop: '20px',
+                    }}
+                  >
+                    {cartItems.map((item) => item.quantity).join(' + ')}
                   </span>
-                )
+                )}
                 <Button variant="outlined" id="panier-btn" onClick={handlePanierClick}>
                   <img src="/panier.png" alt="Panier" />
                   Panier
                 </Button>
               </div>
             </Col>
+
           </Row>
         </Container>
       </div>
@@ -154,7 +183,7 @@ const handleCoiffureClick = () => handleNavigation('/coiffure');
               <Nav.Link
                 onClick={handleMyproductClick}
               >
-               Mes produits
+                Mes produits
               </Nav.Link>
               <Nav.Link
                 href="/"
@@ -186,21 +215,21 @@ const handleCoiffureClick = () => handleNavigation('/coiffure');
                 <h6
                   onClick={handleHighTechClick}
                   onMouseEnter={() => handleCategoryMouseEnter("highTech")}
-                  
+
                 >
                   High-Tech <i className="fa-solid fa-angle-right"></i>
                 </h6>
                 <h6
                   onClick={handleMaisonClick}
                   onMouseEnter={() => handleCategoryMouseEnter("maisonCuisine")}
-    
+
                 >
                   Cuisine et Maison <i className="fa-solid fa-angle-right"></i>
                 </h6>
                 <h6
                   onClick={handleBeauteClick}
                   onMouseEnter={() => handleCategoryMouseEnter("beaute")}
-                 
+
                 >
                   Beauté <i className="fa-solid fa-angle-right"></i>
                 </h6>
@@ -222,9 +251,9 @@ const handleCoiffureClick = () => handleNavigation('/coiffure');
                         src="/smartphone.jpg"
                         alt="phone"
                         className="category-img"
-                        onClick={ handleSmartphoneClick }
+                        onClick={handleSmartphoneClick}
                       />
-                      <p onClick={ handleSmartphoneClick }>Smartphones</p>
+                      <p onClick={handleSmartphoneClick}>Smartphones</p>
                     </Col>
                     <Col>
                       <img
@@ -276,7 +305,7 @@ const handleCoiffureClick = () => handleNavigation('/coiffure');
                       <p onClick={handleFournituresClick} >Fournitures de Cuisines</p>
                     </Col>
                   </Row>
-                  
+
                 )}
                 {activeCategory === "beaute" && (
                   <Row>
@@ -316,7 +345,7 @@ const handleCoiffureClick = () => handleNavigation('/coiffure');
                       />
                       <p onClick={handleCoiffureClick}>Coiffure</p>
                     </Col>
-                    
+
                   </Row>
                 )}
               </Col>

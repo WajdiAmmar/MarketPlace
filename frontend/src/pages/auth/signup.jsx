@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Button, Container, Card, Row, Col, Form, Image } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function Signup() {
     const navigate = useNavigate();
@@ -70,8 +71,6 @@ function Signup() {
                 const data = await response.json();
                 throw new Error(data.message || 'Erreur lors de l\'inscription.');
             }
-
-            const data = await response.json();
             Swal.fire({
                 icon: 'success',
                 title: 'Inscription réussie',
@@ -95,6 +94,9 @@ function Signup() {
                             </Col>
                             <Col md='6'>
                                 <Card.Body className='text-black d-flex flex-column justify-content-center'>
+                                <Col className="mx-auto mb-3">
+                                        <Image src="/logo.png" alt="Logo" className="logo-img" onClick={() => navigate('/')} />
+                                    </Col>
                                     <Form onSubmit={handleSignup}>
                                         {/* Champ Nom */}
                                         <Form.Group className="mb-4">
@@ -177,7 +179,11 @@ function Signup() {
                                             />
                                             <Form.Text className="text-danger">{erreurs.motDePasse}</Form.Text>
                                         </Form.Group>
-
+                                        <p className="small mb-3 pb-lg-2">
+                                            <a className="text-black-50" href="#!" onClick={() => navigate('/login')}>
+                                                Vous avez déjà un compte ?
+                                            </a>
+                                        </p>
                                         {/* Message d'erreur global */}
                                         {erreurs.global && (
                                             <p className="text-danger mb-3">{erreurs.global}</p>
@@ -192,6 +198,10 @@ function Signup() {
                                             S'inscrire
                                         </Button>
                                     </Form>
+                                    <p className="mt-3">Ou :</p>
+                                    <Button variant="light" className="mb-2 w-100" size="lg">
+                                        <i className="fab fa-google mx-3 text-danger"></i> Continuer Avec Google
+                                    </Button>
                                 </Card.Body>
                             </Col>
                         </Row>

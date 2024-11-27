@@ -4,6 +4,7 @@ import { Button, Container, Card, Row, Col, Form, Image } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'; // Utiliser dispatch pour envoyer les actions
 import { login } from '../../actions/authActions'; // Importer l'action de login
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function Login() {
     const navigate = useNavigate();
@@ -139,13 +140,7 @@ function Login() {
                                     </Form>
                                     <p className="mt-3">Ou :</p>
                                     <Button variant="light" className="mb-2 w-100" size="lg">
-                                        <i className="fab fa-google mx-3 google-icon"></i> Continuer Avec Google
-                                    </Button>
-                                    <Button variant="light" className="mb-2 w-100" size="lg">
-                                        <i className="fab fa-facebook mx-3 facebook-icon"></i> Continuer Avec Facebook
-                                    </Button>
-                                    <Button variant="light" className="mb-2 w-100" size="lg">
-                                        <i className="fab fa-twitter mx-3 twitter-icon"></i> Continuer Avec Twitter
+                                        <i className="fab fa-google mx-3 text-danger"></i> Continuer Avec Google
                                     </Button>
                                 </Card.Body>
                             </Col>
