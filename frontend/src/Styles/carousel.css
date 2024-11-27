@@ -1,0 +1,95 @@
+/* Styles pour les titres et paragraphes du carrousel */
+.carousel-caption h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.carousel-caption p {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: white;
+}
+
+/* Marge pour le bouton dans la légende du carrousel */
+.carousel-caption button {
+  margin-top: 10px;
+}
+
+/* Bouton général */
+.custom-button {
+  background-color: #ffffff; /* Couleur blanche */
+  color: rgb(0, 0, 0); /* Texte noir */
+  border: none; /* Pas de bordure */
+  padding: 15px 40px; /* Espacement intérieur */
+  border-radius: 5px; /* Coins arrondis */
+  transition: background-color 0.3s, transform 0.2s; /* Animation de transition */
+}
+
+.custom-button-1 {
+  background-color: #ffffff; /* Couleur blanche */
+  color: rgb(0, 0, 0); /* Texte noir */
+  border: none; /* Pas de bordure */
+  padding: 10px 20px; /* Espacement intérieur */
+  border-radius: 5px; /* Coins arrondis */
+  transition: background-color 0.3s, transform 0.2s; /* Animation de transition */
+  position: absolute; /* Position absolue pour un positionnement libre */
+  right: -200px; /* Espacement du bord droit */
+}
+
+/* Bouton avec couleur de fond rose vif */
+.custom-button-2 {
+  background-color: #ff69b4; /* Rose vif */
+  color: white; /* Texte blanc */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Effets de survol */
+.custom-button-1:hover {
+  background-color: #b0b0b0; /* Gris au survol */
+  color: rgb(165, 10, 10); /* Texte rouge au survol */
+  transform: scale(1.05); /* Agrandissement léger au survol */
+}
+
+.custom-button:hover {
+  background-color: #e0dddf; /* Couleur légèrement grise au survol */
+  transform: scale(1.05); /* Agrandissement léger */
+}
+
+.custom-button-2:hover {
+  background-color: #f100a0; /* Couleur rose plus foncé au survol */
+  transform: scale(1.05); /* Agrandissement léger */
+}
+
+/* Conteneur pour centrer les boutons à gauche */
+.container-1 {
+  display: flex;
+  justify-content:left; /* Alignement à gauche */
+}
+
+/* Conteneur principal du carrousel */
+.carousel {
+  height: '300px';
+  transform: 'scale(1.6)';
+  margin-left: 20px;
+  transition: 'transform 0.3s';
+}
+
+/* Positionnement des légendes du carrousel */
+.carousel-caption {
+  position: absolute;
+  bottom: 20%; /* Ajustement de la hauteur de la légende */
+  left: 50%; /* Centré horizontalement */
+  transform: translateX(-50%); /* Correction du centrage */
+  text-align: center; /* Texte centré */
+}
+
+/* Conteneur pour gérer le positionnement du bouton */
+.container-3 {
+  position: relative; /* Nécessaire pour que le bouton soit positionné absolument */
+  width: 100%; /* Occupe toute la largeur */
+  height: 100%; /* Occupe toute la hauteur */
+}

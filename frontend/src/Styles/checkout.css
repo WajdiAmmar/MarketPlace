@@ -1,0 +1,50 @@
+/* General styling for the form */
+.form-container {
+    font-family: Arial, sans-serif;
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  .form-container label {
+    display: block;
+    color: #FFC107; /* Yellow color for labels */
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .form-container input, 
+  .form-container select, 
+  .form-container button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+  }
+  
+  .form-container button {
+    background-color: #000000; /* Red button */
+    color: #F9A825;
+    font-weight: bold;
+  }
+  
+  .form-container .error-message {
+    color: #FF0000; /* Red for error messages */
+    font-size: 0.9em;
+  }
+  .checkout-page {
+    padding: 20px;
+  }
+  
+  .order-summary {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
