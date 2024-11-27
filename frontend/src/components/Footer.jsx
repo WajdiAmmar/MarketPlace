@@ -92,9 +92,9 @@ const Footer = () => {
 
       <div className="text-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
         <span className="text-white">
-          © 2021 Copyright:
+          © 2024 Copyright:  
           <a className="text-reset fw-bold text-white" href="/">
-            HappyShop.com
+             HappyShop.com
           </a>
         </span>
       </div>
