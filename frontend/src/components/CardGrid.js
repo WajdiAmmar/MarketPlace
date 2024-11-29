@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col,Container } from 'react-bootstrap';
 import '../Styles/card.css'; // Style du composant
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
@@ -204,62 +204,67 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete, handleUpdate }) =>
   };
 
   return (
-    <div className="content-layout">
-      <Row xs={1} md={2} lg={4} className="g-4">
-        {products.map((product) => (
-          <Col key={product.id}>
-            <div
-              className="product-card"
-              style={{ cursor: 'pointer' }} // Indique que la carte est cliquable
+<div className="content-layout">
+<Container>
+  <Row className="g-4">
+    {products.map((product) => (
+      <Col key={product.id} xs={6} sm={6} md={4} lg={3}>
+        <div 
+          className="product-card"
+          style={{ cursor: 'pointer' }} // Indique que la carte est cliquable
+        >
+          {/* Image produit */}
+          <div className="product-image-container">
+            <img
+              src={product.imageUrl}
+              alt={product.title}
+              className="product-image"
+              onClick={() => handleCardClick(product.id)}
+            />
+          </div>
+
+          <div onClick={() => handleCardClick(product.id)}>
+            <h2 className="product-title">{product.title}</h2>
+            <p className="product-price">{product.price} DT</p>
+            <p className="product-description">{product.description}</p>
+
+            {/* Indication de stock */}
+            <p
+              className={`stock-status ${
+                product.quantity > 0 ? 'in-stock' : 'out-of-stock'
+              }`}
             >
-              {/* Image produit */}
-              <div className="product-image-container">
-                <img
-                  src={product.imageUrl}
-                  alt={product.title}
-                  className="product-image"
-                  onClick={() => handleCardClick(product.id)}
-                />
-              </div>
-
-              <div  onClick={() => handleCardClick(product.id)}>
-              <h2 className="product-title">{product.title}</h2>
-              <p className="product-price">{product.price} DT</p>
-              <p className="product-description">{product.description}</p>
-
-              {/* Indication de stock */}
-              <p
-                className={`stock-status ${product.quantity > 0 ? 'in-stock' : 'out-of-stock'}`}
-              >
-                {product.quantity > 0 ? 'En stock' : 'Non disponible'}
-              </p>
-              </div>
-              {/* Actions */}
-              {isMyProductsPage && (
-                <div className="actions">
-                  <FaEdit
-                    className="action-icon edit-icon"
-                    onClick={() => handleEditClick(product)}
-                  />
-                  <FaTrashAlt
-                    className="action-icon delete-icon"
-                    onClick={() => handleDeleteClick(product.id)}
-                  />
-                </div>
-              )}
-              {!isMyProductsPage && (
-                <button
-                  className="buy-now-button"
-                  onClick={() => handleAddToCart(product)} // Ajouter au panier
-                >
-                  Ajouter au panier
-                </button>
-              )}
+              {product.quantity > 0 ? 'En stock' : 'Non disponible'}
+            </p>
+          </div>
+          {/* Actions */}
+          {isMyProductsPage && (
+            <div className="actions">
+              <FaEdit
+                className="action-icon edit-icon"
+                onClick={() => handleEditClick(product)}
+              />
+              <FaTrashAlt
+                className="action-icon delete-icon"
+                onClick={() => handleDeleteClick(product.id)}
+              />
             </div>
-          </Col>
-        ))}
-      </Row>
-    </div>
+          )}
+          {!isMyProductsPage && (
+            <button
+              className="buy-now-button"
+              onClick={() => handleAddToCart(product)} // Ajouter au panier
+            >
+              Ajouter au panier
+            </button>
+          )}
+        </div>
+      </Col>
+    ))}
+  </Row>
+</Container>
+</div>
+
   );
 };
 
