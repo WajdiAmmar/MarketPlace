@@ -8,9 +8,21 @@ const confirmOrderRoutes = require('./src/routes/confirmOrderRoute');
 
 const app = express();
 
+// Liste des origines autorisées
+const allowedOrigins = [
+  process.env.CLIENT_URL || 'http://localhost:3000', // Localhost pour développement
+  'https://projet-paiement.web.app', // URL Firebase en production
+];
+
 // Configuration CORS
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000', // Origine autorisée
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origine non autorisée par les règles CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
   allowedHeaders: ['Content-Type', 'Authorization'], // En-têtes autorisés
   credentials: true, // Autoriser les cookies
@@ -34,7 +46,7 @@ app.use((err, req, res, next) => {
 });
 
 // Lancer le serveur
-const port = process.env.PORT || 5000;
+const port = process.env.BASE_URL || "https://marketplace-happyshop.up.railway.app/";
 app.listen(port, () => {
-  console.log(`Le serveur fonctionne sur http://localhost:${port}`);
+  console.log(`Le serveur fonctionne sur ${port}`);
 });
