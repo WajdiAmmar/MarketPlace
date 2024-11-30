@@ -9,6 +9,7 @@ import CarouselComponent from '../components/CarouselComponent';
 import { Container } from 'react-bootstrap';
 import CardGrid from '../components/CardGrid';  // Importation du composant CardGrid
 
+
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,7 +20,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products/products');
+        const response = await fetch('https://marketplace-happyshop.up.railway.app/api/products/products');
         if (!response.ok) {
           throw new Error(`Erreur lors de la récupération des produits: ${response.statusText}`);
         }

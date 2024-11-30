@@ -4,6 +4,7 @@ import { Button, Container, Card, Row, Col, Form, Image } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
+
 function Signup() {
     const navigate = useNavigate();
     const [nom, setNom] = useState('');
@@ -61,7 +62,7 @@ function Signup() {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/signup', {
+            const response = await fetch('https://marketplace-happyshop.up.railway.app/api/auth/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nom, prenom, genre, email, motDePasse }),
