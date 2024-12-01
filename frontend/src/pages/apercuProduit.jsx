@@ -16,7 +16,7 @@ const ApercuProduit = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/products/products/${productId}`);
+        const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/products/products/${productId}`);
         if (response.ok) {
           const data = await response.json();
           setProduct(data);
@@ -38,7 +38,7 @@ const ApercuProduit = () => {
   const handleAddToCart = async () => {
     if (product && product.quantity > 0) {
       try {
-        const response = await fetch('http://localhost:5000/api/cart/add', {
+        const response = await fetch('https://marketplace-happyshop.up.railway.app/api/cart/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

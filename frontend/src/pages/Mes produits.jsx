@@ -13,7 +13,7 @@ const Myproduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/products/user/${userId}`);
+        const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/products/user/${userId}`);
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des produits');
         }
@@ -29,7 +29,7 @@ const Myproduct = () => {
 
 const handleDelete = async (productId) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/products/products/${productId}`, {
+    const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/products/products/${productId}`, {
       method: 'DELETE',
     });
 

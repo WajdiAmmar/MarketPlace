@@ -36,7 +36,7 @@ const CheckoutForm = () => {
           return;
         }
 
-        const response = await fetch(`http://localhost:5000/api/cart/cart/${userId}`);
+        const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/cart/cart/${userId}`);
         const data = await response.json();
 
         if (response.ok) {

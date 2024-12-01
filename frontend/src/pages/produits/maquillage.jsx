@@ -11,7 +11,7 @@ function  Maquillage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products/product/Maquillage');
+        const response = await fetch('https://marketplace-happyshop.up.railway.app/api/products/product/Maquillage');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des produits');
         }

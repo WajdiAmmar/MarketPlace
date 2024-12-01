@@ -29,7 +29,7 @@ function BeautyCarousel() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products/category/Beauté');
+        const response = await fetch('https://marketplace-happyshop.up.railway.app/api/products/category/Beauté');
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des produits');
         }

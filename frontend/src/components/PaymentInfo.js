@@ -129,7 +129,7 @@ const PaymentForm = ({ formData, onPrevious, onChange }) => {
     }
   
     try {
-      const response = await fetch('http://localhost:5000/api/confirmOrder/confirm-order', {
+      const response = await fetch('https://marketplace-happyshop.up.railway.app/api/confirmOrder/confirm-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ formData, userId }),
