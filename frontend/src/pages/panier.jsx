@@ -24,7 +24,7 @@ const Panier = () => {
 
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/cart/cart/${userId}`);
+        const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/cart/cart/${userId}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -44,7 +44,7 @@ const Panier = () => {
 
   const handleUpdateQuantity = async (productId, change) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/cart/update-quantity`, {
+      const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/cart/update-quantity`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, productId, change }),
@@ -64,7 +64,7 @@ const Panier = () => {
 
   const handleRemoveItem = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/cart/remove`, {
+      const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/cart/remove`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, productId }),
@@ -106,7 +106,7 @@ const Panier = () => {
   
     try {
       for (const item of cartItems) {
-        const response = await fetch(`http://localhost:5000/api/products/products/${item.id}`);
+        const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/products/products/${item.id}`);
         const productData = await response.json();
   
         if (!response.ok) {

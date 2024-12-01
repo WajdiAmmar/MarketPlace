@@ -27,7 +27,7 @@ function Header() {
 
       try {
         const response = await fetch(
-          `http://localhost:5000/api/cart/cart/${userId}`
+          `https://marketplace-happyshop.up.railway.app/api/cart/cart/${userId}`
         );
         const data = await response.json();
 

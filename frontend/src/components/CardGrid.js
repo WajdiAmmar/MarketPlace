@@ -59,7 +59,7 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete, handleUpdate }) =>
 
     try {
       // Requête vers le backend pour ajouter le produit
-      const response = await fetch('http://localhost:5000/api/cart/add', {
+      const response = await fetch('https://marketplace-happyshop.up.railway.app/api/cart/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ const CardGrid = ({ products, isMyProductsPage, handleDelete, handleUpdate }) =>
         if (image) formData.append('image', image); // Ajouter l'image uniquement si elle est présente
   
         try {
-          const response = await fetch(`http://localhost:5000/api/products/products/${product.id}`, {
+          const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/products/products/${product.id}`, {
             method: 'PUT',
             body: formData, // Envoi de données multipart
           });

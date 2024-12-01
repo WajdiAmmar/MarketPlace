@@ -193,7 +193,7 @@ const Ajoutproduit = () => {
     formData.append("image", product.image);
 
     try {
-      const response = await fetch("http://localhost:5000/api/products/add", {
+      const response = await fetch("https://marketplace-happyshop.up.railway.app/api/products/add", {
         method: "POST",
         body: formData,
       });
