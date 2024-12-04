@@ -15,9 +15,16 @@ const allowedOrigins = [
   'https://projet-paiement.web.app', // URL Firebase en production
 ];
 
+
 // Configuration CORS
 app.use(cors({
   origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin === 'null') {
+      callback(null, true);
+    } else {
+      callback(new Error('Origine non autorisée par les règles CORS'));
+    }
+    
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
