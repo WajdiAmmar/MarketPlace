@@ -13,14 +13,14 @@ const app = express();
 const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:3000', // Localhost pour développement
   'https://projet-paiement.web.app', // URL Firebase en production
+  'https://app.powerbi.com' // URL de Power BI pour autoriser les appels depuis Power BI Service
 ];
-
 
 // Configuration CORS
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    if (!origin || allowedOrigins.includes(origin) || origin === 'https://app.powerbi.com') {
+      callback(null, true); // Autoriser l'origine Power BI
     } else {
       callback(new Error('Origine non autorisée par les règles CORS'));
     }
@@ -29,7 +29,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'], // En-têtes autorisés
   credentials: true, // Autoriser les cookies
 }));
-
 
 // Middleware pour le parsing des requêtes JSON
 app.use(express.json());
