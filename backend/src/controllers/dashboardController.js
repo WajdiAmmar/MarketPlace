@@ -1,19 +1,35 @@
-const { firestore} = require('../config/firebase'); // Assurez-vous d'importer Firestore et Storage
-const { collection, getDocs} = require('firebase/firestore'); // Ajoutez getDoc si besoin
+const { firestore } = require('../config/firebase');
+const { collection, getDocs } = require('firebase/firestore');
 
-// Contrôleur pour récupérer toutes les commandes
+// Fonction pour transformer un tableau d'objets en CSV
+const arrayToCsv = (data) => {
+  if (!data || data.length === 0) return '';
+
+  const headers = Object.keys(data[0]); // Extraire les clés comme entêtes
+  const rows = data.map(row => headers.map(header => `"${row[header] || ''}"`).join(',')); // Convertir les valeurs en lignes CSV
+
+  return [headers.join(','), ...rows].join('\n'); // Concaténer les entêtes et les lignes
+};
+
+// Contrôleur pour récupérer toutes les commandes et les envoyer au format CSV
 const getCommandes = async (req, res) => {
   try {
     const commandesRef = collection(firestore, 'commandes');
     const snapshot = await getDocs(commandesRef);
+
     const commandes = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    res.json(commandes);  // Retourne les commandes sous forme de JSON
+    // Transformer les données en CSV
+    const csvData = arrayToCsv(commandes);
+
+    // Envoyer les données CSV dans la réponse HTTP
+    res.setHeader('Content-Type', 'text/csv');
+    res.send(csvData);
   } catch (error) {
-    console.error("Erreur lors de la récupération des commandes : ", error);
+    console.error('Erreur lors de la récupération des commandes :', error);
     res.status(500).send('Erreur lors de la récupération des commandes');
   }
 };
