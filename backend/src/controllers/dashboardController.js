@@ -11,22 +11,34 @@ const arrayToCsv = (data) => {
   return [headers.join(','), ...rows].join('\n'); // Concaténer les entêtes et les lignes
 };
 
+// Fonction pour transformer le champ `products` en JSON lisible
+const processOrdersData = (data) => {
+  return data.map(order => ({
+    ...order,
+    products: JSON.stringify(order.products || []), // Convertir les produits en chaîne JSON
+  }));
+};
+
 // Contrôleur pour récupérer toutes les commandes et les envoyer au format CSV
 const getCommandes = async (req, res) => {
   try {
     const commandesRef = collection(firestore, 'commandes');
     const snapshot = await getDocs(commandesRef);
 
+    // Mapper les données des commandes
     const commandes = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
 
+    // Traiter les données pour rendre `products` lisible
+    const processedCommandes = processOrdersData(commandes);
+
     // Transformer les données en CSV
-    const csvData = arrayToCsv(commandes);
+    const csvData = arrayToCsv(processedCommandes);
 
     // Envoyer les données CSV dans la réponse HTTP en tant que texte brut
-    res.setHeader('Content-Type', 'text/plain')
+    res.setHeader('Content-Type', 'text/plain');
     res.send(csvData);
   } catch (error) {
     console.error('Erreur lors de la récupération des commandes :', error);
