@@ -11,12 +11,10 @@ const arrayToCsv = (data) => {
   return [headers.join(','), ...rows].join('\n'); // Concaténer les entêtes et les lignes
 };
 
-// Fonction pour transformer le champ `products` en JSON lisible
-const processOrdersData = (data) => {
-  return data.map(order => ({
-    ...order,
-    products: JSON.stringify(order.products || []), // Convertir les produits en chaîne JSON
-  }));
+// Fonction pour formater le champ `products`
+const formatProducts = (products) => {
+  if (!Array.isArray(products)) return ''; // Si ce n'est pas un tableau, retourner une chaîne vide
+  return products.map(p => `${p.quantity}`).join('; '); // Exemple: "Product1 (x2); Product2 (x1)"
 };
 
 // Contrôleur pour récupérer toutes les commandes et les envoyer au format CSV
@@ -29,15 +27,13 @@ const getCommandes = async (req, res) => {
     const commandes = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
+      products: formatProducts(doc.data().products || []), // Formater le champ `products`
     }));
 
-    // Traiter les données pour rendre `products` lisible
-    const processedCommandes = processOrdersData(commandes);
-
     // Transformer les données en CSV
-    const csvData = arrayToCsv(processedCommandes);
+    const csvData = arrayToCsv(commandes);
 
-    // Envoyer les données CSV dans la réponse HTTP en tant que texte brut
+    // Envoyer les données CSV dans la réponse HTTP
     res.setHeader('Content-Type', 'text/plain');
     res.send(csvData);
   } catch (error) {
