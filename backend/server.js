@@ -5,6 +5,7 @@ const productRoutes = require('./src/routes/productRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const cartRoutes = require('./src/routes/cartRoutes');
 const confirmOrderRoutes = require('./src/routes/confirmOrderRoute');
+const dashboardRoutes = require('./src/routes/dashboardRoutes');
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/confirmOrder', confirmOrderRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Middleware de gestion des erreurs
 app.use((err, req, res, next) => {
