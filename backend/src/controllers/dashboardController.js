@@ -4,44 +4,34 @@ const { collection, getDocs } = require('firebase/firestore');
 // Fonction pour transformer un tableau d'objets en CSV
 const arrayToCsv = (data) => {
   if (!data || data.length === 0) return '';
-  
+
   const headers = Object.keys(data[0]); // Extraire les clés comme entêtes
   const rows = data.map(row => headers.map(header => `"${row[header] || ''}"`).join(',')); // Convertir les valeurs en lignes CSV
-  
+
   return [headers.join(','), ...rows].join('\n'); // Concaténer les entêtes et les lignes
 };
 
-// Contrôleur pour récupérer toutes les collections et les envoyer au format CSV
-const getAllCollectionsCsv = async (req, res) => {
+// Contrôleur pour récupérer toutes les commandes et les envoyer au format CSV
+const getCommandes = async (req, res) => {
   try {
-    // Noms des collections à récupérer
-    const collections = ['commandes', 'products', 'users'];
-    let csvResponse = ''; // Initialisation d'une chaîne pour stocker le CSV final
+    const commandesRef = collection(firestore, 'commandes');
+    const snapshot = await getDocs(commandesRef);
 
-    // Parcourir chaque collection
-    for (const collectionName of collections) {
-      const collectionRef = collection(firestore, collectionName);
-      const snapshot = await getDocs(collectionRef);
+    const commandes = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
-      const data = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    // Transformer les données en CSV
+    const csvData = arrayToCsv(commandes);
 
-      // Transformer les données de la collection en CSV
-      const csvData = arrayToCsv(data);
-
-      // Ajouter une séparation entre les collections (facultatif)
-      csvResponse += `\n\n=== ${collectionName.toUpperCase()} ===\n${csvData}`;
-    }
-
-    // Envoyer toutes les données CSV dans la réponse HTTP
-    res.setHeader('Content-Type', 'text/plain'); // Format texte brut pour inclure plusieurs sections
-    res.send(csvResponse);
+    // Envoyer les données CSV dans la réponse HTTP en tant que texte brut
+    res.setHeader('Content-Type', 'text/plain')
+    res.send(csvData);
   } catch (error) {
-    console.error('Erreur lors de la récupération des collections :', error);
-    res.status(500).send('Erreur lors de la récupération des collections');
+    console.error('Erreur lors de la récupération des commandes :', error);
+    res.status(500).send('Erreur lors de la récupération des commandes');
   }
 };
 
-module.exports = { getAllCollectionsCsv };
+module.exports = { getCommandes };
