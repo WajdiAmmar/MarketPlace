@@ -75,35 +75,59 @@ const getProducts = async (req, res) => {
     res.status(500).send('Erreur lors de la récupération des produits');
   }
 };
-// Contrôleur pour générer le token Power BI
 const generateEmbedToken = async (req, res) => {
-  const { groupId, reportId } = req.body;
-
-  if (!groupId || !reportId) {
-    return res.status(400).json({ error: 'Group ID et Report ID sont requis' });
-  }
-
   try {
-    const response = await fetch(`${POWER_BI_API_URL}/${groupId}/reports/${reportId}/GenerateToken`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${TOKEN}`,
-      },
-      body: JSON.stringify({ accessLevel: 'view' }),
-    });
+    const { groupId, reportId } = req.body;
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return res.status(response.status).json({ error: 'Erreur lors de la génération du token', details: errorData });
+    // Vérification des champs requis
+    if (!groupId || !reportId) {
+      return res.status(400).json({ error: "Les champs groupId et reportId sont requis" });
     }
 
-    const data = await response.json();
+    // Appel à l'API Power BI
+    const response = await fetch(`${POWER_BI_API_URL}/${groupId}/reports/${reportId}/GenerateToken`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`,
+      },
+      body: JSON.stringify({ accessLevel: "view" }),
+    });
+
+    // Récupération de la réponse brute
+    const responseText = await response.text();
+
+    // Log de la réponse brute pour le débogage
+    console.log("Réponse brute de l'API Power BI :", responseText);
+
+    // Vérification si la réponse est vide
+    if (!responseText) {
+      throw new Error("Réponse vide de l'API Power BI");
+    }
+
+    // Vérification du statut de la réponse
+    if (!response.ok) {
+      console.error("Erreur Power BI :", response.status, responseText);
+      return res.status(response.status).json({ error: "Erreur Power BI", details: responseText });
+    }
+
+    // Analyse de la réponse JSON
+    const data = JSON.parse(responseText);
+
+    // Vérification si le token est présent dans la réponse
+    if (!data.token) {
+      throw new Error("Le token est manquant dans la réponse de Power BI");
+    }
+
+    // Retourner le token au client
     res.status(200).json({ token: data.token });
   } catch (error) {
-    console.error('Erreur lors de la génération du token :', error);
-    res.status(500).send('Erreur interne du serveur');
+    // Gestion des erreurs et logs
+    console.error("Erreur lors de la génération du token :", error.message);
+    res.status(500).json({ error: "Erreur interne", details: error.message });
   }
 };
+
+
 
 module.exports = { getCommandes ,getProducts,generateEmbedToken };
