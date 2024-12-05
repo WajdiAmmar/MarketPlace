@@ -58,7 +58,7 @@ const getProducts = async (req, res) => {
       category: doc.data().category || '', // Extraire le champ category
       price: doc.data().price || '', // Extraire le champ price
       quantity: doc.data().quantity || '', // Extraire le champ quantity
-      date: doc.data().createdAt|| '',
+      date : doc.data().createdAt|| '',
     }));
 
     // Transformer les données en CSV
