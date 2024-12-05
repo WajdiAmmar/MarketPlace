@@ -98,7 +98,7 @@ const generateEmbedToken = async (req, res) => {
     const responseText = await response.text();
 
     // Log de la réponse brute pour le débogage
-    console.log("Réponse brute de l'API Power BI :", responseText);
+    console.log("Réponse brute de l'API Power BI:", responseText);
 
     // Vérification si la réponse est vide
     if (!responseText) {
