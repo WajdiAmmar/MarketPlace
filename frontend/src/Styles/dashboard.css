@@ -1,0 +1,10 @@
+.reportClass {
+    width: 120% !important; /* Ajuste la largeur à 100% */
+    height: 120% !important; /* Ajuste la hauteur à 100% */
+    display: flex;
+    box-shadow: 0 8px 20px rgb(251, 222, 3); /* Ajoute une ombre douce */
+    border-radius: 8px; /* Ajoute des coins légèrement arrondis */
+    background-color: white; /* Optionnel : couleur de fond pour accentuer */
+    padding: 10px; /* Espace autour pour éviter un bord serré */
+    margin:15px; /* Espacement autour du composant */
+}
