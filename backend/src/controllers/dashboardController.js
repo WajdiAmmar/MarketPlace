@@ -1,6 +1,9 @@
 const { firestore } = require('../config/firebase');
 const { collection, getDocs } = require('firebase/firestore');
 
+const POWER_BI_API_URL = 'https://api.powerbi.com/v1.0/myorg/groups';
+const TOKEN = process.env.POWER_BI_TOKEN; 
+
 // Fonction pour transformer un tableau d'objets en CSV
 const arrayToCsv = (data) => {
   if (!data || data.length === 0) return '';
@@ -72,5 +75,35 @@ const getProducts = async (req, res) => {
     res.status(500).send('Erreur lors de la récupération des produits');
   }
 };
+// Contrôleur pour générer le token Power BI
+const generateEmbedToken = async (req, res) => {
+  const { groupId, reportId } = req.body;
 
-module.exports = { getCommandes ,getProducts };
+  if (!groupId || !reportId) {
+    return res.status(400).json({ error: 'Group ID et Report ID sont requis' });
+  }
+
+  try {
+    const response = await fetch(`${POWER_BI_API_URL}/${groupId}/reports/${reportId}/GenerateToken`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${TOKEN}`,
+      },
+      body: JSON.stringify({ accessLevel: 'view' }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return res.status(response.status).json({ error: 'Erreur lors de la génération du token', details: errorData });
+    }
+
+    const data = await response.json();
+    res.status(200).json({ token: data.token });
+  } catch (error) {
+    console.error('Erreur lors de la génération du token :', error);
+    res.status(500).send('Erreur interne du serveur');
+  }
+};
+
+module.exports = { getCommandes ,getProducts,generateEmbedToken };
