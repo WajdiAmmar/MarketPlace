@@ -2,7 +2,6 @@ const { firestore } = require('../config/firebase');
 const { collection, getDocs } = require('firebase/firestore');
 
 const POWER_BI_API_URL = 'https://api.powerbi.com/v1.0/myorg/groups';
-const TOKEN = process.env.POWER_BI_TOKEN; 
 
 // Fonction pour transformer un tableau d'objets en CSV
 const arrayToCsv = (data) => {
@@ -89,14 +88,8 @@ const generateEmbedToken = async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${TOKEN}`,
       },
       body: JSON.stringify({ accessLevel: "view" }),
-    });
-    console.log("Appel de l'API Power BI avec :", `${POWER_BI_API_URL}/${groupId}/reports/${reportId}/GenerateToken`);
-    console.log("En-têtes :", {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${TOKEN}`,
     });
     
     // Récupération de la réponse brute
