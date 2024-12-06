@@ -93,7 +93,12 @@ const generateEmbedToken = async (req, res) => {
       },
       body: JSON.stringify({ accessLevel: "view" }),
     });
-
+    console.log("Appel de l'API Power BI avec :", `${POWER_BI_API_URL}/${groupId}/reports/${reportId}/GenerateToken`);
+    console.log("En-têtes :", {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${TOKEN}`,
+    });
+    
     // Récupération de la réponse brute
     const responseText = await response.text();
 
