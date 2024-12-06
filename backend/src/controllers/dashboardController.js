@@ -19,7 +19,7 @@ const formatProducts = (products) => {
   if (!Array.isArray(products)) return ''; // Si ce n'est pas un tableau, retourner une chaîne vide
   
   return products
-    .map(p => `${p.id}`) // Séparer chaque champ par ";"
+    .map(p => `${p.quantity}`) // Séparer chaque champ par ";"
     .join('; '); // Séparer chaque produit par "; "
 };
 
@@ -93,22 +93,8 @@ const generateEmbedToken = async (req, res) => {
       },
       body: JSON.stringify({ accessLevel: "view" }),
     });
-    console.log("Appel de l'API Power BI avec :", `${POWER_BI_API_URL}/${groupId}/reports/${reportId}/GenerateToken`);
-    console.log("En-têtes :", {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${ACCESS_TOKEN}`,
-    });
-    
     // Récupération de la réponse brute
     const responseText = await response.text();
-
-    // Log de la réponse brute pour le débogage
-    console.log("Réponse brute de l'API Power BI:", responseText);
-
-    // Vérification si la réponse est vide
-    if (!responseText) {
-      throw new Error("Réponse vide de l'API Power BI");
-    }
 
     // Vérification du statut de la réponse
     if (!response.ok) {

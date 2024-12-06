@@ -17,6 +17,8 @@ function Header() {
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Vérifier si l'utilisateur est connecté
   const userId = useSelector((state) => state.auth.user?.ID);
+  const userRole = useSelector((state) => state.auth.user?.role);  // Récupérer le rôle de l'utilisateur
+
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -104,7 +106,11 @@ function Header() {
     setActiveLink(link); // Définit le lien actif
     navigate(link); // Navigue vers le lien
   };
-
+  const handleTableauDeBordClick = () => {
+    if (userRole === "admin") {
+      navigate("/dashboard");
+    }
+  }
   return (
     <div>
       <div className="top-bar mt-10">
@@ -176,6 +182,15 @@ function Header() {
               >
                 Home
               </Nav.Link>
+              {userRole === "admin" && (
+                <Nav.Link
+                  href="#"
+                  onClick={handleTableauDeBordClick}
+                  className="text-light"
+                >
+                  Tableau de bord
+                </Nav.Link>
+              )}
               <Nav.Link
                 href="/"
                 onMouseEnter={handleMouseEnter}
