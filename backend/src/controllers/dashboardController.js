@@ -13,16 +13,21 @@ const arrayToCsv = (data) => {
 
   return [headers.join(','), ...rows].join('\n'); // Concaténer les entêtes et les lignes
 };
+// Fonction pour calculer la quantité totale de produits
+const calculateTotalQuantity = (products) => {
+  if (!Array.isArray(products)) return 0; // Retourner 0 si `products` n'est pas un tableau
+  
+  return products.reduce((total, product) => total + (product.quantity || 0), 0); // Somme des quantités
+};
 
 // Fonction pour formater le champ `products`
 const formatProducts = (products) => {
   if (!Array.isArray(products)) return ''; // Si ce n'est pas un tableau, retourner une chaîne vide
   
   return products
-    .map(p => `${p.quantity}`) // Séparer chaque champ par ";"
+    .map(p => `${p.Product}`) // Séparer chaque champ par ";"
     .join('; '); // Séparer chaque produit par "; "
 };
-
 
 // Contrôleur pour récupérer toutes les commandes et les envoyer au format CSV
 const getCommandes = async (req, res) => {
@@ -31,13 +36,19 @@ const getCommandes = async (req, res) => {
     const snapshot = await getDocs(commandesRef);
 
     // Mapper les données des commandes
-    const commandes = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      products: formatProducts(doc.data().products || []), // Formater le champ `products`
-    }));
+    const commandes = snapshot.docs.map(doc => {
+      const data = doc.data();
+      const products = data.products || [];
 
-    // Transformer les données en CSV
+      return {
+        id: doc.id, // ID de la commande
+        ...data, // Toutes les autres données de la commande
+        products: formatProducts(products), // Champ `products` formaté
+        totalQuantity: calculateTotalQuantity(products), // Quantité totale calculée
+      };
+    });
+
+    // Transformer les données en CSV (inclure `totalQuantity`)
     const csvData = arrayToCsv(commandes);
 
     // Envoyer les données CSV dans la réponse HTTP
@@ -48,6 +59,7 @@ const getCommandes = async (req, res) => {
     res.status(500).send('Erreur lors de la récupération des commandes');
   }
 };
+
 // Contrôleur pour récupérer les produits et les envoyer au format CSV
 const getProducts = async (req, res) => {
   try {
