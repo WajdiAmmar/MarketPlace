@@ -24,6 +24,7 @@ import Dashboard from '../admin/dashboard';
 import Myproduct from '../pages/Mes produits';
 import ApercuProduit from '../pages/apercuProduit';
 import ProtectedRoute from '../protectedRoute/ProtectedRoute'; // Importer le composant ProtectedRoute
+import Products from '../admin/Products';
 
 const RouteList = () => {
   return (
@@ -55,6 +56,14 @@ const RouteList = () => {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+           <Route 
+        path="/products" 
+        element={
+          <ProtectedRoute>
+            <Products />
           </ProtectedRoute>
         } 
       />
