@@ -12,13 +12,14 @@ function Header() {
   const [showCategories, setShowCategories] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null); // Catégorie active
   const [activeLink, setActiveLink] = useState(""); // Lien actif
-  const [error, setError] = useState(null);
+  const [error,setError] = useState(null);
   const [cartItems, setCartItems] = useState([]);
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Vérifier si l'utilisateur est connecté
   const userId = useSelector((state) => state.auth.user?.ID);
-  const userRole = useSelector((state) => state.auth.user?.role);  // Récupérer le rôle de l'utilisateur
-
+  const userRole = useSelector((state) => state.auth.user?.role);
+  const nom = useSelector((state) => state.auth.user?.nom);
+  const prenom = useSelector((state) => state.auth.user?.prenom); // Récupérer le rôle de l'utilisateur
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -74,7 +75,13 @@ function Header() {
     }
   };
   const handlePanierClick = () => handleNavigation("/panier");
-  const handleMyproductClick = () => handleNavigation("/mesproduits");
+  const handleMyproductClick = () => {
+    if (userRole === "admin") {
+      handleNavigation("/products");
+    } else {
+      handleNavigation("/mesproduits");
+    }
+  };
   const handleHighTechClick = () => handleNavigation("/high-tech");
   const handleMaisonClick = () => handleNavigation("/cuisine-maison");
   const handleBeauteClick = () => handleNavigation("/beaute");
@@ -110,12 +117,12 @@ function Header() {
     if (userRole === "admin") {
       navigate("/dashboard");
     }
-  }
+  };
   return (
     <div>
       <div className="top-bar mt-10">
-        <Container>
-          <Row className="align-items-center">
+        <Container >
+          <Row className="align-items-center" style={{width:"1200px"}}>
             <Col md={1} className="logo">
               <img src="/logo.png" alt="Logo" className="logo-img" />
             </Col>
@@ -131,38 +138,69 @@ function Header() {
               </h1>
             </Col>
             <Col>
-              <div style={{ position: "relative" }}>
-                {/* Affichage conditionnel du compteur */}
-                {cartItems.some((item) => item.quantity > 0) && (
-                  <span
-                    className="cart-count"
-                    style={{
-                      position: "absolute",
-                      background: "black",
-                      color: "#F9A825",
-                      borderRadius: "50%",
-                      padding: "5px 10px",
-                      fontSize: "11px",
-                      marginLeft: "90px",
-                      marginTop: "20px",
-                    }}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "35px",
+                  marginLeft: "-40px",
+                }}
+              >
+                {/* Panier */}
+                <div style={{ position: "relative" }}>
+                  {/* Affichage conditionnel du compteur */}
+                  {cartItems.some((item) => item.quantity > 0) && (
+                    <span
+                      className="cart-count"
+                      style={{
+                        position: "absolute",
+                        background: "black",
+                        color: "#F9A825",
+                        borderRadius: "50%",
+                        padding: "5px 10px",
+                        fontSize: "11px",
+                        marginLeft: "55px",
+                        marginTop: "15px",
+                      }}
+                    >
+                      {cartItems.reduce(
+                        (total, item) => total + item.quantity,
+                        0
+                      )}
+                    </span>
+                  )}
+                  <Button
+                    variant="outlined"
+                    id="panier-btn"
+                    onClick={handlePanierClick}
                   >
-                    {/* Somme des quantités des articles */}
-                    {cartItems.reduce(
-                      (total, item) => total + item.quantity,
-                      0
-                    )}
-                  </span>
+                    <img src="/panier.png" alt="Panier" />
+                    <p id="panier-text">Panier</p>
+                  </Button>
+                </div>
+                {isAuthenticated && (
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <img
+                      src="/profil-icon.png" // Utilisez une image par défaut
+                      alt="Profil"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <span
+                      style={{
+                        marginLeft: "15px",
+                        color: "#000",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {prenom} {nom}
+                    </span>
+                  </div>
                 )}
-
-                <Button
-                  variant="outlined"
-                  id="panier-btn"
-                  onClick={handlePanierClick}
-                >
-                  <img src="/panier.png" alt="Panier" />
-                  Panier
-                </Button>
               </div>
             </Col>
           </Row>
@@ -202,7 +240,10 @@ function Header() {
               >
                 Catégories <i className="fa-solid fa-angle-down"></i>
               </Nav.Link>
-              <Nav.Link onClick={handleMyproductClick}>Mes produits</Nav.Link>
+              <Nav.Link onClick={handleMyproductClick}>
+                {userRole === "admin" ? "Tous les produits" : "Mes produits"}
+              </Nav.Link>
+
               <Nav.Link
                 href="/"
                 className={`nav-link ${
