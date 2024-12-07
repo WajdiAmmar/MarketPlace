@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import PersonalInfoForm from './PersonalInfo';
-import DeliveryForm from './DeliveryMethod';
-import PaymentForm from './PaymentInfo';
-import "../Styles/checkout.css";
+import React, { useEffect, useState } from 'react'; // Importation des hooks React
+import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap'; // Importation des composants Bootstrap pour la mise en page
+import { useSelector } from 'react-redux'; // Utilisation de Redux pour récupérer l'état global de l'application
+import PersonalInfoForm from './PersonalInfo'; // Importation du formulaire d'informations personnelles
+import DeliveryForm from './DeliveryMethod'; // Importation du formulaire de méthode de livraison
+import PaymentForm from './PaymentInfo'; // Importation du formulaire d'informations de paiement
+import "../Styles/checkout.css"; // Importation des styles CSS
 
 const CheckoutForm = () => {
+  // Récupération de l'ID de l'utilisateur connecté depuis Redux
   const userId = useSelector((state) => state.auth.user?.ID);
-  const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [step, setStep] = useState(1);
 
-  // State pour les données du formulaire
+  // États locaux pour gérer le panier, le chargement, les erreurs et l'étape actuelle
+  const [cartItems, setCartItems] = useState([]); // Contient les articles du panier
+  const [loading, setLoading] = useState(true); // Indicateur de chargement
+  const [error, setError] = useState(null); // Stocke les erreurs éventuelles
+  const [step, setStep] = useState(1); // Étape actuelle du formulaire de commande (1: informations personnelles, 2: livraison, 3: paiement)
+
+  // États pour stocker les données du formulaire de commande
   const [formData, setFormData] = useState({
     fullName: '',
     phoneNumber: '',
@@ -28,48 +31,50 @@ const CheckoutForm = () => {
     cvv: '',
   });
 
+  // Utilisation de useEffect pour récupérer le panier de l'utilisateur dès que l'ID de l'utilisateur change
   useEffect(() => {
     const fetchCart = async () => {
       try {
         if (!userId) {
-          setError("Vous devez être connecté pour voir votre panier.");
+          setError("Vous devez être connecté pour voir votre panier."); // Si l'utilisateur n'est pas connecté
           return;
         }
 
+        // Requête API pour récupérer les produits du panier de l'utilisateur
         const response = await fetch(`https://marketplace-happyshop.up.railway.app/api/cart/cart/${userId}`);
         const data = await response.json();
 
         if (response.ok) {
-          setCartItems(data.data.products || []);
+          setCartItems(data.data.products || []); // Si la réponse est OK, met à jour les produits du panier
         } else {
-          setError(data.message || "Erreur lors de la récupération du panier.");
+          setError(data.message || "Erreur lors de la récupération du panier."); // Affiche une erreur si la réponse est négative
         }
       } catch (err) {
-        setError("Erreur réseau ou serveur.");
+        setError("Erreur réseau ou serveur."); // Affiche une erreur en cas de problème de réseau ou serveur
       } finally {
-        setLoading(false);
+        setLoading(false); // Marque la fin du chargement
       }
     };
 
-    fetchCart();
+    fetchCart(); // Appel de la fonction pour récupérer le panier
   }, [userId]);
 
-  // Calculer le total
+  // Fonction pour calculer le total de la commande
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0); // Calcule le total en multipliant le prix et la quantité
   };
 
-  // Handlers pour changer de section
-  const handleNext = () => setStep((prevStep) => Math.min(prevStep + 1, 3));
-  const handlePrevious = () => setStep((prevStep) => Math.max(prevStep - 1, 1));
+  // Fonctions pour naviguer entre les étapes du formulaire
+  const handleNext = () => setStep((prevStep) => Math.min(prevStep + 1, 3)); // Passer à l'étape suivante (jusqu'à l'étape 3)
+  const handlePrevious = () => setStep((prevStep) => Math.max(prevStep - 1, 1)); // Revenir à l'étape précédente (minimum étape 1)
 
-  // Mise à jour des données du formulaire
+  // Fonction pour mettre à jour les données du formulaire
   const handleFormDataChange = (field, value) => {
-    setFormData((prevData) => ({ ...prevData, [field]: value }));
+    setFormData((prevData) => ({ ...prevData, [field]: value })); // Met à jour la donnée spécifiée du formulaire
   };
 
   return (
-    <Container className="checkout-page">
+    <Container className="checkout-page"> {/* Conteneur principal pour la page de commande */}
       <Row>
         {/* Colonne gauche : Formulaires */}
         <Col md={8} className="form-section">
@@ -101,11 +106,12 @@ const CheckoutForm = () => {
         <Col md={4} className="summary-section order-summary">
           <h3>Récapitulatif de la Commande</h3>
           {loading ? (
-            <Spinner animation="border" />
+            <Spinner animation="border" /> // Affiche un spinner pendant le chargement des données
           ) : error ? (
-            <Alert variant="danger">{error}</Alert>
+            <Alert variant="danger">{error}</Alert> // Affiche un message d'erreur en cas de problème
           ) : (
             <div className="summary-content">
+              {/* Affiche chaque élément du panier */}
               {cartItems.map((item) => (
                 <div key={item.id} className="summary-item">
                   <p>{item.title}</p>
@@ -116,6 +122,7 @@ const CheckoutForm = () => {
                 </div>
               ))}
               <hr />
+              {/* Affiche les informations de l'utilisateur */}
               <div className="user-info">
                 <h4>Informations du Client</h4>
                 <p>Nom complet: {formData.fullName}</p>
@@ -126,10 +133,12 @@ const CheckoutForm = () => {
                   {formData.postalCode}
                 </p>
               </div>
+              {/* Affiche la méthode de livraison sélectionnée */}
               <div className="delivery-info">
                 <h4>Méthode de Livraison</h4>
                 <p>{formData.deliveryMethod}</p>
               </div>
+              {/* Affiche les informations de paiement */}
               <div className="payment-info">
                 <h4>Informations de Paiement</h4>
                 <p>Nom sur la carte: {formData.cardName}</p>
@@ -137,6 +146,7 @@ const CheckoutForm = () => {
                 <p>Date d'expiration: {formData.expirationDate}</p>
               </div>
               <hr />
+              {/* Affiche le total de la commande */}
               <div className="total">
                 <strong>Total de la commande: </strong>
                 <span>{calculateTotal().toFixed(2)} DT</span>
@@ -149,4 +159,4 @@ const CheckoutForm = () => {
   );
 };
 
-export default CheckoutForm;
+export default CheckoutForm; // Exportation du composant CheckoutForm
