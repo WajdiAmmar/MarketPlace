@@ -45,39 +45,35 @@ function Dashboard() {
       <Header />
       <div style={{ height: "80vh", display: "flex", flexDirection: "column" }}>
         <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <PowerBIEmbed
-            embedConfig={{
-              type: "report",
-              id: "ac045878-9ce1-4e20-910c-4b2f2aa70a24",
-              embedUrl:"https://app.powerbi.com/reportEmbed?reportId=ac045878-9ce1-4e20-910c-4b2f2aa70a24&groupId=7dbe80e4-d3bb-4103-8ad0-1750a7b515d2&w=2&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVdFU1QtRVVST1BFLXJlZGlyZWN0LmFuYWx5c2lzLndpbmRvd3MubmV0IiwiZW1iZWRGZWF0dXJlcyI6eyJ1c2FnZU1ldHJpY3NWTmV4dCI6dHJ1ZX19",
-              accessToken: embedToken,
-              tokenType: models.TokenType.Embed,
-              settings: {
-                panes: {
-                  filters: {
-                    expanded: false,
-                    visible: false,
-                  },
-                },
-                background: models.BackgroundType.Transparent,
-              },
-            }}
-            cssClassName={"reportClass"}
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-            eventHandlers={
-              new Map([
-                ["loaded", () => console.log("Report loaded")],
-                ["rendered", () => console.log("Report rendered")],
-                ["error", (event) => console.log(event.detail)],
-              ])
-            }
-            getEmbeddedComponent={(embeddedReport) => {
-              window.report = embeddedReport;
-            }}
-          />
+         
+        <PowerBIEmbed
+  embedConfig={{
+    type: "report",
+    id: "ac045878-9ce1-4e20-910c-4b2f2aa70a24", // L'identifiant de votre rapport
+    embedUrl: "https://app.powerbi.com/view?r=eyJrIjoiZDJmZjY1MDgtNjUwNS00NTA4LWI1NTQtYzVjOTgwMjNjMzY5IiwidCI6ImY2MDE0ZmRlLWEwN2MtNGZlMC05MjhhLThjNTFiOGIxN2IxNiIsImMiOjR9", // URL publique du rapport
+    settings: {
+      panes: {
+        filters: {
+          visible: false, // Cache les filtres si nécessaire
+        },
+      },
+      background: models.BackgroundType.Transparent, // Fond transparent
+    },
+  }}
+  cssClassName={"reportClass"} // Classe CSS pour la mise en forme
+  style={{
+    width: "100%", // Largeur
+    height: "100%", // Hauteur
+  }}
+  eventHandlers={new Map([
+    ["loaded", () => console.log("Report loaded")],
+    ["rendered", () => console.log("Report rendered")],
+    ["error", (event) => console.log(event.detail)],
+  ])}
+  getEmbeddedComponent={(embeddedReport) => {
+    window.report = embeddedReport; // Référence au composant intégré
+  }}
+/>;
         </div>
       </div>
     </div>
