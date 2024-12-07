@@ -7,18 +7,19 @@ import Swal from 'sweetalert2';
 
 const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
   const navigate = useNavigate();
-  const location = useLocation(); // Récupérer l'URL de la page actuelle
+  const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [price, setPrice] = useState(10000); // Starting with max price
+  const [price, setPrice] = useState(10000); // Prix maximal par défaut
   const connected = useSelector((state) => state.auth.isAuthenticated);
 
+  // Réinitialiser la catégorie si on n'est pas sur la page d'accueil
   useEffect(() => {
-    // Si la page n'est pas la page d'accueil, ne pas afficher le filtrage par catégorie
     if (location.pathname !== '/') {
-      setSelectedCategory(''); // Réinitialiser la catégorie si on est sur une autre page
+      setSelectedCategory(''); // Réinitialiser la catégorie sur une autre page
     }
   }, [location.pathname]);
 
+  // Fonction pour gérer le clic sur "Ajouter un produit"
   const handleAddProductClick = () => {
     if (connected) {
       navigate('/ajoutProduit');
@@ -32,12 +33,13 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
         cancelButtonText: 'Annuler',
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = '/login';
+          window.location.href = '/login'; // Rediriger vers la page de connexion
         }
       });
     }
   };
 
+  // Fonction pour gérer le changement de catégorie
   const handleCategoryChange = (e) => {
     if (!connected) {
       Swal.fire({
@@ -52,6 +54,7 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
     onCategoryChange(e.target.value);
   };
 
+  // Fonction pour gérer le changement de prix
   const handlePriceChange = (value) => {
     if (!connected) {
       Swal.fire({
@@ -80,11 +83,12 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
           <Link to="#">Filtrage</Link>
         </li>
 
-        {/* Afficher le filtrage par catégorie seulement sur la page d'accueil */}
-        {location.pathname === '/' && (
+        {/* Affichage du filtrage par catégorie seulement sur la page d'accueil */}
+        {(location.pathname === '/' || location.pathname === '/mesproduits' || location.pathname === '/products')&& (
           <li className="list-group-item">
             <Form.Label>Catégorie</Form.Label>
             <div>
+              {/* Vérification si l'utilisateur est connecté avant d'activer le filtrage */}
               <Form.Check 
                 type="radio" 
                 label="Toutes les catégories" 
@@ -121,6 +125,7 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
           </li>
         )}
 
+        {/* Filtrage par prix */}
         <li className="list-group-item">
           <Form.Label>Filtrer par Prix (0 - {price} DT)</Form.Label>
           <Form.Control
@@ -131,10 +136,11 @@ const Sidebar = ({ onCategoryChange = () => {}, onPriceChange = () => {} }) => {
             max={10000}
             step={100}
             className="form-range"
-            disabled={!connected}
+            disabled={!connected} // Désactiver si l'utilisateur n'est pas connecté
           />
         </li>
       </ul>
+      {/* Bouton pour ajouter un produit, redirige vers la page de connexion si non connecté */}
       <Button block="true" variant="outline-light" id="connecter-btn" onClick={handleAddProductClick}>
         Ajouter Votre Produit
       </Button>

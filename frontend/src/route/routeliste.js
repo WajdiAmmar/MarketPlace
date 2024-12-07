@@ -6,7 +6,7 @@ import Signup from '../pages/auth/signup';
 import Ajoutproduit from '../pages/ajoutProduit';
 import HighTech from '../pages/categories/HighTech';
 import CuisineMaison from '../pages/categories/CuisineMaison';
-import Beaute from '../pages/categories/Beaute';
+import Beauty from '../pages/categories/Beaute';
 import Panier from '../pages/panier';
 import Smartphone from '../pages/produits/smartphones';
 import Ordinateur from '../pages/produits/ordinateurs';
@@ -35,7 +35,7 @@ const RouteList = () => {
       <Route path="/ajoutProduit" element={<Ajoutproduit />} />
       <Route path="/high-tech" element={<HighTech />} />
       <Route path="/cuisine-maison" element={<CuisineMaison />} />
-      <Route path="/beaute" element={<Beaute />} />
+      <Route path="/beaute" element={<Beauty />} />
       <Route path="/panier" element={<Panier />} />
       <Route path="/smartphone" element={<Smartphone />} />
       <Route path="/ordinateur" element={<Ordinateur />} />

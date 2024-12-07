@@ -11,13 +11,14 @@ function Login() {
     const dispatch = useDispatch();  // Hook pour dispatch l'action
     const [email, setEmail] = useState('');
     const [motDePasse, setMotDePasse] = useState('');
-    const [erreurs, setErreurs] = useState({ email: '', motDePasse: '' });
+    const [erreurs, setErreurs] = useState({ email: '', motDePasse: '', global: '' });
 
     // Fonction de validation des champs
     const validerChamps = () => {
         let isValid = true;
         const erreursTemp = { email: '', motDePasse: '' };
 
+        // Validation de l'email
         if (!email.trim()) {
             erreursTemp.email = "L'adresse email est requise.";
             isValid = false;
@@ -26,6 +27,7 @@ function Login() {
             isValid = false;
         }
 
+        // Validation du mot de passe
         if (!motDePasse.trim()) {
             erreursTemp.motDePasse = 'Le mot de passe est requis.';
             isValid = false;
@@ -37,32 +39,36 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!validerChamps()) {
             return; // Si la validation échoue, on ne fait rien
         }
-    
+
         try {
             const response = await fetch('https://marketplace-happyshop.up.railway.app/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, motDePasse }),
             });
-    
+
             const data = await response.json();
             console.log('Réponse backend:', data);
+
             if (response.ok) {
-                
+                // Dispatch de l'action login avec le token et l'utilisateur récupérés
                 dispatch(login(data.token, data.user));
 
+                // Affichage d'une alerte de succès
                 Swal.fire({
                     icon: 'success',
                     title: 'Connexion réussie',
                     text: `Bienvenue ${data.user.role}!`,
                 }).then(() => {
+                    // Rediriger en fonction du rôle de l'utilisateur
                     navigate(data.user.role === 'admin' ? '/dashboard' : '/');
                 });
             } else {
+                // Gestion des erreurs globales si la connexion échoue
                 setErreurs({ ...erreurs, global: data.message || 'Erreur de connexion. Veuillez vérifier vos informations.' });
             }
         } catch (error) {
@@ -70,7 +76,6 @@ function Login() {
             setErreurs({ ...erreurs, global: 'Une erreur est survenue. Veuillez réessayer.' });
         }
     };
-    
 
     return (
         <Container>
@@ -101,7 +106,7 @@ function Login() {
                                                 {erreurs.email}
                                             </Form.Text>
                                         </Form.Group>
-                                        
+
                                         {/* Champ Mot de Passe */}
                                         <Form.Group className="mb-4">
                                             <Form.Control
