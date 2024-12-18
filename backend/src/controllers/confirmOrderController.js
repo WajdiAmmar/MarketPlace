@@ -140,7 +140,7 @@ const confirmation = async (req, res) => {
     // Paramètres du mail pour l'administrateur
     const mailOptionsAdmin = {
       from: process.env.EMAIL_USER,
-      to: 'wajdiammar010@gmail.com',
+      to: 'hanen.chamakhi@yahoo.fr',
       subject: 'Nouvelle commande',
       text: `Nouvelle commande par ${formData.fullName}.\n\nInformations client:\nNom complet: ${formData.fullName}\nEmail: ${formData.email}\nAdresse: ${formData.address}\nVille: ${formData.city}\nCode postal: ${formData.postalCode}\nTéléphone: ${formData.phoneNumber}\nDate de la commande: ${new Date().toLocaleString()}\nMode de livraison: ${formData.deliveryMethod}\n\nProduits:\n\n${productsAdmin}\n\nTotal de la commande: ${totalAmount.toFixed(2)} DT`,
     };
